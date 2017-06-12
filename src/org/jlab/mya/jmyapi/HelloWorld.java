@@ -3,7 +3,8 @@ package org.jlab.mya.jmyapi;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 /**
@@ -22,21 +23,14 @@ public class HelloWorld {
         ArchiverQueryService service = new ArchiverQueryService(ArchiverDeployment.dev);
 
         String pv = "DCPHP2ADC10";
-        Instant begin = ZonedDateTime.parse("2017-01-01T00:00:00.00-05:00").toInstant();
-        Instant end = ZonedDateTime.parse("2017-01-01T00:00:05.00-05:00").toInstant();
-        //Instant begin = Instant.parse("2017-01-01T05:00:00.00Z"); // UTC
-        //Instant end = Instant.parse("2017-01-01T05:00:05.00Z"); // UTC
+        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(ZoneId.systemDefault()).toInstant();
+        Instant end = LocalDateTime.parse("2017-01-01T00:00:05").atZone(ZoneId.systemDefault()).toInstant();
 
         List<PvRecord> recordList = service.find(pv, begin, end);
 
         for (PvRecord record : recordList) {
-            System.out.println(record);
+            System.out.println(record.toColumnString());
         }
-
-        /*DateTimeFormatter formatter
-                    = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss").withZone(
-                    ZoneId.systemDefault());
-            System.out.println(formatter.format(begin));*/
     }
 
 }

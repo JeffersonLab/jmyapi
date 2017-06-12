@@ -6,7 +6,6 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.Iterator;
 
 /**
  *
@@ -46,9 +45,6 @@ public class PvRecordStream implements Channel {
     private PvRecord rowToEntity() throws SQLException {
         Instant time = MyaUtil.fromMyaTimestamp(rs.getLong(1));
         int code = rs.getInt(2);
-
-        System.out.println("MYA time: " + rs.getLong(1));
-        System.out.println("UTC time: " + time);
 
         return new PvRecord(time, code);
     }
