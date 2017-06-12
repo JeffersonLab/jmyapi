@@ -2,3 +2,4 @@
 /build.xml
 /nbproject/
 /config/credentials.properties
+/config/deployments.properties

@@ -1,0 +1,4 @@
+# Port is same for all deployments 
+port=port
+ops.master.host=hostname
+dev.master.host=hostname
