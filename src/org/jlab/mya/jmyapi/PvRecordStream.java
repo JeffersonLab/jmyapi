@@ -47,6 +47,7 @@ public class PvRecordStream<T> implements Channel {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private PvRecord<T> rowToEntity() throws SQLException {
         Instant time = MyaUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
