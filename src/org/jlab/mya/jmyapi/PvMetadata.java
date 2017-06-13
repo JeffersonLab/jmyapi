@@ -8,11 +8,15 @@ public final class PvMetadata {
     private final int id;
     private final String name;
     private final String host;
+    private final PvDataType type;
+    private final int size;
 
-    public PvMetadata(int id, String name, String host) {
+    public PvMetadata(int id, String name, String host, PvDataType type, int size) {
         this.id = id;
         this.name = name;
         this.host = host;
+        this.type = type;
+        this.size = size;
     }
 
     public int getId() {
@@ -27,9 +31,18 @@ public final class PvMetadata {
         return host;
     }
 
+    public PvDataType getType() {
+        return type;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
     @Override
     public String toString() {
-        return "PvMetadata{" + "id=" + id + ", name=" + name + ", host=" + host + '}';
+        return "PvMetadata{" + "id=" + id + ", name=" + name + ", host=" + host + ", type=" + type +
+                ", size=" + size + '}';
     }
 
     @Override

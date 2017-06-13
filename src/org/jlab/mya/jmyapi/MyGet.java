@@ -40,8 +40,12 @@ public class MyGet {
             if (rs.next()) {
                 int id = rs.getInt("chan_id");
                 String host = rs.getString("host");
-
-                metadata = new PvMetadata(id, name, host);
+                int typeOrdinal = rs.getInt("type");
+                int size = rs.getInt("size");
+                
+                PvDataType type = PvDataType.values()[typeOrdinal];
+                
+                metadata = new PvMetadata(id, name, host, type, size);
             } else {
                 metadata = null;
             }

@@ -11,10 +11,10 @@ import java.time.format.DateTimeFormatter;
  */
 public class PvRecord<T> {
     private final Instant timestamp;
-    private final int code;
+    private final PvEventType code;
     private T[] value;
 
-    PvRecord(Instant timestamp, int code) {
+    PvRecord(Instant timestamp, PvEventType code) {
         this.timestamp = timestamp;
         this.code = code;
     }
@@ -25,6 +25,6 @@ public class PvRecord<T> {
     }
 
     public String toColumnString() {
-        return timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " " + code;
+        return timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) + " " + String.format("%16s", code);
     }
 }

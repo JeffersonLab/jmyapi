@@ -1,7 +1,6 @@
 package org.jlab.mya.jmyapi;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
@@ -55,7 +54,7 @@ public class MyGetTest {
     public void testFetchMetadata_Connection_String() throws Exception {
         System.out.println("fetchMetadata");
         MyGet instance = new MyGet();
-        PvMetadata expResult = new PvMetadata(TEST_ID, TEST_PV, "devmya0");
+        PvMetadata expResult = new PvMetadata(TEST_ID, TEST_PV, "devmya0", PvDataType.DBR_DOUBLE, 1);
         PvMetadata result = instance.fetchMetadata(con, TEST_PV);
         assertEquals(expResult, result);
     }

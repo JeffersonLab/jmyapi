@@ -44,7 +44,9 @@ public class PvRecordStream implements Channel {
 
     private PvRecord rowToEntity() throws SQLException {
         Instant time = MyaUtil.fromMyaTimestamp(rs.getLong(1));
-        int code = rs.getInt(2);
+        int codeOrdinal = rs.getInt(2);
+        
+        PvEventType code = PvEventType.values()[codeOrdinal];
 
         return new PvRecord(time, code);
     }
