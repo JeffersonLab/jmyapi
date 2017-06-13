@@ -6,9 +6,9 @@ package org.jlab.mya.jmyapi;
  */
 public enum PvEventType {
     UPDATE, // 0
-    ARCHIVER_SHUTDOWN, // 1
+    NETWORK_DISCONNECTION, // 1
     ARCHIVING_OF_CHANNEL_TURNED_OFF, // 2
-    NETWORK_DISCONNECTION, // 3
+    ARCHIVER_SHUTDOWN, // 3
     UNKNOWN_UNAVAILABILTY, // 4
     NOT_USED_5,
     NOT_USED_6,

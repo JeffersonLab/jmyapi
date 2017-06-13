@@ -99,9 +99,9 @@ public class ArchiverQueryService {
         return DriverManager.getConnection(url, user, password);
     }
 
-    public List<PvRecord> find(String name, Instant begin, Instant end) throws SQLException,
+    public <T> List<PvRecord<T>> find(String name, Class<T> type, Instant begin, Instant end) throws SQLException,
             IOException {
-        List<PvRecord> recordList;
+        List<PvRecord<T>> recordList;
 
         String host = DEPLOYMENTS_PROPERTIES.getProperty(deployment + ".master.host");
         int port = Integer.parseInt(DEPLOYMENTS_PROPERTIES.getProperty("port"));
@@ -110,24 +110,24 @@ public class ArchiverQueryService {
             MyGet get = new MyGet();
             PvMetadata metadata = get.fetchMetadata(con, name);
             if (host.equals(metadata.getHost())) { // TODO: check for better equivalence: fully qualified vs not vs loopback, etc.
-                recordList = get.fetchList(con, metadata.getId(), begin, end);
+                recordList = get.fetchList(con, metadata.getId(), type, metadata.getSize(), begin, end);
             } else {
-                recordList = find(metadata, begin, end);
+                recordList = find(metadata, type, begin, end);
             }
         }
 
         return recordList;
     }
 
-    public List<PvRecord> find(PvMetadata metadata, Instant begin, Instant end) throws SQLException,
+    public <T> List<PvRecord<T>> find(PvMetadata metadata, Class<T> type, Instant begin, Instant end) throws SQLException,
             IOException {
-        List<PvRecord> recordList;
+        List<PvRecord<T>> recordList;
         String host = metadata.getHost();
         int port = Integer.parseInt(DEPLOYMENTS_PROPERTIES.getProperty("port"));
 
         try (Connection con = open(host, port)) {
             MyGet get = new MyGet();
-            recordList = get.fetchList(con, port, begin, end);
+            recordList = get.fetchList(con, metadata.getId(), type, metadata.getSize(), begin, end);
         }
 
         return recordList;

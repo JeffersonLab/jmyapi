@@ -19,6 +19,8 @@ public class MyGetTest {
 
     public static final String TEST_PV = "DCPHP2ADC10";
     public static final int TEST_ID = 13;
+    public static final Class TEST_CLASS = Float.class;
+    public static final int TEST_SIZE = 1;
     public static final Instant TEST_BEGIN = Instant.parse("2017-06-09T10:15:00.00Z");
     public static final Instant TEST_END = Instant.now();
     
@@ -79,7 +81,7 @@ public class MyGetTest {
         System.out.println("fetchList");
         MyGet instance = new MyGet();
         long expSize = 0;
-        List<PvRecord> result = instance.fetchList(con, TEST_ID, TEST_BEGIN, TEST_END);
+        List<PvRecord<Float>> result = instance.fetchList(con, TEST_ID, TEST_CLASS, TEST_SIZE, TEST_BEGIN, TEST_END);
         if(result.size() != expSize) {
             fail("List size does not match expected");
         }

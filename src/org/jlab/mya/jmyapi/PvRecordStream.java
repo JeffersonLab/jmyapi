@@ -10,15 +10,20 @@ import java.time.Instant;
 /**
  *
  * @author ryans
+ * @param <T>
  */
-public class PvRecordStream implements Channel {
+public class PvRecordStream<T> implements Channel {
 
     private final Statement stmt;
     private final ResultSet rs;
+    private final Class<T> type;
+    private final int recordSize;
 
-    protected PvRecordStream(Statement stmt, ResultSet rs) {
+    protected PvRecordStream(Statement stmt, ResultSet rs, Class<T> type, int recordSize) {
         this.stmt = stmt;
         this.rs = rs;
+        this.type = type;
+        this.recordSize = recordSize;
     }
 
     @Override
@@ -30,7 +35,7 @@ public class PvRecordStream implements Channel {
         }
     }
 
-    public PvRecord read() throws IOException {
+    public PvRecord<T> read() throws IOException {
         try {
             if (rs.next()) {
                 return rowToEntity();
@@ -42,13 +47,22 @@ public class PvRecordStream implements Channel {
         }
     }
 
-    private PvRecord rowToEntity() throws SQLException {
+    private PvRecord<T> rowToEntity() throws SQLException {
         Instant time = MyaUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
-        
         PvEventType code = PvEventType.values()[codeOrdinal];
 
-        return new PvRecord(time, code);
+        Object[] values = new Object[recordSize];
+
+        int offset = 3;
+
+        ResultExtractor extractor = getExtractor();
+
+        for (int i = 0; i < recordSize; i++) {
+            values[i] = extractor.get(i + offset);
+        }
+
+        return new PvRecord<>(time, code, (T[]) values);
     }
 
     @Override
@@ -95,4 +109,66 @@ public class PvRecordStream implements Channel {
             }
         };
     }*/
+    
+    private ResultExtractor getExtractor() throws SQLException {
+        ResultExtractor extractor;
+        
+        switch (type.getSimpleName()) {
+            case "String":
+                extractor = new ResultExtractor(rs) {
+                    @Override
+                    public Object get(int column) throws SQLException {
+                        return rs.getString(column);
+                    }
+                };
+                break;
+            case "Short":
+                extractor = new ResultExtractor(rs) {
+                    @Override
+                    public Object get(int column) throws SQLException {
+                        return rs.getShort(column);
+                    }
+                };
+                break;
+            case "Float":
+                extractor = new ResultExtractor(rs) {
+                    @Override
+                    public Object get(int column) throws SQLException {
+                        return rs.getFloat(column);
+                    }
+                };
+                break;
+            case "Integer":
+                extractor = new ResultExtractor(rs) {
+                    @Override
+                    public Object get(int column) throws SQLException {
+                        return rs.getInt(column);
+                    }
+                };
+                break;
+            case "Long":
+                extractor = new ResultExtractor(rs) {
+                    @Override
+                    public Object get(int column) throws SQLException {
+                        return rs.getLong(column);
+                    }
+                };
+                break;
+            default:
+                throw new SQLException("Unknown type: " + type);
+        }        
+        
+        return extractor;
+    }
+    
+    private abstract class ResultExtractor {
+
+        protected ResultSet rs;
+
+        public ResultExtractor(ResultSet rs) {
+            this.rs = rs;
+        }
+
+        public abstract Object get(int column) throws SQLException;
+    }
 }

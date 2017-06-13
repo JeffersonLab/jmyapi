@@ -20,15 +20,19 @@ public class HelloWorld {
      * @throws java.io.IOException
      */
     public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
-        ArchiverQueryService service = new ArchiverQueryService(ArchiverDeployment.dev);
+        
+        //System.out.println(MyaUtil.fromMyaTimestamp(6276360291443298313L).atZone(ZoneId.systemDefault()));
+        
+        ArchiverQueryService service = new ArchiverQueryService(ArchiverDeployment.ops);
 
-        String pv = "DCPHP2ADC10";
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-01-01T00:00:05").atZone(ZoneId.systemDefault()).toInstant();
+        //String pv = "DCPHP2ADC10";
+        String pv = "IPM3F09.XPOS";
+        Instant begin = LocalDateTime.parse("2016-09-22T08:43:00").atZone(ZoneId.systemDefault()).toInstant();
+        Instant end = LocalDateTime.parse("2017-04-22T08:43:28").atZone(ZoneId.systemDefault()).toInstant();
+        
+        List<PvRecord<Float>> recordList = service.find(pv, Float.class, begin, end);
 
-        List<PvRecord> recordList = service.find(pv, begin, end);
-
-        for (PvRecord record : recordList) {
+        for (PvRecord<Float> record : recordList) {
             System.out.println(record.toColumnString());
         }
     }

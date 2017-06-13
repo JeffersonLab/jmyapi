@@ -5,13 +5,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
-import java.util.TimeZone;
 
 /**
  *
@@ -73,12 +69,12 @@ public class MyGet {
         return count;
     }
 
-    public List<PvRecord> fetchList(Connection con, int id, Instant begin, Instant end) throws
+    public <T> List<PvRecord<T>> fetchList(Connection con, int id, Class<T> type, int recordSize, Instant begin, Instant end) throws
             SQLException, IOException {
-        List<PvRecord> recordList = new ArrayList<>();
+        List<PvRecord<T>> recordList = new ArrayList<>();
 
-        try (PvRecordStream s = openStream(con, id, begin, end)) {
-            PvRecord record;
+        try (PvRecordStream<T> s = openStream(con, id, type, recordSize, begin, end)) {
+            PvRecord<T> record;
 
             while((record = s.read()) != null) {
                 recordList.add(record);                
@@ -88,16 +84,16 @@ public class MyGet {
         return recordList;
     }
 
-    public PvRecordStream openStream(Connection con, int id, Instant begin, Instant end) throws
+    public <T> PvRecordStream<T> openStream(Connection con, int id, Class<T> type, int recordSize, Instant begin, Instant end) throws
             SQLException { // TODO: is end exclusive or inclusive?
         String query = "select * from table_" + id
-                + " where time >= ? and time < ? order by time desc";
+                + " where time >= ? and time < ? order by time asc";
         // TODO: prepareStatement might not allow streaming so might have to use createStatement
         PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY);
         stmt.setFetchSize(Integer.MIN_VALUE); // MySQL Driver specific hint
         stmt.setLong(1, MyaUtil.toMyaTimestamp(begin));
         stmt.setLong(2, MyaUtil.toMyaTimestamp(end));
         ResultSet rs = stmt.executeQuery();
-        return new PvRecordStream(stmt, rs);
+        return new PvRecordStream<>(stmt, rs, type, recordSize);
     }
 }

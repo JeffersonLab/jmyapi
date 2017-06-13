@@ -67,4 +67,36 @@ public final class PvMetadata {
         }
         return true;
     }
+    
+    public Class getTypeClass() {
+        Class clazz;
+        
+        switch(type) {
+            case DBR_STRING:
+                clazz = String.class;
+                break;
+            case DBR_SHORT:
+                clazz = Short.class;
+                break;
+            case DBR_FLOAT:
+                clazz = Float.class;
+                break;
+            case DBR_ENUM:
+                clazz = Integer.class;
+                break;
+            case DBR_CHAR:
+                clazz = Integer.class;
+                break;
+            case DBR_LONG:
+                clazz = Long.class;
+                break;
+            case DBR_DOUBLE: // Use float for double per MYA precedent
+                clazz = Float.class;
+                break;
+            default: 
+                clazz = null;
+        }
+        
+        return clazz;
+    }
 }
