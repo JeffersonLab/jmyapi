@@ -51,18 +51,27 @@ public class PvRecordStream<T> implements Channel {
         Instant time = MyaUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
         PvEventType code = PvEventType.values()[codeOrdinal];
+        T value;
 
-        Object[] values = new Object[recordSize];
+        if (!type.isArray() && "Float".equals(type.getSimpleName())) {
+            value = (T)Float.valueOf(rs.getFloat(3));
+        } else {
+            Class componentType = type.getComponentType();
+            if (componentType == null) {
+                componentType = type;
+            }
+            ResultExtractor extractor = getExtractor(componentType);
+            Object[] values = new Object[recordSize];
 
-        int offset = 3;
+            int offset = 3;
 
-        ResultExtractor extractor = getExtractor();
-
-        for (int i = 0; i < recordSize; i++) {
-            values[i] = extractor.get(i + offset);
+            for (int i = 0; i < recordSize; i++) {
+                values[i] = extractor.get(i + offset);
+            }
+            value = (T)values;
         }
 
-        return new PvRecord<>(time, code, (T[]) values);
+        return new PvRecord<>(time, code, value);
     }
 
     @Override
@@ -109,11 +118,10 @@ public class PvRecordStream<T> implements Channel {
             }
         };
     }*/
-    
-    private ResultExtractor getExtractor() throws SQLException {
+    private ResultExtractor getExtractor(Class componentType) throws SQLException {
         ResultExtractor extractor;
-        
-        switch (type.getSimpleName()) {
+
+        switch (componentType.getSimpleName()) {
             case "String":
                 extractor = new ResultExtractor(rs) {
                     @Override
@@ -156,11 +164,11 @@ public class PvRecordStream<T> implements Channel {
                 break;
             default:
                 throw new SQLException("Unknown type: " + type);
-        }        
-        
+        }
+
         return extractor;
     }
-    
+
     private abstract class ResultExtractor {
 
         protected ResultSet rs;

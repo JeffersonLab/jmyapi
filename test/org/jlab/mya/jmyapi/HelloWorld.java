@@ -30,9 +30,9 @@ public class HelloWorld {
         Instant begin = LocalDateTime.parse("2016-09-22T08:43:00").atZone(ZoneId.systemDefault()).toInstant();
         Instant end = LocalDateTime.parse("2017-04-22T08:43:28").atZone(ZoneId.systemDefault()).toInstant();
         
-        List<PvRecord<Float>> recordList = service.find(pv, Float.class, begin, end);
+        List<PvRecord<Float[]>> recordList = service.find(pv, Float[].class, begin, end);
 
-        for (PvRecord<Float> record : recordList) {
+        for (PvRecord<Float[]> record : recordList) {
             System.out.println(record.toColumnString());
         }
     }

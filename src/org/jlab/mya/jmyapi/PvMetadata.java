@@ -73,25 +73,53 @@ public final class PvMetadata {
         
         switch(type) {
             case DBR_STRING:
-                clazz = String.class;
+                if(size > 1) {
+                    clazz = String[].class;
+                } else {
+                    clazz = String.class;
+                }
                 break;
             case DBR_SHORT:
-                clazz = Short.class;
+                if(size > 1) {
+                    clazz = Short[].class;
+                } else {
+                    clazz = Short.class;
+                }
                 break;
             case DBR_FLOAT:
-                clazz = Float.class;
+                if(size > 1) {
+                    clazz = Float[].class;
+                } else {
+                    clazz = Float.class;
+                }
                 break;
             case DBR_ENUM:
-                clazz = Integer.class;
+                if(size > 1) {
+                    clazz = Integer[].class;
+                } else {
+                    clazz = Integer.class;
+                }
                 break;
             case DBR_CHAR:
-                clazz = Integer.class;
+                if(size > 1) {
+                    clazz = Integer[].class;
+                } else {
+                    clazz = Integer.class;
+                }
                 break;
             case DBR_LONG:
-                clazz = Long.class;
+                if(size > 1) {
+                    clazz = Long[].class;
+                } else {
+                    clazz = Long.class;
+                }
                 break;
             case DBR_DOUBLE: // Use float for double per MYA precedent
-                clazz = Float.class;
+                if(size > 1) {
+                    clazz = Float[].class;
+                } else {
+                    clazz = Float.class;
+                }
                 break;
             default: 
                 clazz = null;
