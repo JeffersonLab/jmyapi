@@ -1,10 +1,10 @@
-package org.jlab.mya.jmyapi;
+package org.jlab.mya;
 
 /**
  *
  * @author ryans
  */
-public enum PvEventType {
+public enum EventCode {
     UPDATE, // 0
     NETWORK_DISCONNECTION, // 1
     ARCHIVING_OF_CHANNEL_TURNED_OFF, // 2
@@ -53,5 +53,5 @@ public enum PvEventType {
     NOT_USED_45,
     NOT_USED_46,
     NOT_USED_47,
-    CHANNELS_PRIOR_DATA_DISCARDED // 48
+    CHANNELS_PRIOR_DATA_DISCARDED // 48    
 }

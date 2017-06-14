@@ -1,15 +1,15 @@
-package org.jlab.mya.jmyapi;
+package org.jlab.mya;
 
 /**
  *
  * @author ryans
  */
-public enum PvDataType {
+public enum DataType {
     DBR_STRING, // 0
     DBR_SHORT, // 1
     DBR_FLOAT, // 2
     DBR_ENUM, // 3
     DBR_CHAR, // 4
     DBR_LONG, // 5
-    DBR_DOUBLE, // 6
+    DBR_DOUBLE, // 6    
 }

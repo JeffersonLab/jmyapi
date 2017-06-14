@@ -1,4 +1,4 @@
-package org.jlab.mya.jmyapi;
+package org.jlab.mya;
 
 import java.time.Instant;
 
@@ -6,9 +6,8 @@ import java.time.Instant;
  *
  * @author ryans
  */
-public final class MyaUtil {
-
-    private MyaUtil() {
+public final class TimeUtil {
+    private TimeUtil() {
         // Private constructor
     }
 
@@ -28,5 +27,5 @@ public final class MyaUtil {
         lo = (int) timestamp;
         Instant instant = Instant.ofEpochSecond(hi, lo);
         return instant;
-    }
+    }    
 }

@@ -1,4 +1,4 @@
-package org.jlab.mya.jmyapi;
+package org.jlab.mya;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -6,6 +6,9 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.stream.FloatEventStream;
 
 /**
  *
@@ -22,7 +25,8 @@ public class HelloWorld {
     public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
 
         //System.out.println(MyaUtil.fromMyaTimestamp(6276360291443298313L).atZone(ZoneId.systemDefault()));
-        ArchiverQueryService service = new ArchiverQueryService(ArchiverDeployment.ops);
+        DataNexus nexus = new OnDemandNexus(Deployment.ops);
+        QueryService service = new QueryService(nexus);
 
         //String pv = "DCPHP2ADC10";
         String pv = "measureQ:heatlocked0031";
@@ -31,12 +35,15 @@ public class HelloWorld {
         Instant end
                 = LocalDateTime.parse("2017-07-22T08:43:28").atZone(ZoneId.systemDefault()).toInstant();
 
-        List<PvRecord<Integer>> recordList = service.find(pv, Integer.class, begin, end);
+        Metadata metadata = service.findMetadata(pv);
+        QueryParams params = new QueryParams(metadata, begin, end);
+        try (FloatEventStream stream = service.openFloat(params)) {
 
-        for (PvRecord<Integer> record : recordList) {
-            //System.out.println(record.toColumnString());
-            Integer test = record.getValue();
-            //System.out.println(record.getValue().getClass());
+            FloatEvent event;
+
+            while ((event = stream.read()) != null) {
+                System.out.println(event);
+            }
         }
     }
 
