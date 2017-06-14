@@ -99,7 +99,21 @@ public class ArchiverQueryService {
         return DriverManager.getConnection(url, user, password);
     }
 
-    public <T> List<PvRecord<T>> find(String name, Class<T> type, Instant begin, Instant end) throws SQLException,
+    private <T> void typeCheck(Class<T> requestedType, Class metadataType) {
+        Class componentType = requestedType.getComponentType();
+
+        if (componentType == null) { // null means not an array
+            componentType = requestedType;
+        }
+
+        if (!metadataType.equals(componentType)) {
+            throw new ClassCastException("Requested " + componentType.getSimpleName()
+                    + ", but database contains: " + metadataType.getSimpleName());
+        }
+    }
+
+    public <T> List<PvRecord<T>> find(String name, Class<T> type, Instant begin, Instant end) throws
+            SQLException,
             IOException {
         List<PvRecord<T>> recordList;
 
@@ -109,8 +123,12 @@ public class ArchiverQueryService {
         try (Connection con = open(host, port)) {
             MyGet get = new MyGet();
             PvMetadata metadata = get.fetchMetadata(con, name);
+
+            typeCheck(type, metadata.getTypeClass());
+
             if (host.equals(metadata.getHost())) { // TODO: check for better equivalence: fully qualified vs not vs loopback, etc.
-                recordList = get.fetchList(con, metadata.getId(), type, metadata.getSize(), begin, end);
+                recordList = get.fetchList(con, metadata.getId(), type, metadata.getSize(), begin,
+                        end);
             } else {
                 recordList = find(metadata, type, begin, end);
             }
@@ -119,7 +137,8 @@ public class ArchiverQueryService {
         return recordList;
     }
 
-    public <T> List<PvRecord<T>> find(PvMetadata metadata, Class<T> type, Instant begin, Instant end) throws SQLException,
+    public <T> List<PvRecord<T>> find(PvMetadata metadata, Class<T> type, Instant begin, Instant end) throws
+            SQLException,
             IOException {
         List<PvRecord<T>> recordList;
         String host = metadata.getHost();
