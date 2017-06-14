@@ -22,7 +22,7 @@ public class QueryService {
 
     public long count(QueryParams params) throws SQLException {
         long count;
-        String host = nexus.getMasterHostName();
+        String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
             try (PreparedStatement stmt = nexus.getCountStatement(con, params)) {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));

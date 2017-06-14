@@ -7,8 +7,10 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.event.MultiStringEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.stream.FloatEventStream;
+import org.jlab.mya.stream.MultiStringEventStream;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -24,17 +26,17 @@ public class UnitTests {
 
     public static final Deployment TEST_DEPLOYMENT = Deployment.dev;
     public static final String TEST_PV = "DCPHP2ADC10";
-    public static final int TEST_ID = 13;
-    public static final Class TEST_CLASS = Float.class;
-    public static final int TEST_SIZE = 1;
-    public static final Metadata TEST_METADATA = new Metadata(TEST_ID, TEST_PV, "devmya0",
-            DataType.DBR_DOUBLE, 1);
-    public static final Instant TEST_BEGIN = LocalDateTime.parse("2016-08-22T08:43:00").atZone(ZoneId.systemDefault()).toInstant();
-    public static final Instant TEST_END = LocalDateTime.parse("2017-09-22T08:43:00").atZone(ZoneId.systemDefault()).toInstant();
-    public static final QueryParams TEST_PARAMS = new QueryParams(TEST_METADATA, TEST_BEGIN,
-            TEST_END);
+    public static final String TEST_PV_MULTI = "HLA:bta_uxtime_h";
+    public static final Instant TEST_BEGIN = LocalDateTime.parse("2016-08-22T08:43:00").atZone(
+            ZoneId.systemDefault()).toInstant();
+    public static final Instant TEST_END = LocalDateTime.parse("2017-09-22T08:43:00").atZone(
+            ZoneId.systemDefault()).toInstant();
 
     private QueryService service;
+    private Metadata TEST_METADATA;
+    private Metadata TEST_METADATA_MULTI;
+    private QueryParams TEST_PARAMS;
+    private QueryParams TEST_PARAMS_MULTI;
 
     public UnitTests() {
 
@@ -52,6 +54,13 @@ public class UnitTests {
     public void setUp() throws ClassNotFoundException, SQLException {
         DataNexus nexus = new OnDemandNexus(TEST_DEPLOYMENT);
         service = new QueryService(nexus);
+        TEST_METADATA = service.findMetadata(TEST_PV);
+        TEST_METADATA_MULTI = service.findMetadata(TEST_PV_MULTI);
+        TEST_PARAMS = new QueryParams(TEST_METADATA, TEST_BEGIN,
+                TEST_END);
+        TEST_PARAMS_MULTI = new QueryParams(TEST_METADATA, TEST_BEGIN,
+                TEST_END);
+
     }
 
     @After
@@ -97,4 +106,16 @@ public class UnitTests {
         }
     }
 
+    @Test
+    public void testMultiStringEvent() throws Exception {
+        List<MultiStringEvent> eventList = new ArrayList<>();
+        long count = service.count(TEST_PARAMS_MULTI);
+        System.out.println("count: " + count);
+        /*try (MultiStringEventStream stream = service.openMultiString(TEST_PARAMS_MULTI)) {
+            MultiStringEvent event;
+            while ((event = stream.read()) != null) {
+                eventList.add(event);
+            }
+        }*/
+    }
 }
