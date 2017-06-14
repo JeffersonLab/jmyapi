@@ -15,7 +15,7 @@ public class PvRecord<T> {
     private final PvEventType code;
     private final T value;
 
-    PvRecord(Instant timestamp, PvEventType code, T value) {
+    public PvRecord(Instant timestamp, PvEventType code, T value) {
         this.timestamp = timestamp;
         this.code = code;
         this.value = value;

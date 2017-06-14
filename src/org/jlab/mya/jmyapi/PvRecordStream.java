@@ -124,41 +124,41 @@ public class PvRecordStream<T> implements Channel {
 
         switch (componentType.getSimpleName()) {
             case "String":
-                extractor = new ResultExtractor(rs) {
+                extractor = new ResultExtractor<String>(rs) {
                     @Override
-                    public Object get(int column) throws SQLException {
+                    public String get(int column) throws SQLException {
                         return rs.getString(column);
                     }
                 };
                 break;
             case "Short":
-                extractor = new ResultExtractor(rs) {
+                extractor = new ResultExtractor<Short>(rs) {
                     @Override
-                    public Object get(int column) throws SQLException {
+                    public Short get(int column) throws SQLException {
                         return rs.getShort(column);
                     }
                 };
                 break;
             case "Float":
-                extractor = new ResultExtractor(rs) {
+                extractor = new ResultExtractor<Float>(rs) {
                     @Override
-                    public Object get(int column) throws SQLException {
+                    public Float get(int column) throws SQLException {
                         return rs.getFloat(column);
                     }
                 };
                 break;
             case "Integer":
-                extractor = new ResultExtractor(rs) {
+                extractor = new ResultExtractor<Integer>(rs) {
                     @Override
-                    public Object get(int column) throws SQLException {
+                    public Integer get(int column) throws SQLException {
                         return rs.getInt(column);
                     }
                 };
                 break;
             case "Long":
-                extractor = new ResultExtractor(rs) {
+                extractor = new ResultExtractor<Long>(rs) {
                     @Override
-                    public Object get(int column) throws SQLException {
+                    public Long get(int column) throws SQLException {
                         return rs.getLong(column);
                     }
                 };
@@ -170,7 +170,7 @@ public class PvRecordStream<T> implements Channel {
         return extractor;
     }
 
-    private abstract class ResultExtractor {
+    private abstract class ResultExtractor<C> {
 
         protected ResultSet rs;
 
@@ -178,6 +178,6 @@ public class PvRecordStream<T> implements Channel {
             this.rs = rs;
         }
 
-        public abstract Object get(int column) throws SQLException;
+        public abstract C get(int column) throws SQLException;
     }
 }

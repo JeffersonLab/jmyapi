@@ -25,16 +25,18 @@ public class HelloWorld {
         ArchiverQueryService service = new ArchiverQueryService(ArchiverDeployment.ops);
 
         //String pv = "DCPHP2ADC10";
-        String pv = "IPM3F09.XPOS";
+        String pv = "measureQ:heatlocked0031";
         Instant begin
-                = LocalDateTime.parse("2016-09-22T08:43:00").atZone(ZoneId.systemDefault()).toInstant();
+                = LocalDateTime.parse("2016-08-22T08:43:00").atZone(ZoneId.systemDefault()).toInstant();
         Instant end
-                = LocalDateTime.parse("2017-04-22T08:43:28").atZone(ZoneId.systemDefault()).toInstant();
+                = LocalDateTime.parse("2017-07-22T08:43:28").atZone(ZoneId.systemDefault()).toInstant();
 
-        List<PvRecord<Float>> recordList = service.find(pv, Float.class, begin, end);
+        List<PvRecord<Integer>> recordList = service.find(pv, Integer.class, begin, end);
 
-        for (PvRecord<Float> record : recordList) {
-            System.out.println(record.toColumnString());
+        for (PvRecord<Integer> record : recordList) {
+            //System.out.println(record.toColumnString());
+            Integer test = record.getValue();
+            //System.out.println(record.getValue().getClass());
         }
     }
 
