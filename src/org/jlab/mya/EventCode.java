@@ -1,7 +1,8 @@
 package org.jlab.mya;
 
 /**
- *
+ * Mya event codes.
+ * 
  * @author ryans
  */
 public enum EventCode {

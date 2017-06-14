@@ -58,7 +58,7 @@ public class UnitTests {
         TEST_METADATA_MULTI = service.findMetadata(TEST_PV_MULTI);
         TEST_PARAMS = new QueryParams(TEST_METADATA, TEST_BEGIN,
                 TEST_END);
-        TEST_PARAMS_MULTI = new QueryParams(TEST_METADATA, TEST_BEGIN,
+        TEST_PARAMS_MULTI = new QueryParams(TEST_METADATA_MULTI, TEST_BEGIN,
                 TEST_END);
 
     }

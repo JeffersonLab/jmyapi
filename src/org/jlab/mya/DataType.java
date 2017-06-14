@@ -1,7 +1,8 @@
 package org.jlab.mya;
 
 /**
- *
+ * Mya DataTypes.
+ * 
  * @author ryans
  */
 public enum DataType {

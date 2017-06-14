@@ -22,7 +22,7 @@ public class FloatEventStream extends EventStream<FloatEvent> {
     }
 
     @Override
-    protected FloatEvent rowToEntity() throws SQLException {
+    protected FloatEvent rowToEvent() throws SQLException {
         Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
         EventCode code = EventCode.values()[codeOrdinal];

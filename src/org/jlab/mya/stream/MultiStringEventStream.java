@@ -23,7 +23,7 @@ public class MultiStringEventStream extends EventStream<MultiStringEvent> {
     }
 
     @Override
-    protected MultiStringEvent rowToEntity() throws SQLException {
+    protected MultiStringEvent rowToEvent() throws SQLException {
         Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
         EventCode code = EventCode.values()[codeOrdinal];
