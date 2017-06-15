@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Properties;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Deployment;
 import org.jlab.mya.QueryParams;
@@ -40,7 +41,14 @@ public class OnDemandNexus extends DataNexus {
 
         String url = "jdbc:mysql://" + host + ":" + port + "/archive";
 
-        return DriverManager.getConnection(url, user, password);
+        Properties options = new Properties();
+        
+        options.put("user", user);
+        options.put("password", password);
+        
+        options.put("useCompression", "true"); // 1.5 Million records streams in 8 seconds with compression and 16 seconds without
+        
+        return DriverManager.getConnection(url, options);
     }
 
     @Override
