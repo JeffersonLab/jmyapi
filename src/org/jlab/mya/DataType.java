@@ -3,7 +3,7 @@ package org.jlab.mya;
 /**
  * Mya DataTypes.
  * 
- * @author ryans
+ * @author slominskir
  */
 public enum DataType {
     DBR_STRING, // 0

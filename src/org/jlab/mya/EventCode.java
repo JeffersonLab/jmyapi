@@ -3,7 +3,7 @@ package org.jlab.mya;
 /**
  * Mya event codes.
  * 
- * @author ryans
+ * @author slominskir
  */
 public enum EventCode {
     UPDATE, // 0

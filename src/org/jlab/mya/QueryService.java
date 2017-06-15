@@ -11,7 +11,7 @@ import org.jlab.mya.stream.MultiStringEventStream;
 /**
  * Provides query access to the Mya database.
  * 
- * @author ryans
+ * @author slominskir
  */
 public class QueryService {
 

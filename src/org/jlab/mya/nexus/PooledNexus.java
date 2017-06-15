@@ -2,7 +2,7 @@ package org.jlab.mya.nexus;
 
 /**
  *
- * @author ryans
+ * @author slominskir
  */
 public class PooledNexus {
     

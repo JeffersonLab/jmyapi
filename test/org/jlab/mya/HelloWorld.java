@@ -11,7 +11,7 @@ import org.jlab.mya.stream.FloatEventStream;
 
 /**
  *
- * @author ryans
+ * @author slominskir
  */
 public class HelloWorld {
 

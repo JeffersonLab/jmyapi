@@ -20,7 +20,7 @@ import java.sql.SQLException;
  *
  * This class is abstract and concrete implementations provide Mya event type specific streams.
  *
- * @author ryans
+ * @author slominskir
  * @param <T> The Event type
  */
 public abstract class EventStream<T extends Event> implements Channel {

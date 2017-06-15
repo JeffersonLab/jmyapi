@@ -12,7 +12,7 @@ import org.jlab.mya.QueryParams;
 
 /**
  *
- * @author ryans
+ * @author slominskir
  */
 public class OnDemandNexus extends DataNexus {
 

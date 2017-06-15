@@ -5,7 +5,7 @@ import java.time.Instant;
 /**
  * The parameters required to query for events.
  * 
- * @author ryans
+ * @author slominskir
  */
 public class QueryParams {
     private final Metadata metadata;    

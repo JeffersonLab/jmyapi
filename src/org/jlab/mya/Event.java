@@ -9,7 +9,7 @@ import java.time.Instant;
  * also be vector or scalar in nature. In practice Mya treats all vectors as collections of Strings
  * and only allows scalar floats and ints.
  *
- * @author ryans
+ * @author slominskir
  */
 public abstract class Event {
 

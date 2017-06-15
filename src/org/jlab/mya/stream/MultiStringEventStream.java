@@ -13,7 +13,7 @@ import org.jlab.mya.event.MultiStringEvent;
 
 /**
  *
- * @author ryans
+ * @author slominskir
  */
 public class MultiStringEventStream extends EventStream<MultiStringEvent> {
 

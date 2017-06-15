@@ -3,7 +3,7 @@ package org.jlab.mya;
 /**
  * Mya deployments.
  * 
- * @author ryans
+ * @author slominskir
  */
 public enum Deployment {
     ops, dev;

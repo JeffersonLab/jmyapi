@@ -13,7 +13,7 @@ import org.jlab.mya.event.IntEvent;
 
 /**
  *
- * @author ryans
+ * @author slominskir
  */
 public class IntEventStream extends EventStream<IntEvent> {
 

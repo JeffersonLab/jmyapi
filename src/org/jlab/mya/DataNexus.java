@@ -15,7 +15,7 @@ import java.util.Properties;
  * (1) credentials.properties and (2) deployments.properties.  If these files are not found this 
  * class will throw an ExceptionInInitializerError upon being loaded by the class loader.
  *
- * @author ryans
+ * @author slominskir
  */
 public abstract class DataNexus {
 

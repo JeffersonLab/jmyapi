@@ -8,7 +8,7 @@ import java.time.Instant;
  * Mya stores each timestamp in the database as a 64-bit field where the top half of the field is
  * UNIX time and the bottom half is fractional seconds.
  *
- * @author ryans
+ * @author slominskir
  */
 public final class TimeUtil {
 

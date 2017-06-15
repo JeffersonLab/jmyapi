@@ -20,7 +20,7 @@ import org.junit.Test;
 
 /**
  *
- * @author ryans
+ * @author slominskir
  */
 public class UnitTests {
 

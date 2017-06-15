@@ -13,7 +13,7 @@ import org.jlab.mya.event.FloatEvent;
 
 /**
  *
- * @author ryans
+ * @author slominskir
  */
 public class FloatEventStream extends EventStream<FloatEvent> {
 
