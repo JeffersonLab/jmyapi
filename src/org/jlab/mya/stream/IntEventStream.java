@@ -12,11 +12,20 @@ import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.IntEvent;
 
 /**
- *
+ * EventStream of IntEvents.
+ * 
  * @author slominskir
  */
 public class IntEventStream extends EventStream<IntEvent> {
 
+    /**
+     * Create a new IntEventStream.
+     * 
+     * @param params The QueryParams
+     * @param con The database connection
+     * @param stmt The database statement
+     * @param rs The database result set
+     */    
     public IntEventStream(QueryParams params, Connection con, PreparedStatement stmt, ResultSet rs) {
         super(params, con, stmt, rs);
     }
