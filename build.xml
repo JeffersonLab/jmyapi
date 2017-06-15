@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jmyapi" default="clean-build" basedir=".">       
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="classes.dir" value="${build.dir}/classes"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="lib.dir" value="lib"/>
+    <property name="config.dir" value="config"/>
+    <property name="dist.dir" value="dist"/>
+    <property name="dist.jar" value="${dist.dir}/jmyapi.jar"/>
+    <path id="project.class.path">       
+        <pathelement path="${java.class.path}"/>
+        <fileset dir="lib">
+            <include name="*.jar"/>
+        </fileset>        
+    </path>    
+    <target name="run" depends="dist">
+        <java jar="${dist.jar}" fork="true"/>
+    </target>    
+    <target name="dist" depends="compile">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${dist.jar}" basedir="${classes.dir}" manifest="manifest.mf"/>
+        <copy todir="${dist.dir}/lib">
+            <fileset dir="${lib.dir}"/>
+        </copy>
+        <copy todir="${dist.dir}/config">
+            <fileset dir="${config.dir}"/>
+        </copy>                                           
+    </target>
+    <target name="clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}"/>
+    </target>    
+    <target name="compile">
+        <mkdir dir="${classes.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${classes.dir}" includeantruntime="false" source="1.8" debug="true">
+            <classpath refid="project.class.path"/>
+        </javac>
+        <copy todir="${classes.dir}">
+            <fileset dir="${src.dir}" excludes="**/*.java"/>
+        </copy>        
+    </target>    
+    <target name="doc">
+        <javadoc sourcepath="${src.dir}" destdir="${dist.dir}/javadoc" overview="${src.dir}/overview.html">
+            <classpath refid="project.class.path"/>
+            <header>jmyapi Version 1.0</header>
+            <doctitle>jmyapi Overview</doctitle>
+            <link href="http://docs.oracle.com/javase/8/docs/api/"/>
+        </javadoc>
+    </target>    
+    <target name="clean-build" depends="clean,compile"/>
+</project>
