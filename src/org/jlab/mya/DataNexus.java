@@ -30,14 +30,6 @@ public abstract class DataNexus {
     public static final Properties DEPLOYMENTS_PROPERTIES = new Properties();
 
     static {
-        // Load MySQL Driver
-        // Note: This isn't required anymore, but doesn't hurt
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-
         // Load DB Credentials Config
         try (InputStream is
                 = DataNexus.class.getClassLoader().getResourceAsStream(
