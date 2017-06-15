@@ -9,17 +9,30 @@ import org.jlab.mya.stream.IntEventStream;
 import org.jlab.mya.stream.MultiStringEventStream;
 
 /**
- *
+ * Provides query access to the Mya database.
+ * 
  * @author ryans
  */
 public class QueryService {
 
     private final DataNexus nexus;
 
+    /**
+     * Create a new QueryService with the provided DataNexus.
+     * 
+     * @param nexus The DataNexus
+     */
     public QueryService(DataNexus nexus) {
         this.nexus = nexus;
     }
 
+    /**
+     * Count the number of events associated with the supplied QueryParams.
+     * 
+     * @param params The QueryParams
+     * @return The number of events
+     * @throws SQLException If unable to query the database
+     */
     public long count(QueryParams params) throws SQLException {
         long count;
         String host = params.getMetadata().getHost();
@@ -42,6 +55,13 @@ public class QueryService {
         return count;
     }
 
+    /**
+     * Query for PV metadata given PV name.
+     * 
+     * @param name The PV name
+     * @return PV metadata
+     * @throws SQLException If unable to query the database 
+     */
     public Metadata findMetadata(String name) throws SQLException {
         Metadata metadata;
 
@@ -71,6 +91,16 @@ public class QueryService {
         return metadata;
     }
 
+    /**
+     * Open a stream to float events associated with the specified QueryParams.
+     *
+     * Generally you'll want to use try-with-resources around a call to this method to ensure you
+     * close the stream properly.
+     * 
+     * @param params The QueryParams
+     * @return a stream
+     * @throws SQLException If unable to query the database 
+     */
     public FloatEventStream openFloat(QueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
@@ -81,6 +111,16 @@ public class QueryService {
         return new FloatEventStream(params, con, stmt, rs);
     }
 
+    /**
+     * Open a stream to int events associated with the specified QueryParams.
+     *
+     * Generally you'll want to use try-with-resources around a call to this method to ensure you
+     * close the stream properly.
+     * 
+     * @param params The QueryParams
+     * @return a stream
+     * @throws SQLException If unable to query the database 
+     */    
     public IntEventStream openInt(QueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
@@ -91,6 +131,16 @@ public class QueryService {
         return new IntEventStream(params, con, stmt, rs);
     }
 
+    /**
+     * Open a stream to multi string events associated with the specified QueryParams.
+     *
+     * Generally you'll want to use try-with-resources around a call to this method to ensure you
+     * close the stream properly.
+     * 
+     * @param params The QueryParams
+     * @return a stream
+     * @throws SQLException If unable to query the database 
+     */    
     public MultiStringEventStream openMultiString(QueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
@@ -101,6 +151,11 @@ public class QueryService {
         return new MultiStringEventStream(params, con, stmt, rs);
     }
 
+    /**
+     * Return the DataNexus.
+     * 
+     * @return The DataNexus
+     */
     public DataNexus getNexus() {
         return nexus;
     }
