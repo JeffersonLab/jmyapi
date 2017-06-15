@@ -16,22 +16,6 @@ import org.junit.Test;
  */
 public class PerformanceTest {
 
-    public PerformanceTest() throws SQLException, IOException {
-        
-        doTest();
-    }
-    
-    /**
-     * @param args the command line arguments
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
-     */
-    public static void main(String[] args) throws SQLException, IOException {
-        PerformanceTest test = new PerformanceTest();
-
-        //test.doTest();
-    }
-
     @Test
     public void doTest() throws SQLException, IOException {
         DataNexus nexus = new OnDemandNexus(Deployment.ops);
