@@ -11,11 +11,17 @@ import org.jlab.mya.Deployment;
 import org.jlab.mya.QueryParams;
 
 /**
- *
+ * A Mya DataNexus which creates resources on-demand and closes them immediately after use.
+ * 
  * @author slominskir
  */
 public class OnDemandNexus extends DataNexus {
 
+    /**
+     * Create a new OnDemandNexus with the specified deployment.
+     * 
+     * @param deployment The deployment
+     */
     public OnDemandNexus(Deployment deployment) {
         super(deployment);
     }
