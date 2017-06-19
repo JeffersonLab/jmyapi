@@ -61,7 +61,7 @@ public class SamplingUnitTests {
      * Test basic sample
      */
     @Test
-    public void testBasicSample() throws Exception {
+    public void testNaiveSampler() throws Exception {
         long expSize = 21;
         List<FloatEvent> eventList = new ArrayList<>();
         try (FloatEventStream stream = service.openFloatNaiveSampler(TEST_PARAMS)) {
