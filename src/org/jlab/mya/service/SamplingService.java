@@ -9,6 +9,7 @@ import org.jlab.mya.DataNexus;
 import org.jlab.mya.QueryParams;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
+import org.jlab.mya.params.NaiveSamplerParams;
 import org.jlab.mya.stream.FloatEventStream;
 
 /**
@@ -42,23 +43,23 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openFloatNaiveSampler(QueryParams params) throws SQLException {
-        int points = 24;
+    public FloatEventStream openFloatNaiveSampler(NaiveSamplerParams params) throws SQLException {
+        long maxPoints = params.getLimit();
 
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
 
         // Note: If we wanted the statment to be reused we would need to move it to DataNexus to allow implentations the opportunity to cache.
-        // Note: call can return a result set, but C++ version doesn't so we don't; I guess for performance reasons?
+        // Note: Call can return a result set, but C++ version doesn't so we don't; I guess for performance reasons?
         // Note: There are two other procedures "Bin" and "reduce", but neither appears to be used by C++ myapi
         String query = "{call Sample(?, ?, ?, ?, ?)}";
         CallableStatement stmtA = con.prepareCall(query);
 
         stmtA.setString(1, "table_" + params.getMetadata().getId());
-        stmtA.setInt(2, points);
+        stmtA.setLong(2, maxPoints);
         stmtA.setLong(3, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmtA.setLong(4, TimeUtil.toMyaTimestamp(params.getEnd()));
-        stmtA.setInt(5, 0); // if zero then don't return anything.   If non-zero then return result set and clean up temporary table.  We're currently doint this the hard way and not returning result set...
+        stmtA.setInt(5, 0); // if zero then don't return anything.   If non-zero then return result set and clean up temporary table.  We're currently do this the hard way by not returning result set...
         stmtA.execute();
         stmtA.close();
 
