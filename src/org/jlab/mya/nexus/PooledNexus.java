@@ -56,5 +56,4 @@ public class PooledNexus extends DataNexus implements Channel {
             SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
 }

@@ -1,5 +1,6 @@
 package org.jlab.mya;
 
+import org.jlab.mya.service.IntervalService;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
@@ -23,7 +24,7 @@ public class HelloWorld {
     public static void main(String[] args) throws SQLException, IOException {
 
         DataNexus nexus = new OnDemandNexus(Deployment.ops);
-        QueryService service = new QueryService(nexus);
+        IntervalService service = new IntervalService(nexus);
 
         String pv = "measureQ:heatlocked0031";
         Instant begin

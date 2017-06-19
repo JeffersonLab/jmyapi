@@ -1,5 +1,6 @@
 package org.jlab.mya;
 
+import org.jlab.mya.service.IntervalService;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ import org.junit.Test;
  *
  * @author slominskir
  */
-public class UnitTests {
+public class IntervalUnitTests {
 
     public static final Deployment TEST_DEPLOYMENT = Deployment.dev;
     public static final String TEST_PV = "DCPHP2ADC10";
@@ -32,13 +33,13 @@ public class UnitTests {
     public static final Instant TEST_END = LocalDateTime.parse("2017-09-22T08:43:00").atZone(
             ZoneId.systemDefault()).toInstant();
 
-    private QueryService service;
+    private IntervalService service;
     private Metadata TEST_METADATA;
     private Metadata TEST_METADATA_MULTI;
     private QueryParams TEST_PARAMS;
     private QueryParams TEST_PARAMS_MULTI;
 
-    public UnitTests() {
+    public IntervalUnitTests() {
 
     }
 
@@ -53,7 +54,7 @@ public class UnitTests {
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
         DataNexus nexus = new OnDemandNexus(TEST_DEPLOYMENT);
-        service = new QueryService(nexus);
+        service = new IntervalService(nexus);
         TEST_METADATA = service.findMetadata(TEST_PV);
         TEST_METADATA_MULTI = service.findMetadata(TEST_PV_MULTI);
         TEST_PARAMS = new QueryParams(TEST_METADATA, TEST_BEGIN,
@@ -69,7 +70,7 @@ public class UnitTests {
     }
 
     /**
-     * Test of fetchMetadata method, of class MyGet.
+     * Test of find metadata.
      */
     @Test
     public void testFindMetadata() throws Exception {
@@ -89,7 +90,7 @@ public class UnitTests {
     }
 
     /**
-     * Test of fetchList method, of class MyGet.
+     * Test of stream approach.
      */
     @Test
     public void testOpenStream() throws Exception {

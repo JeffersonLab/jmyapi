@@ -12,14 +12,14 @@ import org.jlab.mya.QueryParams;
 
 /**
  * A Mya DataNexus which creates resources on-demand and closes them immediately after use.
- * 
+ *
  * @author slominskir
  */
 public class OnDemandNexus extends DataNexus {
 
     /**
      * Create a new OnDemandNexus with the specified deployment.
-     * 
+     *
      * @param deployment The deployment
      */
     public OnDemandNexus(Deployment deployment) {
@@ -48,13 +48,20 @@ public class OnDemandNexus extends DataNexus {
         String url = "jdbc:mysql://" + host + ":" + port + "/archive";
 
         Properties options = new Properties();
-        
+
         options.put("user", user);
         options.put("password", password);
-        
+
         options.put("useCompression", "true"); // 1.5 Million records streams in 8 seconds with compression and 16 seconds without
+
+        options.put("noAccessToProcedureBodies", "true"); // Required to use stored procedures from limited access user
         
-        return DriverManager.getConnection(url, options);
+        try {
+            return DriverManager.getConnection(url, options);
+        } catch (SQLException e) {
+            throw new SQLException("Unable to obtain connection to host: " + host + "; port: "
+                    + port, e);
+        }
     }
 
     @Override
@@ -75,10 +82,11 @@ public class OnDemandNexus extends DataNexus {
     }
 
     @Override
-    public PreparedStatement getCountStatement(Connection con, QueryParams params) throws SQLException {
-        String query = "select count(*) from table_" + params.getMetadata().getId() + " where time >= ? and time < ?";
+    public PreparedStatement getCountStatement(Connection con, QueryParams params) throws
+            SQLException {
+        String query = "select count(*) from table_" + params.getMetadata().getId()
+                + " where time >= ? and time < ?";
 
         return con.prepareStatement(query);
     }
-
 }

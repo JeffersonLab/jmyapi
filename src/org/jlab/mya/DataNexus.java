@@ -10,10 +10,10 @@ import java.util.Properties;
 /**
  * Manages the possibly multiple data sources required to service requests to a cluster of Mya
  * hosts.
- * 
- * Two configuration files (Java properties) are required to be in the class path:
- * (1) credentials.properties and (2) deployments.properties.  If these files are not found this 
- * class will throw an ExceptionInInitializerError upon being loaded by the class loader.
+ *
+ * Two configuration files (Java properties) are required to be in the class path: (1)
+ * credentials.properties and (2) deployments.properties. If these files are not found this class
+ * will throw an ExceptionInInitializerError upon being loaded by the class loader.
  *
  * @author slominskir
  */
@@ -63,7 +63,7 @@ public abstract class DataNexus {
 
     /**
      * Create a new DataNexus for the given deployment.
-     * 
+     *
      * @param deployment The Mya deployment
      */
     public DataNexus(Deployment deployment) {
@@ -72,7 +72,7 @@ public abstract class DataNexus {
 
     /**
      * Return the Mya deployment.
-     * 
+     *
      * @return The deployment
      */
     public Deployment getDeployment() {
@@ -81,7 +81,7 @@ public abstract class DataNexus {
 
     /**
      * Return the host name of the master host for the deployment associated with this DataNexus.
-     * 
+     *
      * @return The master host name
      */
     public String getMasterHostName() {
@@ -90,10 +90,10 @@ public abstract class DataNexus {
 
     /**
      * Return a connection to the specified host.
-     * 
+     *
      * Note: clever implementations may be caching / pooling connections and may actually return a
      * wrapped connection to you.
-     * 
+     *
      * @param host The Mya host name
      * @return A MySQL database connection (or wrapped connection)
      * @throws SQLException If unable to obtain a connection
@@ -102,9 +102,9 @@ public abstract class DataNexus {
 
     /**
      * Return a prepared statement for the given connection to query metadata.
-     * 
+     *
      * Note: clever implementations may be caching / pooling statements.
-     * 
+     *
      * @param con The connection the statement belongs to
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
@@ -113,7 +113,7 @@ public abstract class DataNexus {
 
     /**
      * Return a prepared statement for the given connection and query parameters to query events.
-     * 
+     *
      * @param con The connection the statement belongs to
      * @param params The query parameters associated with the statement (notably metadata id)
      * @return The PreparedStatement
@@ -124,7 +124,7 @@ public abstract class DataNexus {
 
     /**
      * Return a prepared statement for the given connection and query parameters to count events.
-     * 
+     *
      * @param con The connection the statement belongs to
      * @param params The query parameters associated with the statement (notably metadata id)
      * @return The PreparedStatement
