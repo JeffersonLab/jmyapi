@@ -34,7 +34,11 @@ public class SamplingService extends QueryService {
      *
      * The naive algorithm is the what you get with 'myget -l'. "Sampling" is a strong word here
      * since the stored procedure used does not always provide a consistent spacing of data and does
-     * not weigh the data.  I assume this is comparatively fast vs other sampling methods.
+     * not weigh the data. I assume this is comparatively fast vs other sampling methods. It appears
+     * the procedure simply divides the interval into sub-intervals based on the number of requested
+     * points and then queries for the first event in each sub-interval. If no event is found in the
+     * sub-interval then no point is provided for that sub-interval meaning that the user may get
+     * less points then the limit.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
@@ -51,7 +55,9 @@ public class SamplingService extends QueryService {
 
         // Note: If we wanted the statment to be reused we would need to move it to DataNexus to allow implentations the opportunity to cache.
         // Note: Call can return a result set, but C++ version doesn't so we don't; I guess for performance reasons?
-        // Note: There are two other procedures "Bin" and "reduce", but neither appears to be used by C++ myapi
+        // Note: There are two other procedures "Bin" and "reduce", but neither appears to be used by C++ myapi.
+        // Bin appears to take an average for each sub-interval instead of simply taking the first value.
+        // reduce takes every nth event instead of breaking down the interval into sub-intervals
         String query = "{call Sample(?, ?, ?, ?, ?)}";
         CallableStatement stmtA = con.prepareCall(query);
 
@@ -89,8 +95,8 @@ public class SamplingService extends QueryService {
     public FloatEventStream openFloatBasicSampler(QueryParams params) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
         // See archive.cpp Snapshot
-    }    
-    
+    }
+
     /**
      * Open a stream to float events associated with the specified QueryParams and sampled using the
      * advanced algorithm (not supported yet).
