@@ -44,9 +44,27 @@ public final class TimeUtil {
         int lo;
         int hi;
         hi = (int) (timestamp >> 32); // >> 32 means sign extend; >>> 32 means zero-fill...
-        lo = (int) timestamp;
         
-        lo = (int)(lo * 0.23283064365387); // 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling factor to convert to nanoseconds
+        lo = (int) timestamp; // cast will truncate to lowest 32 bits.
+        
+        // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer
+        long tmp = Integer.toUnsignedLong(lo); // this is expensive though... is there a better way to do the unsigned arithmetic?
+        
+        // 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling factor to convert to nanoseconds
+        tmp = (long)(tmp * 0.23283064365387);
+        
+        lo = Math.toIntExact(tmp); // Throw ArithmeticException if overflow (unlike with cast)
+        
+        // TODO: for performance remove sanity checks and use cast instead of toIntExact?
+        
+        // Sanity checks - make sure nanoseconds are non-negative and less than a second worth.
+        if(lo < 0) {
+            throw new ArithmeticException("Underflow: negative nanoseconds");
+        }
+        
+        if(lo > 999999999) {
+            throw new ArithmeticException("Overflow: nanoseconds forming seconds");
+        }
         
         Instant instant = Instant.ofEpochSecond(hi, lo);
         return instant;

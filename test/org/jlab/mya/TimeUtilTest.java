@@ -41,8 +41,7 @@ public class TimeUtilTest {
     @Test
     public void testToMyaTimestamp() {
         System.out.println("toMyaTimestamp");
-        //String dateStr = "2017-01-01T00:00:01.749013";
-        String dateStr = "2017-01-01T00:00:00.749013326";
+        String dateStr = "2017-01-01T00:00:01.749013325";
 
         Instant instant = LocalDateTime.parse(dateStr).atZone(
                 ZoneId.systemDefault()).toInstant();
@@ -58,8 +57,7 @@ public class TimeUtilTest {
     public void testFromMyaTimestamp() {
         System.out.println("fromMyaTimestamp");
 
-        //String dateStr = "2017-01-01T00:00:01.749013";
-        String dateStr = "2017-01-01T00:00:00.749013326";
+        String dateStr = "2017-01-01T00:00:01.749013325";
 
         long timestamp = 6370496505408607835L;
         Instant expResult = LocalDateTime.parse(dateStr).atZone(
