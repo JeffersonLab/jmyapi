@@ -29,7 +29,10 @@ public final class TimeUtil {
         int lo; // Integer to fill lower bits
         int hi; // Integer to fill upper bits
         hi = (int) instant.getEpochSecond(); // Hope this part doesn't overflow...
-        lo = instant.getNano(); // TODO: do I need to scale this?
+        lo = instant.getNano();
+        long tmp = Integer.toUnsignedLong(lo);
+        tmp = (long)(tmp * 4.294967296); // 4.294967296 = 1 / 0.23283064365386962890625
+        lo = (int)tmp; // TODO: why is this okay down to microsecond, but not nanoseconds?
         long timestamp = (((long) hi) << 32) | (lo & 0xffffffffL);
         return timestamp;
     }
