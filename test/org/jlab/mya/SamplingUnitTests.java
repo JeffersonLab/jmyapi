@@ -21,25 +21,12 @@ import static org.junit.Assert.fail;
 
 /**
  * Unit tests for sampling service.
- * 
+ *
  * @author slominskir
  */
 public class SamplingUnitTests {
 
-    public static final Deployment TEST_DEPLOYMENT = Deployment.ops;
-    public static final String TEST_PV = "R123PMES";
-    public static final Instant TEST_BEGIN = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-            ZoneId.systemDefault()).toInstant();
-    public static final Instant TEST_END = LocalDateTime.parse("2017-01-25T00:00:00").atZone(
-            ZoneId.systemDefault()).toInstant();
-    public static final long TEST_NAIVE_LIMIT = 24;
-    public static final long TEST_BASIC_STEP = 86400000;
-    public static final long TEST_BASIC_SAMPLES = 24;
-
     private SamplingService service;
-    private Metadata TEST_METADATA;
-    private NaiveSamplerParams TEST_NAIVE_PARAMS;
-    private BasicSamplerParams TEST_BASIC_PARAMS;
 
     @BeforeClass
     public static void setUpClass() {
@@ -51,13 +38,8 @@ public class SamplingUnitTests {
 
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
-        DataNexus nexus = new OnDemandNexus(TEST_DEPLOYMENT);
+        DataNexus nexus = new OnDemandNexus(Deployment.ops);
         service = new SamplingService(nexus);
-        TEST_METADATA = service.findMetadata(TEST_PV);
-        TEST_NAIVE_PARAMS = new NaiveSamplerParams(TEST_METADATA, TEST_BEGIN,
-                TEST_END, TEST_NAIVE_LIMIT);
-        TEST_BASIC_PARAMS = new BasicSamplerParams(TEST_METADATA, TEST_BEGIN, TEST_BASIC_STEP, TEST_BASIC_SAMPLES);
-
     }
 
     @After
@@ -66,15 +48,27 @@ public class SamplingUnitTests {
     }
 
     /**
-     * Test basic sample.
-     * 
+     * Test naive sampler.
+     *
      * Compare with "myget -l 24 -c R123PMES -b 2017-01-01 -e 2017-01-25"
      */
     @Test
     public void testNaiveSampler() throws Exception {
+        
+        String pv = "R123PMES";
+        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+                ZoneId.systemDefault()).toInstant();
+        Instant end = LocalDateTime.parse("2017-01-25T00:00:00").atZone(
+                ZoneId.systemDefault()).toInstant();        
+        long limit = 24;
+
+        Metadata metadata = service.findMetadata(pv);
+        NaiveSamplerParams params = new NaiveSamplerParams(metadata, begin,
+                end, limit);            
+        
         long expSize = 21; // We limit to 24, but we know historical data only has 21
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = service.openFloatNaiveSampler(TEST_NAIVE_PARAMS)) {
+        try (FloatEventStream stream = service.openFloatNaiveSampler(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -87,15 +81,26 @@ public class SamplingUnitTests {
     }
 
     /**
-     * Test basic sample.
-     * 
+     * Test basic sampler.
+     *
      * Compare with: "mySampler -b 2017-01-01 -s 1d -n 24 R123PMES"
      */
     @Test
     public void testBasicSampler() throws Exception {
+
+        String pv = "R123PMES";
+        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+                ZoneId.systemDefault()).toInstant();
+        long stepMilliseconds = 86400000;
+        long sampleCount = 24;        
+        
+        Metadata metadata = service.findMetadata(pv);
+        BasicSamplerParams params = new BasicSamplerParams(metadata, begin,
+                stepMilliseconds, sampleCount);  
+
         long expSize = 24;
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = service.openFloatBasicSampler(TEST_BASIC_PARAMS)) {
+        try (FloatEventStream stream = service.openFloatBasicSampler(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
