@@ -9,7 +9,9 @@ import org.jlab.mya.DataNexus;
 import org.jlab.mya.QueryParams;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
+import org.jlab.mya.params.BasicSamplerParams;
 import org.jlab.mya.params.NaiveSamplerParams;
+import org.jlab.mya.stream.BasicSamplerFloatEventStream;
 import org.jlab.mya.stream.FloatEventStream;
 
 /**
@@ -81,9 +83,10 @@ public class SamplingService extends QueryService {
 
     /**
      * Open a stream to float events associated with the specified QueryParams and sampled using the
-     * basic algorithm (not supported yet).
+     * basic algorithm.
      *
-     * The basic algorithm is what you get with 'mySampler'.
+     * The basic algorithm is what you get with 'mySampler'. Each sample is obtained from a separate
+     * query.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
@@ -92,9 +95,15 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openFloatBasicSampler(QueryParams params) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-        // See archive.cpp Snapshot
+    public FloatEventStream openFloatBasicSampler(BasicSamplerParams params) throws SQLException {
+        String host = params.getMetadata().getHost();
+        Connection con = nexus.getConnection(host);
+        String query = "select * from table_" + params.getMetadata().getId()
+                + " force index for order by (primary) where time <= ? order by time desc limit 1";
+        PreparedStatement stmt = con.prepareStatement(query);
+
+        return new BasicSamplerFloatEventStream(params, con, stmt);
+
     }
 
     /**
