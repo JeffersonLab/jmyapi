@@ -37,10 +37,12 @@ public class BasicSamplerFloatEventStream extends FloatEventStream {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(start));
                 //stmt.setLong(2, TimeUtil.toMyaTimestamp(stop));
                 try (ResultSet result = stmt.executeQuery()) {
+                    sampleCursor++;
+                    
                     if (result.next()) {
                         return rowToEventSingleResultSet(start, result);
                     } else {
-                        return new FloatEvent(start, EventCode.ORIGIN_OF_CHANNELS_HISTORY, 0);
+                        return new FloatEvent(start, EventCode.UNDEFINED, 0);
                     }
                 }
             } else {
@@ -57,8 +59,11 @@ public class BasicSamplerFloatEventStream extends FloatEventStream {
         EventCode code = EventCode.values()[codeOrdinal];
         float value = result.getFloat(3);
 
-        sampleCursor++;
-
+        // mySampler treats anything but an UPDATE as UNDEFINED
+        if(code != EventCode.UPDATE) {
+            code = EventCode.UNDEFINED;
+        }
+        
         return new FloatEvent(sampleTime, code, value);
     }
 

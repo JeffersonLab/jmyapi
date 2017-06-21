@@ -54,5 +54,13 @@ public enum EventCode {
     NOT_USED_45,
     NOT_USED_46,
     NOT_USED_47,
-    CHANNELS_PRIOR_DATA_DISCARDED // 48    
+    CHANNELS_PRIOR_DATA_DISCARDED, // 48,
+    NOT_USED_49,
+    NOT_USED_50,
+    NOT_USED_51,
+    NOT_USED_52,
+    NOT_USED_53,
+    NOT_USED_54,
+    NOT_USED_55,
+    UNDEFINED; // 56
 }
