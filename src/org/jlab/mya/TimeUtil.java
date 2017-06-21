@@ -29,7 +29,7 @@ public final class TimeUtil {
         int lo; // Integer to fill lower bits
         int hi; // Integer to fill upper bits
         hi = (int) instant.getEpochSecond(); // Hope this part doesn't overflow...
-        lo = instant.getNano();
+        lo = instant.getNano(); // TODO: do I need to scale this?
         long timestamp = (((long) hi) << 32) | (lo & 0xffffffffL);
         return timestamp;
     }
@@ -45,6 +45,9 @@ public final class TimeUtil {
         int hi;
         hi = (int) (timestamp >> 32); // >> 32 means sign extend; >>> 32 means zero-fill...
         lo = (int) timestamp;
+        
+        lo = (int)(lo * 0.23283064365387); // 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling factor to convert to nanoseconds
+        
         Instant instant = Instant.ofEpochSecond(hi, lo);
         return instant;
     }

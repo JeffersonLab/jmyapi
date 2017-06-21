@@ -50,7 +50,7 @@ public class SamplingUnitTests {
     /**
      * Test naive sampler.
      *
-     * Compare with "myget -l 24 -c R123PMES -b 2017-01-01 -e 2017-01-25"
+     * Compare with "myget -l 24 -c R123PMES -b 2017-01-01 -e 2017-01-25 -f 9"
      */
     @Test
     public void testNaiveSampler() throws Exception {
@@ -61,6 +61,7 @@ public class SamplingUnitTests {
         Instant end = LocalDateTime.parse("2017-01-25T00:00:00").atZone(
                 ZoneId.systemDefault()).toInstant();        
         long limit = 24;
+        int fractionalDigits = 9; // nanoseconds
 
         Metadata metadata = service.findMetadata(pv);
         NaiveSamplerParams params = new NaiveSamplerParams(metadata, begin,
@@ -72,7 +73,7 @@ public class SamplingUnitTests {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
-                System.out.println(event);
+                System.out.println(event.toString(fractionalDigits));
             }
         }
         if (eventList.size() != expSize) {
