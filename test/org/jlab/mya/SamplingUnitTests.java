@@ -20,8 +20,9 @@ import org.junit.Test;
 import static org.junit.Assert.fail;
 
 /**
- *
- * @author ryans
+ * Unit tests for sampling service.
+ * 
+ * @author slominskir
  */
 public class SamplingUnitTests {
 

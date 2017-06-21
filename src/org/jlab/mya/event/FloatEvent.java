@@ -38,7 +38,6 @@ public class FloatEvent extends Event {
     @Override
     public String toString() {
         return timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(
-                "yyyy-MM-dd HH:mm:ss")) + " " + String.format("%32s", code) + " " + String.format(
-                "%24s", value);
+                "yyyy-MM-dd HH:mm:ss")) + " " + ((code == EventCode.UPDATE) ? String.valueOf(value) : "<" + code.getDescription() + ">");
     }
 }

@@ -34,7 +34,7 @@ public class FloatEventStream extends EventStream<FloatEvent> {
     protected FloatEvent rowToEvent() throws SQLException {
         Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
-        EventCode code = EventCode.values()[codeOrdinal];
+        EventCode code = EventCode.fromInt(codeOrdinal);
         float value = rs.getFloat(3);
         return new FloatEvent(timestamp, code, value);
     }

@@ -12,8 +12,11 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.params.BasicSamplerParams;
 
 /**
- *
- * @author ryans
+ * EventStream for the Basic sampler.
+ * 
+ * Unlike a standard EventStream this one actually creates a new ResultSet for each sample.
+ * 
+ * @author slominskir
  */
 public class BasicSamplerFloatEventStream extends FloatEventStream {
 
@@ -56,7 +59,7 @@ public class BasicSamplerFloatEventStream extends FloatEventStream {
     protected FloatEvent rowToEventSingleResultSet(Instant sampleTime, ResultSet result) throws SQLException {
         //Instant timestamp = TimeUtil.fromMyaTimestamp(result.getLong(1));
         int codeOrdinal = result.getInt(2);
-        EventCode code = EventCode.values()[codeOrdinal];
+        EventCode code = EventCode.fromInt(codeOrdinal);
         float value = result.getFloat(3);
 
         // mySampler treats anything but an UPDATE as UNDEFINED

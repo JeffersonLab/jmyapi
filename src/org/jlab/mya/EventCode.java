@@ -6,61 +6,57 @@ package org.jlab.mya;
  * @author slominskir
  */
 public enum EventCode {
-    UPDATE, // 0
-    NETWORK_DISCONNECTION, // 1
-    ARCHIVING_OF_CHANNEL_TURNED_OFF, // 2
-    ARCHIVER_SHUTDOWN, // 3
-    UNKNOWN_UNAVAILABILTY, // 4
-    NOT_USED_5,
-    NOT_USED_6,
-    NOT_USED_7,
-    NOT_USED_8,
-    NOT_USED_9,
-    NOT_USED_10,
-    NOT_USED_11,
-    NOT_USED_12,
-    NOT_USED_13,
-    NOT_USED_14,
-    NOT_USED_15,
-    ORIGIN_OF_CHANNELS_HISTORY, // 16
-    NOT_USED_17,
-    NOT_USED_18,
-    NOT_USED_19,
-    NOT_USED_20,
-    NOT_USED_21,
-    NOT_USED_22,
-    NOT_USED_23,
-    NOT_USED_24,
-    NOT_USED_25,
-    NOT_USED_26,
-    NOT_USED_27,
-    NOT_USED_28,
-    NOT_USED_29,
-    NOT_USED_30,
-    NOT_USED_31,
-    NOT_USED_32,
-    NOT_USED_33,
-    NOT_USED_34,
-    NOT_USED_35,
-    NOT_USED_36,
-    NOT_USED_37,
-    NOT_USED_38,
-    NOT_USED_39,
-    NOT_USED_40,
-    NOT_USED_41,
-    NOT_USED_42,
-    NOT_USED_43,
-    NOT_USED_44,
-    NOT_USED_45,
-    NOT_USED_46,
-    NOT_USED_47,
-    CHANNELS_PRIOR_DATA_DISCARDED, // 48,
-    NOT_USED_49,
-    NOT_USED_50,
-    NOT_USED_51,
-    NOT_USED_52,
-    NOT_USED_53,
-    NOT_USED_54,
-    NOT_USED_55,
-    UNDEFINED; // 56
+    UPDATE("Normal channel data point"),
+    NETWORK_DISCONNECTION("Network disconnection"),
+    ARCHIVING_OF_CHANNEL_TURNED_OFF("Archiving of channel turned off"),
+    ARCHIVER_SHUTDOWN("Archiver shutdown"),
+    UNKNOWN_UNAVAILABILTY("Unknown unavailability"),
+    ORIGIN_OF_CHANNELS_HISTORY("Origin of channel's history"),
+    CHANNELS_PRIOR_DATA_MOVED_OFFLINE("Channel's prior data moved offline"),
+    CHANNELS_PRIOR_DATA_DISCARDED("Channel's prior data discarded"),
+    UNDEFINED("undefined");
+    
+    private final String description;
+    
+    private EventCode(String description) {
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+    
+    public static EventCode fromInt(int number) {
+        EventCode code;
+        switch(number) {
+            case 0:
+                code = EventCode.UPDATE;
+                break;
+            case 1:
+                code = EventCode.NETWORK_DISCONNECTION;
+                break;
+            case 2:
+                code = EventCode.ARCHIVING_OF_CHANNEL_TURNED_OFF;
+                break;
+            case 3:
+                code = EventCode.ARCHIVER_SHUTDOWN;
+                break;
+            case 4:
+                code = EventCode.UNKNOWN_UNAVAILABILTY;
+                break;
+            case 16:
+                code = EventCode.ORIGIN_OF_CHANNELS_HISTORY;
+                break;
+            case 32:
+                code = EventCode.CHANNELS_PRIOR_DATA_MOVED_OFFLINE;
+                break;
+            case 48:
+                code = EventCode.CHANNELS_PRIOR_DATA_DISCARDED;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown code number: " + number);
+        }
+        
+        return code;
+    }
 }

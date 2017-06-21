@@ -34,7 +34,7 @@ public class IntEventStream extends EventStream<IntEvent> {
     protected IntEvent rowToEvent() throws SQLException {
         Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
-        EventCode code = EventCode.values()[codeOrdinal];
+        EventCode code = EventCode.fromInt(codeOrdinal);
         int value = rs.getInt(3);
         return new IntEvent(timestamp, code, value);
     }

@@ -35,7 +35,7 @@ public class MultiStringEventStream extends EventStream<MultiStringEvent> {
     protected MultiStringEvent rowToEvent() throws SQLException {
         Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
-        EventCode code = EventCode.values()[codeOrdinal];
+        EventCode code = EventCode.fromInt(codeOrdinal);
         String[] value = new String[params.getMetadata().getSize()];
         int offset = 3;
 
