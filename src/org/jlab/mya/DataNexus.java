@@ -114,7 +114,8 @@ public abstract class DataNexus {
     public abstract PreparedStatement getMetadataStatement(Connection con) throws SQLException;
 
     /**
-     * Return a prepared statement for the given connection and query parameters to query events.
+     * Return a prepared statement for the given connection and parameters to query a time interval
+     * for events.
      *
      * @param con The connection the statement belongs to
      * @param params The query parameters associated with the statement (notably metadata id)
@@ -126,7 +127,8 @@ public abstract class DataNexus {
             SQLException;
 
     /**
-     * Return a prepared statement for the given connection and query parameters to count events.
+     * Return a prepared statement for the given connection and parameters to count events in a time
+     * interval.
      *
      * @param con The connection the statement belongs to
      * @param params The query parameters associated with the statement (notably metadata id)
@@ -137,9 +139,10 @@ public abstract class DataNexus {
             SQLException;
 
     /**
-     * Return a prepared statement for obtaining a single event at a given point in time. Depending
-     * on parameters the query may search for the last event before (or equal) the point-in-time or
-     * the first event after (or equal) the point in time.
+     * Return a prepared statement for the given connection and parameters to query for a single
+     * event at a given point in time. Depending on parameters the query may search for the last
+     * event before (or equal) the point-in-time or the first event after (or equal) the point in
+     * time.
      *
      * @param con The connection the statement belongs to
      * @param params The query parameters associated with the statement (notably metadata id)
