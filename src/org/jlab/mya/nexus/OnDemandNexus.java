@@ -56,7 +56,7 @@ public class OnDemandNexus extends DataNexus {
         options.put("useCompression", "true"); // 1.5 Million records streams in 8 seconds with compression and 16 seconds without
 
         options.put("noAccessToProcedureBodies", "true"); // Required to use stored procedures from limited access user
-        
+
         try {
             return DriverManager.getConnection(url, options);
         } catch (SQLException e) {
@@ -92,19 +92,17 @@ public class OnDemandNexus extends DataNexus {
     }
 
     @Override
-    public PreparedStatement getEventPointFirstStatement(Connection con, PointQueryParams params) throws
+    public PreparedStatement getEventPointStatement(Connection con, PointQueryParams params) throws
             SQLException {
-        String query = "select * from table_" + params.getMetadata().getId()
-                + " where time >= ? order by time asc limit 1";
+        String query;
 
-        return con.prepareStatement(query);
-    }
-
-    @Override
-    public PreparedStatement getEventPointLastStatement(Connection con, PointQueryParams params) throws
-            SQLException {
-        String query = "select * from table_" + params.getMetadata().getId()
-                + " where time <= ? order by time desc limit 1";
+        if (params.isLessThanOrEqual()) {
+            query = "select * from table_" + params.getMetadata().getId()
+                    + " where time <= ? order by time desc limit 1";
+        } else {
+            query = "select * from table_" + params.getMetadata().getId()
+                    + " where time >= ? order by time asc limit 1";
+        }
 
         return con.prepareStatement(query);
     }

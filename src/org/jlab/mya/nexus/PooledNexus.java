@@ -59,13 +59,7 @@ public class PooledNexus extends DataNexus implements Channel {
     }
 
     @Override
-    public PreparedStatement getEventPointFirstStatement(Connection con, PointQueryParams params) throws
-            SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public PreparedStatement getEventPointLastStatement(Connection con, PointQueryParams params) throws
+    public PreparedStatement getEventPointStatement(Connection con, PointQueryParams params) throws
             SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }

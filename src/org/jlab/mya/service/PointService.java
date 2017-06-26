@@ -38,18 +38,14 @@ public class PointService extends QueryService {
     public FloatEvent findFloatEvent(PointQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
-            PreparedStatement stmt;
-            if (params.isLessThanOrEqual()) {
-                stmt = nexus.getEventPointLastStatement(con, params);
-            } else {
-                stmt = nexus.getEventPointFirstStatement(con, params);
-            }
-            stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return FloatEvent.fromRow(rs);
-                } else {
-                    return null;
+            try (PreparedStatement stmt = nexus.getEventPointStatement(con, params)) {
+                stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        return FloatEvent.fromRow(rs);
+                    } else {
+                        return null;
+                    }
                 }
             }
         }
@@ -65,18 +61,14 @@ public class PointService extends QueryService {
     public IntEvent findIntEvent(PointQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
-            PreparedStatement stmt;
-            if (params.isLessThanOrEqual()) {
-                stmt = nexus.getEventPointLastStatement(con, params);
-            } else {
-                stmt = nexus.getEventPointFirstStatement(con, params);
-            }
-            stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return IntEvent.fromRow(rs);
-                } else {
-                    return null;
+            try (PreparedStatement stmt = nexus.getEventPointStatement(con, params)) {
+                stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        return IntEvent.fromRow(rs);
+                    } else {
+                        return null;
+                    }
                 }
             }
         }
@@ -92,18 +84,14 @@ public class PointService extends QueryService {
     public MultiStringEvent findMultiStringEvent(PointQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
-            PreparedStatement stmt;
-            if (params.isLessThanOrEqual()) {
-                stmt = nexus.getEventPointLastStatement(con, params);
-            } else {
-                stmt = nexus.getEventPointFirstStatement(con, params);
-            }
-            stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
-            try (ResultSet rs = stmt.executeQuery()) {
-                if (rs.next()) {
-                    return MultiStringEvent.fromRow(rs, params.getMetadata().getSize());
-                } else {
-                    return null;
+            try (PreparedStatement stmt = nexus.getEventPointStatement(con, params)) {
+                stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        return MultiStringEvent.fromRow(rs, params.getMetadata().getSize());
+                    } else {
+                        return null;
+                    }
                 }
             }
         }

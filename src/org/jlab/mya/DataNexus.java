@@ -137,26 +137,15 @@ public abstract class DataNexus {
             SQLException;
 
     /**
-     * Return a prepared statement for obtaining a single event at a given point in time (first
-     * event; greater than or equal to timestamp).
+     * Return a prepared statement for obtaining a single event at a given point in time. Depending
+     * on parameters the query may search for the last event before (or equal) the point-in-time or
+     * the first event after (or equal) the point in time.
      *
      * @param con The connection the statement belongs to
      * @param params The query parameters associated with the statement (notably metadata id)
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    public abstract PreparedStatement getEventPointFirstStatement(Connection con,
-            PointQueryParams params) throws SQLException;
-
-    /**
-     * Return a prepared statement for obtaining a single event at a given point in time (last
-     * event; less than or equal to timestamp).
-     *
-     * @param con The connection the statement belongs to
-     * @param params The query parameters associated with the statement (notably metadata id)
-     * @return The PreparedStatement
-     * @throws SQLException If unable to prepare a statement
-     */
-    public abstract PreparedStatement getEventPointLastStatement(Connection con,
+    public abstract PreparedStatement getEventPointStatement(Connection con,
             PointQueryParams params) throws SQLException;
 }
