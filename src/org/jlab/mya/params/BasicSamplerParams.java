@@ -27,10 +27,20 @@ public class BasicSamplerParams extends QueryParams {
         this.sampleCount = sampleCount;
     }
 
+    /**
+     * Return the step milliseconds.
+     * 
+     * @return The step milliseconds
+     */
     public long getStepMilliseconds() {
         return stepMilliseconds;
     }
 
+    /**
+     * Return the sample count.
+     * 
+     * @return The sample count
+     */
     public long getSampleCount() {
         return sampleCount;
     }
