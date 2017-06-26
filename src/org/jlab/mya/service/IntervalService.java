@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.QueryParams;
+import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.stream.FloatEventStream;
@@ -13,7 +13,7 @@ import org.jlab.mya.stream.IntEventStream;
 import org.jlab.mya.stream.MultiStringEventStream;
 
 /**
- * Provides event interval query access to the Mya database.
+ * Provides query access to the Mya database for a set of events in a given time interval.
  *
  * @author slominskir
  */
@@ -29,13 +29,13 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Count the number of events associated with the supplied QueryParams.
+     * Count the number of events associated with the supplied IntervalQueryParams.
      *
-     * @param params The QueryParams
+     * @param params The IntervalQueryParams
      * @return The number of events
      * @throws SQLException If unable to query the database
      */
-    public long count(QueryParams params) throws SQLException {
+    public long count(IntervalQueryParams params) throws SQLException {
         long count;
         String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
@@ -58,19 +58,19 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified QueryParams.
+     * Open a stream to float events associated with the specified IntervalQueryParams.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
      *
-     * @param params The QueryParams
+     * @param params The IntervalQueryParams
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openFloatStream(QueryParams params) throws SQLException {
+    public FloatEventStream openFloatStream(IntervalQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
-        PreparedStatement stmt = nexus.getEventStatement(con, params);
+        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();
@@ -78,19 +78,19 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Open a stream to int events associated with the specified QueryParams.
+     * Open a stream to int events associated with the specified IntervalQueryParams.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
      *
-     * @param params The QueryParams
+     * @param params The IntervalQueryParams
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public IntEventStream openIntStream(QueryParams params) throws SQLException {
+    public IntEventStream openIntStream(IntervalQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
-        PreparedStatement stmt = nexus.getEventStatement(con, params);
+        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();
@@ -98,19 +98,19 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Open a stream to multi string events associated with the specified QueryParams.
+     * Open a stream to multi string events associated with the specified IntervalQueryParams.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
      *
-     * @param params The QueryParams
+     * @param params The IntervalQueryParams
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public MultiStringEventStream openMultiStringStream(QueryParams params) throws SQLException {
+    public MultiStringEventStream openMultiStringStream(IntervalQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
-        PreparedStatement stmt = nexus.getEventStatement(con, params);
+        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();

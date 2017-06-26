@@ -1,5 +1,6 @@
 package org.jlab.mya;
 
+import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.service.IntervalService;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,7 +31,7 @@ public class PerformanceTest {
 
         Metadata metadata = service.findMetadata(pv);
 
-        QueryParams params = new QueryParams(metadata, begin, end);
+        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
 
         Runtime rt = Runtime.getRuntime();
         long memoryUsedBytes;

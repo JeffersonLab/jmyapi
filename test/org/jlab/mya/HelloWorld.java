@@ -1,5 +1,6 @@
 package org.jlab.mya;
 
+import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.service.IntervalService;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -33,7 +34,7 @@ public class HelloWorld {
                 = LocalDateTime.parse("2017-07-22T08:43:28").atZone(ZoneId.systemDefault()).toInstant();
 
         Metadata metadata = service.findMetadata(pv);
-        QueryParams params = new QueryParams(metadata, begin, end);
+        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
         try (FloatEventStream stream = service.openFloatStream(params)) {
 
             FloatEvent event;

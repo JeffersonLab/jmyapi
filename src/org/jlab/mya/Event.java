@@ -1,6 +1,7 @@
 package org.jlab.mya;
 
 import java.time.Instant;
+import java.util.Objects;
 
 /**
  * A Mya history event such as an update or discontinuity marker.

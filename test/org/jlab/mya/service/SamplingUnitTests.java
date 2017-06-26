@@ -1,4 +1,4 @@
-package org.jlab.mya;
+package org.jlab.mya.service;
 
 import java.sql.SQLException;
 import java.time.Instant;
@@ -6,11 +6,13 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import org.jlab.mya.DataNexus;
+import org.jlab.mya.Deployment;
+import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.BasicSamplerParams;
 import org.jlab.mya.params.NaiveSamplerParams;
-import org.jlab.mya.service.SamplingService;
 import org.jlab.mya.stream.FloatEventStream;
 import org.junit.After;
 import org.junit.AfterClass;

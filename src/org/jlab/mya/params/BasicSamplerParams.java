@@ -2,14 +2,13 @@ package org.jlab.mya.params;
 
 import java.time.Instant;
 import org.jlab.mya.Metadata;
-import org.jlab.mya.QueryParams;
 
 /**
  * Parameters for the basic sampler (mySampler).
  * 
  * @author slominskir
  */
-public class BasicSamplerParams extends QueryParams {
+public class BasicSamplerParams extends IntervalQueryParams {
     private final long stepMilliseconds;
     private final long sampleCount;
 

@@ -8,7 +8,8 @@ import java.sql.SQLException;
 import java.util.Properties;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Deployment;
-import org.jlab.mya.QueryParams;
+import org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.params.PointQueryParams;
 
 /**
  * A Mya DataNexus which creates resources on-demand and closes them immediately after use.
@@ -71,7 +72,7 @@ public class OnDemandNexus extends DataNexus {
     }
 
     @Override
-    public PreparedStatement getEventStatement(Connection con, QueryParams params) throws
+    public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params) throws
             SQLException {
         String query = "select * from table_" + params.getMetadata().getId()
                 + " where time >= ? and time < ? order by time asc";
@@ -82,10 +83,28 @@ public class OnDemandNexus extends DataNexus {
     }
 
     @Override
-    public PreparedStatement getCountStatement(Connection con, QueryParams params) throws
+    public PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
             SQLException {
         String query = "select count(*) from table_" + params.getMetadata().getId()
                 + " where time >= ? and time < ?";
+
+        return con.prepareStatement(query);
+    }
+
+    @Override
+    public PreparedStatement getEventPointFirstStatement(Connection con, PointQueryParams params) throws
+            SQLException {
+        String query = "select * from table_" + params.getMetadata().getId()
+                + " where time >= ? order by time asc limit 1";
+
+        return con.prepareStatement(query);
+    }
+
+    @Override
+    public PreparedStatement getEventPointLastStatement(Connection con, PointQueryParams params) throws
+            SQLException {
+        String query = "select * from table_" + params.getMetadata().getId()
+                + " where time <= ? order by time desc limit 1";
 
         return con.prepareStatement(query);
     }

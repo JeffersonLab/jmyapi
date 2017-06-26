@@ -1,10 +1,13 @@
 package org.jlab.mya.event;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import org.jlab.mya.Event;
 import org.jlab.mya.EventCode;
+import org.jlab.mya.TimeUtil;
 
 /**
  * Represents a Mya history event for a PV of data type float.
@@ -25,6 +28,14 @@ public class FloatEvent extends Event {
     public FloatEvent(Instant timestamp, EventCode code, float value) {
         super(timestamp, code);
         this.value = value;
+    }
+    
+    public static FloatEvent fromRow(ResultSet rs) throws SQLException {
+        Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
+        int codeOrdinal = rs.getInt(2);
+        EventCode code = EventCode.fromInt(codeOrdinal);
+        float value = rs.getFloat(3);
+        return new FloatEvent(timestamp, code, value);        
     }
 
     /**

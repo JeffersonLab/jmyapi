@@ -1,8 +1,11 @@
 package org.jlab.mya.event;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Instant;
 import org.jlab.mya.Event;
 import org.jlab.mya.EventCode;
+import org.jlab.mya.TimeUtil;
 
 /**
  * Represents a Mya history event for a PV that is vector in nature or a PV that is not a scalar int
@@ -26,6 +29,19 @@ public class MultiStringEvent extends Event {
         this.value = value;
     }
 
+    public static MultiStringEvent fromRow(ResultSet rs, int size) throws SQLException {
+        Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
+        int codeOrdinal = rs.getInt(2);
+        EventCode code = EventCode.fromInt(codeOrdinal);
+        String[] value = new String[size];
+        int offset = 3;
+
+        for (int i = 0; i < size; i++) {
+            value[i] = rs.getString(i + offset);
+        }
+        return new MultiStringEvent(timestamp, code, value);
+    }    
+    
     /**
      * Return the value.
      * 

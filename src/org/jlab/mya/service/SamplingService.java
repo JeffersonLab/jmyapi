@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.QueryParams;
+import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.params.BasicSamplerParams;
@@ -15,7 +15,7 @@ import org.jlab.mya.stream.BasicSamplerFloatEventStream;
 import org.jlab.mya.stream.FloatEventStream;
 
 /**
- * Provides sampled event interval query access to the Mya database.
+ * Provides query access to the Mya database for a set of sampled events in a given time interval.
  *
  * Sampling is sometimes performed in the database itself as a stored procedure to possibly minimize
  * the amount of data transferred. However, it is possible that sampling will actually increase the
@@ -31,8 +31,8 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified QueryParams and sampled using the
-     * naive algorithm.
+     * Open a stream to float events associated with the specified IntervalQueryParams and sampled using the
+ naive algorithm.
      *
      * The naive algorithm is the what you get with 'myget -l'. "Sampling" is a strong word here
      * since the stored procedure used does not always provide a consistent spacing of data and does
@@ -45,7 +45,7 @@ public class SamplingService extends QueryService {
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
      *
-     * @param params The QueryParams
+     * @param params The IntervalQueryParams
      * @return a stream
      * @throws SQLException If unable to query the database
      */
@@ -82,8 +82,8 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified QueryParams and sampled using the
-     * basic algorithm.
+     * Open a stream to float events associated with the specified IntervalQueryParams and sampled using the
+ basic algorithm.
      *
      * The basic algorithm is what you get with 'mySampler'. Each sample is obtained from a separate
      * query.
@@ -91,7 +91,7 @@ public class SamplingService extends QueryService {
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
      *
-     * @param params The QueryParams
+     * @param params The IntervalQueryParams
      * @return a stream
      * @throws SQLException If unable to query the database
      */
@@ -107,19 +107,19 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified QueryParams and sampled using the
-     * advanced algorithm (not supported yet).
+     * Open a stream to float events associated with the specified IntervalQueryParams and sampled using the
+ advanced algorithm (not supported yet).
      *
      * TODO: Describe advanced algorithm.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
      *
-     * @param params The QueryParams
+     * @param params The IntervalQueryParams
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openAdvancedSamplerFloatStream(QueryParams params) throws SQLException {
+    public FloatEventStream openAdvancedSamplerFloatStream(IntervalQueryParams params) throws SQLException {
         throw new UnsupportedOperationException("Not supported yet.  Looking at you Adam");
     }
 

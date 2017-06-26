@@ -7,7 +7,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Deployment;
-import org.jlab.mya.QueryParams;
+import org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.params.PointQueryParams;
 
 /**
  * A Mya DataNexus which pools resources for later use (Not supported yet). 
@@ -46,13 +47,25 @@ public class PooledNexus extends DataNexus implements Channel {
     }
 
     @Override
-    public PreparedStatement getEventStatement(Connection con, QueryParams params) throws
+    public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params) throws
             SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public PreparedStatement getCountStatement(Connection con, QueryParams params) throws
+    public PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
+            SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PreparedStatement getEventPointFirstStatement(Connection con, PointQueryParams params) throws
+            SQLException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public PreparedStatement getEventPointLastStatement(Connection con, PointQueryParams params) throws
             SQLException {
         throw new UnsupportedOperationException("Not supported yet.");
     }

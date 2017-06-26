@@ -1,11 +1,13 @@
 package org.jlab.mya;
 
+import org.jlab.mya.params.IntervalQueryParams;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
+import org.jlab.mya.params.PointQueryParams;
 
 /**
  * Manages the possibly multiple data sources required to service requests to a cluster of Mya
@@ -119,7 +121,8 @@ public abstract class DataNexus {
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    public abstract PreparedStatement getEventStatement(Connection con, QueryParams params) throws
+    public abstract PreparedStatement getEventIntervalStatement(Connection con,
+            IntervalQueryParams params) throws
             SQLException;
 
     /**
@@ -130,6 +133,30 @@ public abstract class DataNexus {
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    public abstract PreparedStatement getCountStatement(Connection con, QueryParams params) throws
+    public abstract PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
             SQLException;
+
+    /**
+     * Return a prepared statement for obtaining a single event at a given point in time (first
+     * event; greater than or equal to timestamp).
+     *
+     * @param con The connection the statement belongs to
+     * @param params The query parameters associated with the statement (notably metadata id)
+     * @return The PreparedStatement
+     * @throws SQLException If unable to prepare a statement
+     */
+    public abstract PreparedStatement getEventPointFirstStatement(Connection con,
+            PointQueryParams params) throws SQLException;
+
+    /**
+     * Return a prepared statement for obtaining a single event at a given point in time (last
+     * event; less than or equal to timestamp).
+     *
+     * @param con The connection the statement belongs to
+     * @param params The query parameters associated with the statement (notably metadata id)
+     * @return The PreparedStatement
+     * @throws SQLException If unable to prepare a statement
+     */
+    public abstract PreparedStatement getEventPointLastStatement(Connection con,
+            PointQueryParams params) throws SQLException;
 }

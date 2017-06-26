@@ -1,17 +1,19 @@
-package org.jlab.mya;
+package org.jlab.mya.service;
 
-import org.jlab.mya.service.IntervalService;
+import org.jlab.mya.params.IntervalQueryParams;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import org.jlab.mya.DataNexus;
+import org.jlab.mya.Deployment;
+import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.MultiStringEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.stream.FloatEventStream;
-import org.jlab.mya.stream.MultiStringEventStream;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,8 +38,8 @@ public class IntervalUnitTests {
     private IntervalService service;
     private Metadata TEST_METADATA;
     private Metadata TEST_METADATA_MULTI;
-    private QueryParams TEST_PARAMS;
-    private QueryParams TEST_PARAMS_MULTI;
+    private IntervalQueryParams TEST_PARAMS;
+    private IntervalQueryParams TEST_PARAMS_MULTI;
 
     public IntervalUnitTests() {
 
@@ -57,9 +59,9 @@ public class IntervalUnitTests {
         service = new IntervalService(nexus);
         TEST_METADATA = service.findMetadata(TEST_PV);
         TEST_METADATA_MULTI = service.findMetadata(TEST_PV_MULTI);
-        TEST_PARAMS = new QueryParams(TEST_METADATA, TEST_BEGIN,
+        TEST_PARAMS = new IntervalQueryParams(TEST_METADATA, TEST_BEGIN,
                 TEST_END);
-        TEST_PARAMS_MULTI = new QueryParams(TEST_METADATA_MULTI, TEST_BEGIN,
+        TEST_PARAMS_MULTI = new IntervalQueryParams(TEST_METADATA_MULTI, TEST_BEGIN,
                 TEST_END);
 
     }

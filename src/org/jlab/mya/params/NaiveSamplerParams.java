@@ -2,14 +2,13 @@ package org.jlab.mya.params;
 
 import java.time.Instant;
 import org.jlab.mya.Metadata;
-import org.jlab.mya.QueryParams;
 
 /**
  * Parameters for the naive sampler (myget -l).
  *
  * @author slominskir
  */
-public class NaiveSamplerParams extends QueryParams {
+public class NaiveSamplerParams extends IntervalQueryParams {
 
     private final long limit;
 

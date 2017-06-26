@@ -1,5 +1,6 @@
 package org.jlab.mya;
 
+import org.jlab.mya.params.IntervalQueryParams;
 import java.io.IOException;
 import java.nio.channels.Channel;
 import java.sql.Connection;
@@ -25,7 +26,7 @@ import java.sql.SQLException;
  */
 public abstract class EventStream<T extends Event> implements Channel {
 
-    protected final QueryParams params;
+    protected final IntervalQueryParams params;
     protected final Connection con;
     protected final PreparedStatement stmt;
     protected final ResultSet rs;
@@ -38,7 +39,7 @@ public abstract class EventStream<T extends Event> implements Channel {
      * @param stmt The database statement
      * @param rs The database result set
      */
-    public EventStream(QueryParams params, Connection con, PreparedStatement stmt, ResultSet rs) {
+    public EventStream(IntervalQueryParams params, Connection con, PreparedStatement stmt, ResultSet rs) {
         this.params = params;
         this.con = con;
         this.stmt = stmt;
