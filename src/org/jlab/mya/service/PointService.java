@@ -20,7 +20,7 @@ import org.jlab.mya.params.PointQueryParams;
 public class PointService extends QueryService {
 
     /**
-     * Create a new QueryService with the provided DataNexus.
+     * Create a new PointService with the provided DataNexus.
      *
      * @param nexus The DataNexus
      */

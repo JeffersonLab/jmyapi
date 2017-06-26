@@ -20,13 +20,14 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
 
 /**
  * Unit tests for sampling service.
  *
  * @author slominskir
  */
-public class SamplingUnitTests {
+public class SamplingServiceTest {
 
     private SamplingService service;
 

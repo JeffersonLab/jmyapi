@@ -25,7 +25,7 @@ import org.junit.Test;
  *
  * @author slominskir
  */
-public class IntervalUnitTests {
+public class IntervalServiceTest {
 
     public static final Deployment TEST_DEPLOYMENT = Deployment.dev;
     public static final String TEST_PV = "DCPHP2ADC10";
@@ -41,7 +41,7 @@ public class IntervalUnitTests {
     private IntervalQueryParams TEST_PARAMS;
     private IntervalQueryParams TEST_PARAMS_MULTI;
 
-    public IntervalUnitTests() {
+    public IntervalServiceTest() {
 
     }
 
