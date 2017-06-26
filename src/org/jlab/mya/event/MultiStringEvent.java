@@ -33,6 +33,7 @@ public class MultiStringEvent extends Event {
      * Factory method for constructing a MultiStringEvent from a row in a database ResultSet.
      *
      * @param rs The ResultSet
+     * @param size The size of the value vector (size 1 is acceptable)
      * @return A new MultiStringEvent
      * @throws SQLException If unable to create an Event from the ResultSet
      */    
