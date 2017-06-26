@@ -31,8 +31,8 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified IntervalQueryParams and sampled using the
- naive algorithm.
+     * Open a stream to float events associated with the specified IntervalQueryParams and sampled
+     * using the naive algorithm.
      *
      * The naive algorithm is the what you get with 'myget -l'. "Sampling" is a strong word here
      * since the stored procedure used does not always provide a consistent spacing of data and does
@@ -49,7 +49,8 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openNaiveSamplerFloatStream(NaiveSamplerParams params) throws SQLException {
+    public FloatEventStream openNaiveSamplerFloatStream(NaiveSamplerParams params) throws
+            SQLException {
         long maxPoints = params.getLimit();
 
         String host = params.getMetadata().getHost();
@@ -82,8 +83,8 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified IntervalQueryParams and sampled using the
- basic algorithm.
+     * Open a stream to float events associated with the specified IntervalQueryParams and sampled
+     * using the basic algorithm.
      *
      * The basic algorithm is what you get with 'mySampler'. Each sample is obtained from a separate
      * query.
@@ -95,7 +96,8 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openBasicSamplerFloatStream(BasicSamplerParams params) throws SQLException {
+    public FloatEventStream openBasicSamplerFloatStream(BasicSamplerParams params) throws
+            SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         String query = "select * from table_" + params.getMetadata().getId()
@@ -107,8 +109,8 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified IntervalQueryParams and sampled using the
- advanced algorithm (not supported yet).
+     * Open a stream to float events associated with the specified IntervalQueryParams and sampled
+     * using the advanced algorithm (not supported yet).
      *
      * TODO: Describe advanced algorithm.
      *
@@ -119,7 +121,8 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openAdvancedSamplerFloatStream(IntervalQueryParams params) throws SQLException {
+    public FloatEventStream openAdvancedSamplerFloatStream(IntervalQueryParams params) throws
+            SQLException {
         throw new UnsupportedOperationException("Not supported yet.  Looking at you Adam");
     }
 
