@@ -1,4 +1,6 @@
 org.jlab.mya
 org.jlab.mya.event
 org.jlab.mya.nexus
+org.jlab.mya.params
+org.jlab.mya.service
 org.jlab.mya.stream
