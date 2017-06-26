@@ -1,7 +1,8 @@
 package org.jlab.mya;
 
 /**
- * The parameters required to query for events.
+ * The parameters required to query for events. The PV Metadata is an essential query parameter
+ * because it indicates which host to query and for which database ID.
  *
  * @author slominskir
  */
@@ -18,6 +19,11 @@ public abstract class QueryParams {
         this.metadata = metadata;
     }
 
+    /**
+     * Return the Metadata "PV Query Key".
+     *
+     * @return The Metadata
+     */
     public Metadata getMetadata() {
         return metadata;
     }

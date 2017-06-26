@@ -34,7 +34,7 @@ public class BasicSamplerFloatEventStream extends FloatEventStream {
     public FloatEvent read() throws IOException {
         try {
             if (isOpen()) {
-                Instant start = params.getBegin().plusMillis(basicParams.getStepMilliseconds()
+                Instant start = basicParams.getBegin().plusMillis(basicParams.getStepMilliseconds()
                         * sampleCursor);
                 //Instant stop = start.plusMillis(basicParams.getStepMilliseconds());
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(start));

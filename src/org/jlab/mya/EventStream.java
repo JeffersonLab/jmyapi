@@ -1,6 +1,5 @@
 package org.jlab.mya;
 
-import org.jlab.mya.params.IntervalQueryParams;
 import java.io.IOException;
 import java.nio.channels.Channel;
 import java.sql.Connection;
@@ -26,20 +25,35 @@ import java.sql.SQLException;
  */
 public abstract class EventStream<T extends Event> implements Channel {
 
-    protected final IntervalQueryParams params;
+    /**
+     * The query parameters.
+     */
+    protected final QueryParams params;
+
+    /**
+     * The database connection.
+     */
     protected final Connection con;
+
+    /**
+     * The database prepared statement.
+     */
     protected final PreparedStatement stmt;
+
+    /**
+     * The database result set.
+     */
     protected final ResultSet rs;
 
     /**
      * Create a new event stream.
-     * 
+     *
      * @param params The query parameters
      * @param con The database connection
      * @param stmt The database statement
      * @param rs The database result set
      */
-    public EventStream(IntervalQueryParams params, Connection con, PreparedStatement stmt, ResultSet rs) {
+    public EventStream(QueryParams params, Connection con, PreparedStatement stmt, ResultSet rs) {
         this.params = params;
         this.con = con;
         this.stmt = stmt;
@@ -47,9 +61,9 @@ public abstract class EventStream<T extends Event> implements Channel {
     }
 
     /**
-     * Read the next event from the stream.  Generally you'll want to iterate over the stream using 
-     * a while loop.
-     * 
+     * Read the next event from the stream. Generally you'll want to iterate over the stream using a
+     * while loop.
+     *
      * @return The next event or null if End-Of-Stream reached
      * @throws IOException If unable to read the next event
      */
@@ -67,12 +81,17 @@ public abstract class EventStream<T extends Event> implements Channel {
 
     /**
      * Read the next row of data from the ResultSet and convert it into an event.
-     * 
+     *
      * @return The next event
      * @throws SQLException If unable to convert a ResultSet row to an event.
      */
     protected abstract T rowToEvent() throws SQLException;
 
+    /**
+     * Tells whether or not this channel is open.
+     *
+     * @return true if, and only if, this channel is open
+     */
     @Override
     public boolean isOpen() {
         try {
@@ -82,6 +101,11 @@ public abstract class EventStream<T extends Event> implements Channel {
         }
     }
 
+    /**
+     * Closes the channel.
+     * 
+     * @throws IOException If an I/O error occurs
+     */
     @Override
     public void close() throws IOException {
         try {

@@ -58,7 +58,7 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified IntervalQueryParams.
+     * Open a stream to float-valued events associated with the specified IntervalQueryParams.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
@@ -78,7 +78,7 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Open a stream to int events associated with the specified IntervalQueryParams.
+     * Open a stream to int-valued events associated with the specified IntervalQueryParams.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
@@ -98,7 +98,8 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Open a stream to multi string events associated with the specified IntervalQueryParams.
+     * Open a stream to multi-string-valued events associated with the specified
+     * IntervalQueryParams.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
@@ -107,7 +108,8 @@ public class IntervalService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public MultiStringEventStream openMultiStringStream(IntervalQueryParams params) throws SQLException {
+    public MultiStringEventStream openMultiStringStream(IntervalQueryParams params) throws
+            SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);

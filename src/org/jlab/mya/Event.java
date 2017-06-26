@@ -1,7 +1,6 @@
 package org.jlab.mya;
 
 import java.time.Instant;
-import java.util.Objects;
 
 /**
  * A Mya history event such as an update or discontinuity marker.
@@ -14,7 +13,14 @@ import java.util.Objects;
  */
 public abstract class Event {
 
+    /**
+     * The timestamp of the event.
+     */
     protected final Instant timestamp;
+    
+    /**
+     * The event code.
+     */
     protected final EventCode code;
 
     /**

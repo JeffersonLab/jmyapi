@@ -1,8 +1,8 @@
 package org.jlab.mya;
 
 /**
- * The metadata associated with an EPICS PV. The metadata is the "key"
- * required to query for events since it reveals what host to query and what underlying ID to query.
+ * The metadata associated with an EPICS PV. The metadata is the "key" required to query for events
+ * since it reveals what host to query and what underlying ID to query.
  *
  * @author slominskir
  */
@@ -16,7 +16,7 @@ public final class Metadata {
 
     /**
      * Create a new Metadata.
-     * 
+     *
      * @param id The unique database ID assigned to the PV
      * @param name The PV name
      * @param host The host on which events are stored for this PV
@@ -33,7 +33,7 @@ public final class Metadata {
 
     /**
      * Return the unique ID.
-     * 
+     *
      * @return The ID
      */
     public int getId() {
@@ -42,7 +42,7 @@ public final class Metadata {
 
     /**
      * Return the PV name.
-     * 
+     *
      * @return The name
      */
     public String getName() {
@@ -51,7 +51,7 @@ public final class Metadata {
 
     /**
      * Return the host name where the PV's events are located.
-     * 
+     *
      * @return The host name
      */
     public String getHost() {
@@ -60,7 +60,7 @@ public final class Metadata {
 
     /**
      * Return the data type of the PV.
-     * 
+     *
      * @return The data type
      */
     public DataType getType() {
@@ -69,24 +69,41 @@ public final class Metadata {
 
     /**
      * Return the size of each event (scalar or vector).
-     * 
+     *
      * @return The size
      */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Returns a String representation of this Metadata.
+     * 
+     * @return The String representation
+     */
     @Override
     public String toString() {
         return "Metadata{" + "id=" + id + ", name=" + name + ", host=" + host + ", type=" + type
                 + ", size=" + size + '}';
     }
 
+    /**
+     * Returns a hash code value for the object. This method is supported for the benefit of hash tables such as those provided by HashMap. 
+     * 
+     * @return A hash code value for this Metadata 
+     */
     @Override
     public int hashCode() {
         return id;
     }
 
+    /**
+     * Indicates whether some other object is "equal to" this one. The database ID is used for
+     * comparison.
+     *
+     * @param obj The reference object with which to compare
+     * @return true if this Metadata is the same as the obj argument; false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
