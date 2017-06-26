@@ -55,7 +55,7 @@ public class SamplingService extends QueryService {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
 
-        // Note: If we wanted the statment to be reused we would need to move it to DataNexus to allow implementations the opportunity to cache.
+        // Note: If we wanted the statement to be reused we would need to move it to DataNexus to allow implementations the opportunity to cache.
         // Note: Call can return a result set, but C++ version doesn't so we don't; I guess for performance reasons?
         // Note: There are two other procedures "Bin" and "reduce", but neither appears to be used by C++ myapi.
         // Bin appears to take an average for each sub-interval instead of simply taking the first value.
