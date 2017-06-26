@@ -34,7 +34,7 @@ public class HelloWorld {
 
         Metadata metadata = service.findMetadata(pv);
         QueryParams params = new QueryParams(metadata, begin, end);
-        try (FloatEventStream stream = service.openFloat(params)) {
+        try (FloatEventStream stream = service.openFloatStream(params)) {
 
             FloatEvent event;
 

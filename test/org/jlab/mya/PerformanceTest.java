@@ -45,7 +45,7 @@ public class PerformanceTest {
         stop = System.currentTimeMillis();
         System.out.println("count: " + count + "; took seconds: " + (stop - start) / 1000.0);
         start = System.currentTimeMillis();
-        try (FloatEventStream stream = service.openFloat(params)) {
+        try (FloatEventStream stream = service.openFloatStream(params)) {
 
             FloatEvent event;
 

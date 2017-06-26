@@ -96,7 +96,7 @@ public class IntervalUnitTests {
     public void testOpenStream() throws Exception {
         long expSize = 0;
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = service.openFloat(TEST_PARAMS)) {
+        try (FloatEventStream stream = service.openFloatStream(TEST_PARAMS)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);

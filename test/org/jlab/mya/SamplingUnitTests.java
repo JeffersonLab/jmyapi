@@ -69,7 +69,7 @@ public class SamplingUnitTests {
         
         long expSize = 21; // We limit to 24, but we know historical data only has 21
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = service.openFloatNaiveSampler(params)) {
+        try (FloatEventStream stream = service.openNaiveSamplerFloatStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -101,7 +101,7 @@ public class SamplingUnitTests {
 
         long expSize = 24;
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = service.openFloatBasicSampler(params)) {
+        try (FloatEventStream stream = service.openBasicSamplerFloatStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);

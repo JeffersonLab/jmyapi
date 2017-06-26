@@ -49,17 +49,17 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openFloatNaiveSampler(NaiveSamplerParams params) throws SQLException {
+    public FloatEventStream openNaiveSamplerFloatStream(NaiveSamplerParams params) throws SQLException {
         long maxPoints = params.getLimit();
 
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
 
-        // Note: If we wanted the statment to be reused we would need to move it to DataNexus to allow implentations the opportunity to cache.
+        // Note: If we wanted the statment to be reused we would need to move it to DataNexus to allow implementations the opportunity to cache.
         // Note: Call can return a result set, but C++ version doesn't so we don't; I guess for performance reasons?
         // Note: There are two other procedures "Bin" and "reduce", but neither appears to be used by C++ myapi.
         // Bin appears to take an average for each sub-interval instead of simply taking the first value.
-        // reduce takes every nth event instead of breaking down the interval into sub-intervals
+        // reduce takes every nth event instead of breaking down the interval into time-based sub-intervals
         String query = "{call Sample(?, ?, ?, ?, ?)}";
         CallableStatement stmtA = con.prepareCall(query);
 
@@ -95,7 +95,7 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openFloatBasicSampler(BasicSamplerParams params) throws SQLException {
+    public FloatEventStream openBasicSamplerFloatStream(BasicSamplerParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         String query = "select * from table_" + params.getMetadata().getId()
@@ -119,8 +119,8 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openFloatAdvancedSampler(QueryParams params) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public FloatEventStream openAdvancedSamplerFloatStream(QueryParams params) throws SQLException {
+        throw new UnsupportedOperationException("Not supported yet.  Looking at you Adam");
     }
 
 }

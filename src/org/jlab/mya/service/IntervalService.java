@@ -67,7 +67,7 @@ public class IntervalService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openFloat(QueryParams params) throws SQLException {
+    public FloatEventStream openFloatStream(QueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         PreparedStatement stmt = nexus.getEventStatement(con, params);
@@ -87,7 +87,7 @@ public class IntervalService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public IntEventStream openInt(QueryParams params) throws SQLException {
+    public IntEventStream openIntStream(QueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         PreparedStatement stmt = nexus.getEventStatement(con, params);
@@ -107,7 +107,7 @@ public class IntervalService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public MultiStringEventStream openMultiString(QueryParams params) throws SQLException {
+    public MultiStringEventStream openMultiStringStream(QueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         PreparedStatement stmt = nexus.getEventStatement(con, params);
