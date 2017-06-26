@@ -3,7 +3,7 @@ package org.jlab.mya;
 import java.time.Instant;
 
 /**
- * Utilities for conversion between Mya's database time format and Java's native Instant.
+ * Utility methods for conversion between Mya's database time format and Java's native Instant.
  *
  * Mya stores each timestamp in the database as a 64-bit field where the top half of the field is
  * UNIX time and the bottom half is fractional seconds.

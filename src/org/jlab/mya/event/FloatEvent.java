@@ -29,13 +29,20 @@ public class FloatEvent extends Event {
         super(timestamp, code);
         this.value = value;
     }
-    
+
+    /**
+     * Factory method for constructing a FloatEvent from a row in a database ResultSet.
+     *
+     * @param rs The ResultSet
+     * @return A new FloatEvent
+     * @throws SQLException If unable to create an Event from the ResultSet
+     */
     public static FloatEvent fromRow(ResultSet rs) throws SQLException {
         Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
         EventCode code = EventCode.fromInt(codeOrdinal);
         float value = rs.getFloat(3);
-        return new FloatEvent(timestamp, code, value);        
+        return new FloatEvent(timestamp, code, value);
     }
 
     /**
@@ -47,25 +54,40 @@ public class FloatEvent extends Event {
         return value;
     }
 
+    /**
+     * Return a String representation of this FloatEvent using a timestamp with zero fractional
+     * seconds displayed.
+     *
+     * @return A String representation
+     */
     @Override
     public String toString() {
         return toString(0);
     }
 
+    /**
+     * Return a String representation of this FloatEvent using a timestamp with the specified
+     * fractional second precision displayed. Note: using a value of 6 (microseconds) is generally
+     * the max precision (A precision up to 9, nanoseconds, is supported, but rounding errors
+     * prevent proper conversion).
+     *
+     * @param f The fractional seconds (-f in myget)
+     * @return The String representation
+     */
     public String toString(int f) {
         String format = "yyyy-MM-dd HH:mm:ss";
 
-        if(f > 9) {
+        if (f > 9) {
             f = 9;
         }
-        
-        if(f > 0) {
+
+        if (f > 0) {
             format = format + ".S";
-            for(int i = 1; i < f; i++) {
+            for (int i = 1; i < f; i++) {
                 format = format + "S";
             }
         }
-        
+
         return timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
                 + " " + ((code == EventCode.UPDATE) ? String.valueOf(value) : "<"
                         + code.getDescription() + ">");

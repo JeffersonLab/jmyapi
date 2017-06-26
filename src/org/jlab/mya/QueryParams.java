@@ -5,7 +5,7 @@ package org.jlab.mya;
  *
  * @author slominskir
  */
-public class QueryParams {
+public abstract class QueryParams {
 
     private final Metadata metadata;
 

@@ -27,6 +27,13 @@ public class IntEvent extends Event {
         this.value = value;
     }
 
+    /**
+     * Factory method for constructing an IntEvent from a row in a database ResultSet.
+     *
+     * @param rs The ResultSet
+     * @return A new IntEvent
+     * @throws SQLException If unable to create an Event from the ResultSet
+     */    
     public static IntEvent fromRow(ResultSet rs) throws SQLException {
         Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);

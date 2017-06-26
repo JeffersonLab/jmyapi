@@ -27,11 +27,11 @@ public class HelloWorld {
         DataNexus nexus = new OnDemandNexus(Deployment.ops);
         IntervalService service = new IntervalService(nexus);
 
-        String pv = "measureQ:heatlocked0031";
+        String pv = "R123PMES";
         Instant begin
-                = LocalDateTime.parse("2016-08-22T08:43:00").atZone(ZoneId.systemDefault()).toInstant();
+                = LocalDateTime.parse("2017-01-01T00:00:00.123456").atZone(ZoneId.systemDefault()).toInstant();
         Instant end
-                = LocalDateTime.parse("2017-07-22T08:43:28").atZone(ZoneId.systemDefault()).toInstant();
+                = LocalDateTime.parse("2017-01-01T00:01:00.123456").atZone(ZoneId.systemDefault()).toInstant();
 
         Metadata metadata = service.findMetadata(pv);
         IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
@@ -40,7 +40,7 @@ public class HelloWorld {
             FloatEvent event;
 
             while ((event = stream.read()) != null) {
-                System.out.println(event);
+                System.out.println(event.toString(6));
             }
         }
     }
