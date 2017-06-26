@@ -18,14 +18,30 @@ public enum EventCode {
     
     private final String description;
     
+    /**
+     * Create a new EventCode enum value with the specified description.
+     * 
+     * @param description The description, which is intended to match the core C++ based MYA tools
+     */
     private EventCode(String description) {
         this.description = description;
     }
 
+    /**
+     * Return the EventCode description.
+     * 
+     * @return The description
+     */
     public String getDescription() {
         return description;
     }
     
+    /**
+     * Convert a Mya event code number (as found in the database) to enum value.
+     * 
+     * @param number The code number
+     * @return The EventCode enum value
+     */
     public static EventCode fromInt(int number) {
         EventCode code;
         switch(number) {

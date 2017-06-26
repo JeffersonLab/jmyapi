@@ -11,7 +11,7 @@ import org.jlab.mya.params.PointQueryParams;
 
 /**
  * Manages the possibly multiple data sources required to service requests to a cluster of Mya
- * hosts.
+ * hosts, which make up a deployment.
  *
  * Two configuration files (Java properties) are required to be in the class path: (1)
  * credentials.properties and (2) deployments.properties. If these files are not found this class
