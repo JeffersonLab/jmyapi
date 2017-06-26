@@ -50,7 +50,7 @@ public class SamplingUnitTests {
     /**
      * Test naive sampler.
      *
-     * Compare with "myget -l 24 -c R123PMES -b 2017-01-01 -e 2017-01-25 -f 9"
+     * Compare with "myget -l 24 -c R123PMES -b 2017-01-01 -e 2017-01-25 -f 6"
      */
     @Test
     public void testNaiveSampler() throws Exception {
@@ -61,7 +61,7 @@ public class SamplingUnitTests {
         Instant end = LocalDateTime.parse("2017-01-25T00:00:00").atZone(
                 ZoneId.systemDefault()).toInstant();        
         long limit = 24;
-        int fractionalDigits = 9; // nanoseconds
+        int fractionalDigits = 6; // microseconds; seems to be max precision of myget
 
         Metadata metadata = service.findMetadata(pv);
         NaiveSamplerParams params = new NaiveSamplerParams(metadata, begin,
