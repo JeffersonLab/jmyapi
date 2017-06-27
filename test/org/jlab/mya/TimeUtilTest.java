@@ -3,6 +3,11 @@ package org.jlab.mya;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.service.IntervalService;
+import org.jlab.mya.stream.FloatEventStream;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -64,6 +69,33 @@ public class TimeUtilTest {
                 ZoneId.systemDefault()).toInstant();
         Instant result = TimeUtil.fromMyaTimestamp(timestamp);
         assertEquals(expResult, result);
+    }
+
+    /**
+     * Make sure nanosecond difference in conversion functions is no more than 100 and do this test
+     * over an interval of many events.
+     *
+     * @throws Exception if something bad happened
+     */
+    @Test
+    public void testABunchOData() throws Exception {
+        float delta = 100; // nanoseconds of fudge
+        DataNexus nexus = new OnDemandNexus(Deployment.ops);
+        IntervalService service = new IntervalService(nexus);
+        Metadata metadata = service.findMetadata("R123PMES");
+        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+                ZoneId.systemDefault()).toInstant();
+        Instant end = LocalDateTime.parse("2017-02-01T00:00:00").atZone(
+                ZoneId.systemDefault()).toInstant();
+        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
+        try (FloatEventStream stream = service.openFloatStream(params)) {
+            FloatEvent event;
+            while ((event = stream.read()) != null) {
+                long t = TimeUtil.toMyaTimestamp(event.timestamp);
+                Instant i = TimeUtil.fromMyaTimestamp(t);
+                assertEquals(event.timestamp.getNano(), i.getNano(), delta);
+            }
+        }
     }
 
 }
