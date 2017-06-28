@@ -12,6 +12,11 @@ import java.time.Instant;
  * Instead they are treated similar to how NTP handles fractional seconds: 1 second = 1 / 2^32
  * fractional seconds.
  *
+ * Fractional seconds (floating point) stored in 32 bits cannot always be converted to nanoseconds
+ * (integer) and back again to fractional seconds such that the number you start with is the same as
+ * the one you end with. The C++ API uses a max precision of microseconds, but even then may not
+ * guarantee invertability.
+ *
  * @author slominskir
  */
 public final class TimeUtil {
@@ -32,12 +37,12 @@ public final class TimeUtil {
     public static long toMyaTimestamp(Instant instant) {
         int lo; // Integer to fill lower bits
         int hi; // Integer to fill upper bits
-        //hi = (int) instant.getEpochSecond(); // Hope this part doesn't overflow...
-        hi = Math.toIntExact(instant.getEpochSecond()); // throws ArithmeticException if overflow
+        hi = (int) instant.getEpochSecond(); // Hope this part doesn't overflow...
+        //hi = Math.toIntExact(instant.getEpochSecond()); // throws ArithmeticException if overflow
         lo = instant.getNano();
         long tmp = Integer.toUnsignedLong(lo);
-        tmp = (long) (tmp * 4.294967296); // 4.294967296 = 1 / 0.23283064365386962890625
-        lo = (int) tmp; // TODO: why is this okay down to microsecond, but not nanoseconds?
+        tmp = (long) (tmp * 4.294967296); // 4.294967296 = 1 / 0.23283064365386962890625 (scaling factor to convert from nanoseconds to 2^32 fractional seconds)
+        lo = (int) tmp;
         long timestamp = (((long) hi) << 32) | (lo & 0xffffffffL);
         return timestamp;
     }
@@ -52,26 +57,24 @@ public final class TimeUtil {
         int lo;
         int hi;
         hi = (int) (timestamp >> 32); // >> 32 means sign extend; >>> 32 means zero-fill...
-
         lo = (int) timestamp; // cast will truncate to lowest 32 bits.
 
         // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer
-        long tmp = Integer.toUnsignedLong(lo); // this is expensive though... is there a better way to do the unsigned arithmetic?
+        long tmp = Integer.toUnsignedLong(lo);
 
-        // 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling factor to convert to nanoseconds
+        // 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling factor to convert from 2^32 fractional seconds to nanoseconds
         tmp = (long) (tmp * 0.23283064365387);
 
-        lo = Math.toIntExact(tmp); // Throw ArithmeticException if overflow (unlike with cast)
+        lo = (int)tmp;
+        //lo = Math.toIntExact(tmp); // Throw ArithmeticException if overflow (unlike with cast)
 
-        // TODO: for performance remove sanity checks and use cast instead of toIntExact?
-        // Sanity checks - make sure nanoseconds are non-negative and less than a second worth.
-        if (lo < 0) {
+        /*if (lo < 0) {
             throw new ArithmeticException("Underflow: negative nanoseconds");
         }
 
         if (lo > 999999999) {
             throw new ArithmeticException("Overflow: nanoseconds forming seconds");
-        }
+        }*/
 
         Instant instant = Instant.ofEpochSecond(hi, lo);
         return instant;
