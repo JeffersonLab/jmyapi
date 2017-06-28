@@ -1,4 +1,6 @@
 # Port is same for all deployments 
 port=port
 ops.master.host=hostname
+ops.hosts=csv of hostnames
 dev.master.host=hostname
+dev.hosts=csv of hostnames

@@ -1,0 +1,69 @@
+package org.jlab.mya.nexus;
+
+import java.sql.Connection;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import org.jlab.mya.Deployment;
+import org.jlab.mya.Metadata;
+import org.jlab.mya.StandaloneConnectionPools;
+import org.jlab.mya.StandaloneJndi;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.params.PointQueryParams;
+import org.jlab.mya.service.PointService;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
+
+/**
+ *
+ * @author ryans
+ */
+public class PooledNexusTest {
+
+    public PooledNexusTest() {
+    }
+
+    @BeforeClass
+    public static void setUpClass() {
+    }
+
+    @AfterClass
+    public static void tearDownClass() {
+    }
+
+    @Before
+    public void setUp() {
+    }
+
+    @After
+    public void tearDown() {
+    }
+
+    /**
+     * Test of getConnection method, of class PooledNexus.
+     */
+    @Test
+    public void testGetConnection() throws Exception {
+        System.out.println("getConnection");
+        new StandaloneJndi();
+        try (StandaloneConnectionPools pools = new StandaloneConnectionPools(Deployment.ops)) {
+            PooledNexus nexus = new PooledNexus(Deployment.ops);
+            PointService service = new PointService(nexus);
+            String pv = "R123PMES";
+            Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+                    ZoneId.systemDefault()).toInstant();
+
+            Metadata metadata = service.findMetadata(pv);
+            PointQueryParams params = new PointQueryParams(metadata, timestamp);
+            float expResult = -7.2f;
+            FloatEvent result = service.findFloatEvent(params);
+            assertEquals(expResult, result.getValue(), 0.01);
+            System.out.println(result);
+        }
+    }
+
+}

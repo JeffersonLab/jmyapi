@@ -1,66 +1,61 @@
 package org.jlab.mya.nexus;
 
-import java.io.IOException;
-import java.nio.channels.Channel;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import org.jlab.mya.DataNexus;
+import java.util.HashMap;
+import java.util.Map;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import org.jlab.mya.Deployment;
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.params.PointQueryParams;
+
+;
 
 /**
- * A Mya DataNexus which pools resources for later use (Not supported yet). 
+ * A Mya DataNexus which pools resources for later use.
+ *
+ * This DataNexus delegates the connection pooling to one or more JNDI DataSources. Either a
+ * container (application server) such as Tomcat needs to be configured with the JNDI DataSources or
+ * the StandaloneJndi and StandaloneConnectionPools classes can be used.
  * 
  * @author slominskir
  */
-public class PooledNexus extends DataNexus implements Channel {
+public class PooledNexus extends OnDemandNexus {
+
+    private final Context initCtx;
+    private final Context envCtx;
+    private final Map<String, DataSource> dsMap = new HashMap<>();
 
     /**
      * Create a new PooledNexus with the specified deployment.
-     * 
+     *
      * @param deployment The deployment
-     */    
-    public PooledNexus(Deployment deployment) {
+     * @throws NamingException If unable to lookup the underlying DBCP connection pool
+     */
+    public PooledNexus(Deployment deployment) throws NamingException {
         super(deployment);
-    }
 
-    @Override
-    public boolean isOpen() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        initCtx = new InitialContext();
+        envCtx = (Context) initCtx.lookup("java:comp/env");
 
-    @Override
-    public void close() throws IOException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        String hostCsv = DEPLOYMENTS_PROPERTIES.getProperty(deployment + ".hosts");
+        String hostList[] = hostCsv.split(",");
+
+        for (String host : hostList) {
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/" + host);
+            dsMap.put(host, ds);
+        }
     }
 
     @Override
     public Connection getConnection(String host) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        DataSource ds = dsMap.get(host);
 
-    @Override
-    public PreparedStatement getMetadataStatement(Connection con) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
+        if (ds == null) {
+            throw new SQLException("Unable to obtain connection for: " + host);
+        }
 
-    @Override
-    public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params) throws
-            SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
-            SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public PreparedStatement getEventPointStatement(Connection con, PointQueryParams params) throws
-            SQLException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return ds.getConnection();
     }
 }
