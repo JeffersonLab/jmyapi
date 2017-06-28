@@ -22,6 +22,27 @@ import java.time.Instant;
 public final class TimeUtil {
 
     /**
+     * To Nanoseconds scaling factor.
+     * 
+     * 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling factor to convert from
+     * 2^32 fractional seconds to nanoseconds
+     */
+    private final static double TO_NANO_SCALER = 0.23283064365387;
+
+    /**
+     * From Nanoseconds scaling factor.
+     * 
+     * 4.294967296 = 1 / 0.23283064365386962890625 (scaling factor to convert from nanoseconds to
+     * 2^32 fractional seconds)
+     */
+    private final static double FROM_NANO_SCALER = 4.294967296;
+    
+    /**
+     * Bit mask for clearing high 32-bits of 64-bit long leaving only low 32-bits.
+     */
+    private final static long HI_MASK = (1L << 32) - 1;
+
+    /**
      * Instantiating one of these is useless so don't do it.
      */
     private TimeUtil() {
@@ -37,12 +58,19 @@ public final class TimeUtil {
     public static long toMyaTimestamp(Instant instant) {
         int lo; // Integer to fill lower bits
         int hi; // Integer to fill upper bits
+        
         hi = (int) instant.getEpochSecond(); // Hope this part doesn't overflow...
+        
+        // This is a slower way to do the above
         //hi = Math.toIntExact(instant.getEpochSecond()); // throws ArithmeticException if overflow
+        
         lo = instant.getNano();
-        long tmp = Integer.toUnsignedLong(lo);
-        tmp = (long) (tmp * 4.294967296); // 4.294967296 = 1 / 0.23283064365386962890625 (scaling factor to convert from nanoseconds to 2^32 fractional seconds)
-        lo = (int) tmp;
+        
+        // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer              
+        long unsignedLo = Integer.toUnsignedLong(lo);
+        unsignedLo = (long) (unsignedLo * FROM_NANO_SCALER);
+        lo = (int) unsignedLo;
+        
         long timestamp = (((long) hi) << 32) | (lo & 0xffffffffL);
         return timestamp;
     }
@@ -56,18 +84,23 @@ public final class TimeUtil {
     public static Instant fromMyaTimestamp(long timestamp) {
         int lo;
         int hi;
+
         hi = (int) (timestamp >> 32); // >> 32 means sign extend; >>> 32 means zero-fill...
-        lo = (int) timestamp; // cast will truncate to lowest 32 bits.
 
-        // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer
-        long tmp = Integer.toUnsignedLong(lo);
+        // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer        
+        long unsignedLo = timestamp & HI_MASK;
 
-        // 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling factor to convert from 2^32 fractional seconds to nanoseconds
-        tmp = (long) (tmp * 0.23283064365387);
+        // This is a slightly slower way to do the above
+        //lo = (int) timestamp; // cast will truncate to lowest 32 bits.
+        //long unsignedLo = Integer.toUnsignedLong(lo);
+        unsignedLo = (long) (unsignedLo * TO_NANO_SCALER);
 
-        lo = (int)tmp;
+        lo = (int) unsignedLo;
+
+        // This is a slightly slower way to do the above
         //lo = Math.toIntExact(tmp); // Throw ArithmeticException if overflow (unlike with cast)
 
+        // Unnecessary sanity checks
         /*if (lo < 0) {
             throw new ArithmeticException("Underflow: negative nanoseconds");
         }
@@ -75,7 +108,7 @@ public final class TimeUtil {
         if (lo > 999999999) {
             throw new ArithmeticException("Overflow: nanoseconds forming seconds");
         }*/
-
+        
         Instant instant = Instant.ofEpochSecond(hi, lo);
         return instant;
     }
