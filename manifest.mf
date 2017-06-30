@@ -1,4 +1,2 @@
 Manifest-Version: 1.0
-Main-Class: org.jlab.mya.HelloWorld
-Class-Path: config/ lib/mysql-connector-java-5.1.42-bin.jar
 
