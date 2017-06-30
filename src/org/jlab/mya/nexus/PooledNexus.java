@@ -10,15 +10,13 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.jlab.mya.Deployment;
 
-;
-
 /**
  * A Mya DataNexus which pools resources for later use.
  *
  * This DataNexus delegates the connection pooling to one or more JNDI DataSources. Either a
  * container (application server) such as Tomcat needs to be configured with the JNDI DataSources or
  * the StandaloneJndi and StandaloneConnectionPools classes can be used.
- * 
+ *
  * @author slominskir
  */
 public class PooledNexus extends OnDemandNexus {
@@ -43,7 +41,14 @@ public class PooledNexus extends OnDemandNexus {
         String hostList[] = hostCsv.split(",");
 
         for (String host : hostList) {
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/" + host);
+            DataSource ds;
+            try {
+                ds = (DataSource) envCtx.lookup("jdbc/" + host);
+            } catch (NamingException e) {
+                // The NamingException thrown by Tomcat doesn't provide any info such as which 
+                // name failed so we use our own
+                throw new NamingException("Unable to find DataSource: jdbc/" + host);
+            }
             dsMap.put(host, ds);
         }
     }
@@ -53,9 +58,13 @@ public class PooledNexus extends OnDemandNexus {
         DataSource ds = dsMap.get(host);
 
         if (ds == null) {
-            throw new SQLException("Unable to obtain connection for: " + host);
+            throw new SQLException("Unable to obtain DataSource for: " + host);
         }
 
-        return ds.getConnection();
+        try {
+            return ds.getConnection();
+        } catch (SQLException e) {
+            throw new SQLException("Unable to obtain Connection for: " + host, e);
+        }
     }
 }
