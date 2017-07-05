@@ -91,46 +91,4 @@ public class OnDemandNexus extends DataNexus {
                     + port, e);
         }
     }
-
-    @Override
-    public PreparedStatement getMetadataStatement(Connection con) throws SQLException {
-        String query = "select * from channels where name = ?";
-        return con.prepareStatement(query);
-    }
-
-    @Override
-    public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params) throws
-            SQLException {
-        String query = "select * from table_" + params.getMetadata().getId()
-                + " where time >= ? and time < ? order by time asc";
-        PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY,
-                ResultSet.CONCUR_READ_ONLY);
-        stmt.setFetchSize(Integer.MIN_VALUE); // MySQL Driver specific hint
-        return stmt;
-    }
-
-    @Override
-    public PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
-            SQLException {
-        String query = "select count(*) from table_" + params.getMetadata().getId()
-                + " where time >= ? and time < ?";
-
-        return con.prepareStatement(query);
-    }
-
-    @Override
-    public PreparedStatement getEventPointStatement(Connection con, PointQueryParams params) throws
-            SQLException {
-        String query;
-
-        if (params.isLessThanOrEqual()) {
-            query = "select * from table_" + params.getMetadata().getId()
-                    + " where time <= ? order by time desc limit 1";
-        } else {
-            query = "select * from table_" + params.getMetadata().getId()
-                    + " where time >= ? order by time asc limit 1";
-        }
-
-        return con.prepareStatement(query);
-    }
 }

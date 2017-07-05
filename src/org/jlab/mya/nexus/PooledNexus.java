@@ -8,6 +8,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
+import org.jlab.mya.DataNexus;
 import org.jlab.mya.Deployment;
 
 /**
@@ -19,7 +20,7 @@ import org.jlab.mya.Deployment;
  *
  * @author slominskir
  */
-public class PooledNexus extends OnDemandNexus {
+public class PooledNexus extends DataNexus {
 
     private final Context initCtx;
     private final Context envCtx;

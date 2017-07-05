@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.jlab.mya.params.PointQueryParams;
@@ -92,7 +93,10 @@ public abstract class DataNexus {
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    public abstract PreparedStatement getMetadataStatement(Connection con) throws SQLException;
+    public PreparedStatement getMetadataStatement(Connection con) throws SQLException {
+        String query = "select * from channels where name = ?";
+        return con.prepareStatement(query);
+    }
 
     /**
      * Return a prepared statement for the given connection and parameters to query a time interval
@@ -103,9 +107,15 @@ public abstract class DataNexus {
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    public abstract PreparedStatement getEventIntervalStatement(Connection con,
-            IntervalQueryParams params) throws
-            SQLException;
+    public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params) throws
+            SQLException {
+        String query = "select * from table_" + params.getMetadata().getId()
+                + " where time >= ? and time < ? order by time asc";
+        PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY);
+        stmt.setFetchSize(Integer.MIN_VALUE); // MySQL Driver specific hint
+        return stmt;
+    }
 
     /**
      * Return a prepared statement for the given connection and parameters to count events in a time
@@ -116,8 +126,13 @@ public abstract class DataNexus {
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    public abstract PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
-            SQLException;
+    public PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
+            SQLException {
+        String query = "select count(*) from table_" + params.getMetadata().getId()
+                + " where time >= ? and time < ?";
+
+        return con.prepareStatement(query);
+    }
 
     /**
      * Return a prepared statement for the given connection and parameters to query for a single
@@ -130,6 +145,18 @@ public abstract class DataNexus {
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    public abstract PreparedStatement getEventPointStatement(Connection con,
-            PointQueryParams params) throws SQLException;
+    public PreparedStatement getEventPointStatement(Connection con, PointQueryParams params) throws
+            SQLException {
+        String query;
+
+        if (params.isLessThanOrEqual()) {
+            query = "select * from table_" + params.getMetadata().getId()
+                    + " where time <= ? order by time desc limit 1";
+        } else {
+            query = "select * from table_" + params.getMetadata().getId()
+                    + " where time >= ? order by time asc limit 1";
+        }
+
+        return con.prepareStatement(query);
+    }
 }
