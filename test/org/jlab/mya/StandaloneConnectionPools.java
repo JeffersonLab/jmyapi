@@ -12,8 +12,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
-import static org.jlab.mya.DataNexus.CREDENTIALS_PROPERTIES;
 import static org.jlab.mya.DataNexus.DEPLOYMENTS_PROPERTIES;
+import static org.jlab.mya.nexus.OnDemandNexus.CREDENTIALS_PROPERTIES;
 
 /**
  * Allows use of the PooledNexus when outside of a Java application server such as Tomcat.

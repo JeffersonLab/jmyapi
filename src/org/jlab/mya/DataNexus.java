@@ -13,18 +13,13 @@ import org.jlab.mya.params.PointQueryParams;
  * Manages the possibly multiple data sources required to service requests to a cluster of Mya
  * hosts, which make up a deployment.
  *
- * Two configuration files (Java properties) are required to be in the class path: (1)
- * credentials.properties and (2) deployments.properties. If these files are not found this class
- * will throw an ExceptionInInitializerError upon being loaded by the class loader.
+ * A configuration file (Java properties) is required to be in the class path:
+ * "deployments.properties". If this file is not found this class will throw an
+ * ExceptionInInitializerError upon being loaded by the class loader.
  *
  * @author slominskir
  */
 public abstract class DataNexus {
-
-    /**
-     * The application's db credentials configuration properties.
-     */
-    public static final Properties CREDENTIALS_PROPERTIES = new Properties();
 
     /**
      * The application's deployments configuration properties.
@@ -32,20 +27,6 @@ public abstract class DataNexus {
     public static final Properties DEPLOYMENTS_PROPERTIES = new Properties();
 
     static {
-        // Load DB Credentials Config
-        try (InputStream is
-                = DataNexus.class.getClassLoader().getResourceAsStream(
-                        "credentials.properties")) {
-            if (is == null) {
-                throw new IOException(
-                        "File Not Found; Configuration File: credentials.properties");
-            }
-
-            CREDENTIALS_PROPERTIES.load(is);
-        } catch (IOException e) {
-            throw new ExceptionInInitializerError(e);
-        }
-
         // Load MYA Deployment Config
         try (InputStream is
                 = DataNexus.class.getClassLoader().getResourceAsStream(

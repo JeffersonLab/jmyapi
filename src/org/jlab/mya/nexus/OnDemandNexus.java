@@ -1,5 +1,7 @@
 package org.jlab.mya.nexus;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -14,9 +16,34 @@ import org.jlab.mya.params.PointQueryParams;
 /**
  * A Mya DataNexus which creates resources on-demand and closes them immediately after use.
  *
+ * A configuration file (Java properties) is required to be in the class path:
+ * "credentials.properties". If this file is not found this class will throw an
+ * ExceptionInInitializerError upon being loaded by the class loader.
+ *
  * @author slominskir
  */
 public class OnDemandNexus extends DataNexus {
+
+    /**
+     * The application's db credentials configuration properties.
+     */
+    public static final Properties CREDENTIALS_PROPERTIES = new Properties();
+
+    static {
+        // Load DB Credentials Config
+        try (InputStream is
+                = DataNexus.class.getClassLoader().getResourceAsStream(
+                        "credentials.properties")) {
+            if (is == null) {
+                throw new IOException(
+                        "File Not Found; Configuration File: credentials.properties");
+            }
+
+            CREDENTIALS_PROPERTIES.load(is);
+        } catch (IOException e) {
+            throw new ExceptionInInitializerError(e);
+        }
+    }
 
     /**
      * Create a new OnDemandNexus with the specified deployment.
