@@ -12,6 +12,8 @@ import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.BasicSamplerParams;
+import org.jlab.mya.params.ImprovedSamplerParams;
+import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.params.NaiveSamplerParams;
 import org.jlab.mya.stream.FloatEventStream;
 import org.junit.After;
@@ -21,15 +23,30 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.fail;
 import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
+import static org.junit.Assert.fail;
 
 /**
- * Unit tests for sampling service.
+ * Unit tests for sampling sampleService.
  *
  * @author slominskir
  */
 public class SamplingServiceTest {
 
-    private SamplingService service;
+    private SamplingService sampleService;
+    private IntervalService intervalService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -42,7 +59,8 @@ public class SamplingServiceTest {
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
         DataNexus nexus = new OnDemandNexus(Deployment.ops);
-        service = new SamplingService(nexus);
+        sampleService = new SamplingService(nexus);
+        intervalService = new IntervalService(nexus);
     }
 
     @After
@@ -66,13 +84,13 @@ public class SamplingServiceTest {
         long limit = 24;
         int fractionalDigits = 6; // microseconds; seems to be max precision of myget
 
-        Metadata metadata = service.findMetadata(pv);
+        Metadata metadata = sampleService.findMetadata(pv);
         NaiveSamplerParams params = new NaiveSamplerParams(metadata, begin,
                 end, limit);            
         
         long expSize = 21; // We limit to 24, but we know historical data only has 21
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = service.openNaiveSamplerFloatStream(params)) {
+        try (FloatEventStream stream = sampleService.openNaiveSamplerFloatStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -98,13 +116,13 @@ public class SamplingServiceTest {
         long stepMilliseconds = 86400000;
         long sampleCount = 24;        
         
-        Metadata metadata = service.findMetadata(pv);
+        Metadata metadata = sampleService.findMetadata(pv);
         BasicSamplerParams params = new BasicSamplerParams(metadata, begin,
                 stepMilliseconds, sampleCount);  
 
         long expSize = 24;
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = service.openBasicSamplerFloatStream(params)) {
+        try (FloatEventStream stream = sampleService.openBasicSamplerFloatStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -115,4 +133,43 @@ public class SamplingServiceTest {
             fail("List size does not match expected");
         }
     }
+    
+    /**
+     * Test improved sampler.
+     */
+    @Test
+    public void testImprovedSampler() throws Exception {
+        
+        String pv = "R123PMES";
+        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+                ZoneId.systemDefault()).toInstant();
+        Instant end = LocalDateTime.parse("2017-01-01T00:00:20").atZone(
+                ZoneId.systemDefault()).toInstant();        
+        long limit = 10;
+        int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
+
+        Metadata metadata = sampleService.findMetadata(pv);
+        
+        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
+        
+        long count = intervalService.count(params);
+        
+        //System.out.println("count: " + count);
+        
+        ImprovedSamplerParams samplerParams = new ImprovedSamplerParams(metadata, begin,
+                end, limit, count);            
+        
+        long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
+        List<FloatEvent> eventList = new ArrayList<>();
+        try (FloatEventStream stream = sampleService.openImprovedSamplerFloatStream(samplerParams)) {
+            FloatEvent event;
+            while ((event = stream.read()) != null) {
+                eventList.add(event);
+                System.out.println(event.toString(displayFractionalDigits));
+            }
+        }
+        if (eventList.size() != expSize) {
+            fail("List size does not match expected");
+        }
+    }    
 }

@@ -10,9 +10,11 @@ import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.params.BasicSamplerParams;
+import org.jlab.mya.params.ImprovedSamplerParams;
 import org.jlab.mya.params.NaiveSamplerParams;
 import org.jlab.mya.stream.BasicSamplerFloatEventStream;
 import org.jlab.mya.stream.FloatEventStream;
+import org.jlab.mya.stream.ImprovedSamplerFloatEventStream;
 
 /**
  * Provides query access to the Mya database for a set of sampled events in a given time interval.
@@ -40,7 +42,7 @@ public class SamplingService extends QueryService {
      * the procedure simply divides the interval into sub-intervals based on the number of requested
      * points and then queries for the first event in each sub-interval. If no event is found in the
      * sub-interval then no point is provided for that sub-interval meaning that the user may get
-     * less points then the limit.
+     * less points then the limit. Sub-intervals are spaced by date.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
@@ -87,7 +89,7 @@ public class SamplingService extends QueryService {
      * using the basic algorithm.
      *
      * The basic algorithm is what you get with 'mySampler'. Each sample is obtained from a separate
-     * query.
+     * query. Bins are based on date.
      *
      * Generally you'll want to use try-with-resources around a call to this method to ensure you
      * close the stream properly.
@@ -109,6 +111,38 @@ public class SamplingService extends QueryService {
     }
 
     /**
+     * Open a stream to float events associated with the specified ImprovedSamplerParams and sampled
+     * using the improved algorithm.
+     *
+     * This algorithm bins by count, not by date interval like many other sampling algorithms. There
+     * are pros and cons to this, but it means the event-based nature of the data is preserved and
+     * doesn't give periods of calm/idle time as many samples and give more samples to busy activity
+     * periods.
+     *
+     * Another feature of this algorithm is it streams over the entire dataset once instead of
+     * issuing n-queries (n = # of bins). There are pros and cons to this as well. This algorithm
+     * will generally perform better than issuing n-queries would if there are only a few points per
+     * bin.
+     *
+     * TODO: Figure out number of events per bin threshold in which to use n-queries instead.
+     *
+     * @param params The ImprovedSamplerParams
+     * @return a stream
+     * @throws SQLException If unable to query the database
+     */
+    public FloatEventStream openImprovedSamplerFloatStream(ImprovedSamplerParams params) throws
+            SQLException {
+
+        String host = params.getMetadata().getHost();
+        Connection con = nexus.getConnection(host);
+        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);
+        stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
+        stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
+        ResultSet rs = stmt.executeQuery();
+        return new ImprovedSamplerFloatEventStream(params, con, stmt, rs);
+    }
+
+    /**
      * Open a stream to float events associated with the specified IntervalQueryParams and sampled
      * using the advanced algorithm (not supported yet).
      *
@@ -125,5 +159,4 @@ public class SamplingService extends QueryService {
             SQLException {
         throw new UnsupportedOperationException("Not supported yet.  Looking at you Adam");
     }
-
 }

@@ -24,6 +24,13 @@ public class BasicSamplerFloatEventStream extends FloatEventStream {
 
     private long sampleCursor = 0;
 
+    /**
+     * Create a new BasicSamplerFloatEventStream.
+     * 
+     * @param params The query parameters
+     * @param con The database connection
+     * @param stmt The database statement
+     */
     public BasicSamplerFloatEventStream(BasicSamplerParams params, Connection con,
             PreparedStatement stmt) {
         super(params, con, stmt, null);
