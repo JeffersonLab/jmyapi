@@ -5,3 +5,4 @@
 /config/deployments.properties
 /dist/
 /build/
+/nbbuild.xml
