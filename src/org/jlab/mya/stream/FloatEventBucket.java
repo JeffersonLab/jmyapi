@@ -57,10 +57,9 @@ public class FloatEventBucket {
         
         // Since we are saving non-update events, we should also include the adjacent points to accurately display the
         // disconnect.  If non-update event, look back for last point.  If update, look back to see if last was non-update.
-        FloatEvent prev = null;        
-        System.out.println("Points in bucket at time of downsample: " + events.size());
+        FloatEvent prev = null;
+
         for(FloatEvent e : events) {
-            System.out.println("prev:" + prev + " -- e:" + e);
 
             // Non-update events - filter these out first since they don't have meaningful values
             if ( e.getCode() != EventCode.UPDATE ) {
@@ -71,7 +70,6 @@ public class FloatEventBucket {
                 prev = e;
                 continue;
             } else if ( prev != null && prev.getCode() != EventCode.UPDATE ) {
-                System.out.println("HERE");
                 output.add(e);
                 // no continue here since this point may also be the min/max/lttb.  We'll end up with fewer
                 // points on average since duplicate hits get removed.
@@ -119,8 +117,6 @@ public class FloatEventBucket {
             sampledOutput.add(lttb);            
         }
         sampledOutput.addAll(output);
-                
-        System.out.println("Size of downSample added to queue: " + sampledOutput.size());
         return sampledOutput;
     }
     
