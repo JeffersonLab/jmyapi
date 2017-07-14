@@ -79,7 +79,6 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
 
             // Keep reading events and putting them on the queue until you find the first "update" event
             while( (first = super.read()) != null && (! first.getCode().equals(EventCode.UPDATE)) ) {
-                System.out.println("Queueing first non-update");
                 queue.add(first);
                 pointsProcessed++;
             }
@@ -87,7 +86,6 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
             if (first != null) {
                 hasFirst = true;
                 lastLTTB = first;
-                System.out.println("Queueing first update");
                 queue.add(lastLTTB);
                 pointsProcessed++;
                 
@@ -108,7 +106,6 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
                     binBoundary = binBoundary + binSize;
                     FloatEventBucket feb = new FloatEventBucket(events);
                     lastLTTB = feb.downSample(lastLTTB, curr);
-                    System.out.println("Procesed bucket");
                     queue.addAll(feb.getDownSampledOutput());
                     events.clear();
                     return;  // We only want to queue up one bucket's worth of downsampled points at a time
@@ -125,11 +122,9 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
             if ( ! events.isEmpty()) {
                 FloatEventBucket feb = new FloatEventBucket(events);
                 lastLTTB = feb.downSample(lastLTTB, prev);
-                System.out.println("Processed last bucket");
                 queue.addAll(feb.getDownSampledOutput());
                 events.clear();
             }
-            System.out.println("Queueing last event");
             queue.add(prev);
         } else {
             // This must be a read request after we've exhausted our resultSet, so don't do anything.  The queue should return
