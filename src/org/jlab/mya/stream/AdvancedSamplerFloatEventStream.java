@@ -28,7 +28,12 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
     private long binBoundary = 0;
     private long pointsProcessed = 0;
     private final List<FloatEvent> events = new ArrayList<>();
-            
+
+    // We use to points so we can look ahead and handle the last point similar to the first and process the last "real" bucket
+    private FloatEvent prev = null;
+    private FloatEvent curr = null;
+        
+    
     /**
      * Create a new ImprovedSamplerFloatStream.
      * 
@@ -74,6 +79,7 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
 
             // Keep reading events and putting them on the queue until you find the first "update" event
             while( (first = super.read()) != null && (! first.getCode().equals(EventCode.UPDATE)) ) {
+                System.out.println("Queueing first non-update");
                 queue.add(first);
                 pointsProcessed++;
             }
@@ -81,6 +87,7 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
             if (first != null) {
                 hasFirst = true;
                 lastLTTB = first;
+                System.out.println("Queueing first update");
                 queue.add(lastLTTB);
                 pointsProcessed++;
                 
@@ -91,22 +98,19 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
             return;
         }
 
-        // We use to points so we can look ahead and handle the last point siimlar to the first and process the last "real" bucket
-        FloatEvent prev = null;
-        FloatEvent curr;
+        prev = curr;
         while( ( curr = super.read()) != null ) {
             if ( prev != null ) {
                 events.add(prev);
                 pointsProcessed++;
+                
                 if (pointsProcessed  == binBoundary) {
-
                     binBoundary = binBoundary + binSize;
                     FloatEventBucket feb = new FloatEventBucket(events);
                     lastLTTB = feb.downSample(lastLTTB, curr);
+                    System.out.println("Procesed bucket");
                     queue.addAll(feb.getDownSampledOutput());
                     events.clear();
-                    events.add(curr);
-                    pointsProcessed++;
                     return;  // We only want to queue up one bucket's worth of downsampled points at a time
                 }
             }
@@ -118,12 +122,14 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
             // write it to the queue, then add the last point to the queue (prev should not have been added to event list yet).  Clear 
             // the listand when a subsequent read/procesStream happens, processStream will not queue anything else up and the 
             // queue will return null.
-            FloatEventBucket feb = new FloatEventBucket(events);
-            lastLTTB = feb.downSample(lastLTTB, prev);
             if ( ! events.isEmpty()) {
+                FloatEventBucket feb = new FloatEventBucket(events);
+                lastLTTB = feb.downSample(lastLTTB, prev);
+                System.out.println("Processed last bucket");
                 queue.addAll(feb.getDownSampledOutput());
                 events.clear();
             }
+            System.out.println("Queueing last event");
             queue.add(prev);
         } else {
             // This must be a read request after we've exhausted our resultSet, so don't do anything.  The queue should return
