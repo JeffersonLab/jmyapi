@@ -58,40 +58,48 @@ public class FloatEventBucket {
         // Since we are saving non-update events, we should also include the adjacent points to accurately display the
         // disconnect.  If non-update event, look back for last point.  If update, look back to see if last was non-update.
         FloatEvent prev = null;        
-        for(FloatEvent e2 : events) {
+        System.out.println("Points in bucket at time of downsample: " + events.size());
+        for(FloatEvent e : events) {
+            System.out.println("prev:" + prev + " -- e:" + e);
 
             // Non-update events - filter these out first since they don't have meaningful values
-            if ( e2.getCode() != EventCode.UPDATE ) {
+            if ( e.getCode() != EventCode.UPDATE ) {
                 if (prev != null ) {
                     output.add(prev);
                 }
-                output.add(e2);
+                output.add(e);
+                prev = e;
                 continue;
             } else if ( prev != null && prev.getCode() != EventCode.UPDATE ) {
-                output.add(e2);
+                System.out.println("HERE");
+                output.add(e);
                 // no continue here since this point may also be the min/max/lttb.  We'll end up with fewer
                 // points on average since duplicate hits get removed.
             }
             
             // LTTB check
-            area = calculateTriangleArea(e1, e2, e3);
-            if ( area > lttbArea) {
+            area = calculateTriangleArea(e1, e, e3);
+            if (area > lttbArea) {
                 lttbArea = area;
-                lttb = e2;
+                lttb = e;
             }
             
             // min / max
-            if ( min == null || e2.getValue() < min.getValue() ) {
-                min = e2;
+            if ( min == null || e.getValue() < min.getValue() ) {
+                min = e;
             }
-            if ( max == null || e2.getValue() > max.getValue() ) {
-                max = e2;
+            if ( max == null || e.getValue() > max.getValue() ) {
+                max = e;
             }
             
+            prev = e;
         }
         
         // If the bucket contained nothing but non-update events, you get the previous LTTB point back.  This seems better
         // than setting the point to another arbitrary point.
+        if ( lttb == null ) {
+            lttb = e1;
+        }
         return lttb;
     }
 
@@ -101,12 +109,18 @@ public class FloatEventBucket {
      */
     public SortedSet<FloatEvent> getDownSampledOutput() {
         SortedSet<FloatEvent> sampledOutput = new TreeSet<>();
-        sampledOutput.add(lttb);
-        sampledOutput.add(min);
-        sampledOutput.add(max);
-        sampledOutput.add(lttb);
+        if ( lttb != null ) {
+            sampledOutput.add(lttb);
+        }
+        if ( min != null ) {
+            sampledOutput.add(min);            
+        }
+        if ( max != null ) {
+            sampledOutput.add(lttb);            
+        }
         sampledOutput.addAll(output);
                 
+        System.out.println("Size of downSample added to queue: " + sampledOutput.size());
         return sampledOutput;
     }
     
