@@ -4,3 +4,7 @@ ops.master.host=hostname
 ops.hosts=csv of hostnames
 dev.master.host=hostname
 dev.hosts=csv of hostnames
+
+# Proxies
+proxy.host.hostname=hostname
+proxy.port.hostname=port
