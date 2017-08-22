@@ -6,5 +6,5 @@ package org.jlab.mya;
  * @author slominskir
  */
 public enum Deployment {
-    ops, dev;
+    ops, opsfb, dev, devfb, history, bpm;
 }

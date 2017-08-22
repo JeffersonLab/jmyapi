@@ -11,7 +11,7 @@ import java.time.Instant;
  *
  * @author slominskir
  */
-public abstract class Event {
+public abstract class Event implements Comparable<Event> {
 
     /**
      * The timestamp of the event.
@@ -50,5 +50,15 @@ public abstract class Event {
      */
     public EventCode getCode() {
         return code;
+    }
+
+    /**
+     * Compares Event objects according to their Instant timestamps.
+     * @param e An Event object that is being compared
+     * @return Negative if earlier, Positive if later.
+     */
+    @Override
+    public int compareTo(Event e) {
+        return timestamp.compareTo(e.getTimestamp());
     }
 }
