@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
+import org.jlab.mya.Event;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
@@ -13,7 +14,8 @@ import org.jlab.mya.event.MultiStringEvent;
 import org.jlab.mya.params.PointQueryParams;
 
 /**
- * Provides query access to the Mya database for a single event near a point in time.
+ * Provides query access to the Mya database for a single event near a point in
+ * time.
  *
  * @author slominskir
  */
@@ -26,6 +28,32 @@ public class PointService extends QueryService {
      */
     public PointService(DataNexus nexus) {
         super(nexus);
+    }
+
+    public Event findEvent(PointQueryParams params) throws SQLException {
+
+        Event event;
+
+        if (params.getMetadata().getSize() > 1) {
+            event = findMultiStringEvent(params);
+        } else {
+            switch (params.getMetadata().getType()) {
+                case DBR_SHORT:
+                case DBR_LONG:
+                case DBR_ENUM:
+                    event = findIntEvent(params);
+                    break;
+                case DBR_FLOAT:
+                case DBR_DOUBLE:
+                    event = findFloatEvent(params);
+                    break;
+                default:
+                    event = findMultiStringEvent(params);
+                    break;
+            }
+        }
+
+        return event;
     }
 
     /**
@@ -75,7 +103,8 @@ public class PointService extends QueryService {
     }
 
     /**
-     * Find a multi-string-valued event associated with the specified PointQueryParams.
+     * Find a multi-string-valued event associated with the specified
+     * PointQueryParams.
      *
      * @param params The PointQueryParams
      * @return A MultiStringEvent or null if none found
