@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
+import org.jlab.mya.EventStream;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
@@ -13,7 +14,8 @@ import org.jlab.mya.stream.IntEventStream;
 import org.jlab.mya.stream.MultiStringEventStream;
 
 /**
- * Provides query access to the Mya database for a set of events in a given time interval.
+ * Provides query access to the Mya database for a set of events in a given time
+ * interval.
  *
  * @author slominskir
  */
@@ -29,7 +31,8 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Count the number of events associated with the supplied IntervalQueryParams.
+     * Count the number of events associated with the supplied
+     * IntervalQueryParams.
      *
      * @param params The IntervalQueryParams
      * @return The number of events
@@ -58,10 +61,50 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Open a stream to float-valued events associated with the specified IntervalQueryParams.
+     * Open a stream to events associated with the specified
+     * IntervalQueryParams. This method returns a generic stream which will need
+     * to be cast to obtain values (values may be primitives so a
+     * generic getValue() method returning a generic would not work unless you
+     * want to accept primitive autoboxing performance cost).
      *
-     * Generally you'll want to use try-with-resources around a call to this method to ensure you
-     * close the stream properly.
+     * Generally you'll want to use try-with-resources around a call to this
+     * method to ensure you close the stream properly.
+     *
+     * @param params The IntervalQueryParams
+     * @return a stream
+     * @throws SQLException If unable to query the database
+     */
+    public EventStream openEventStream(IntervalQueryParams params) throws SQLException {
+        EventStream stream;
+
+        if (params.getMetadata().getSize() > 1) {
+            stream = openMultiStringStream(params);
+        } else {
+            switch (params.getMetadata().getType()) {
+                case DBR_SHORT:
+                case DBR_LONG:
+                case DBR_ENUM:
+                    stream = openIntStream(params);
+                    break;
+                case DBR_FLOAT:
+                case DBR_DOUBLE:
+                    stream = openFloatStream(params);
+                    break;
+                default:
+                    stream = openMultiStringStream(params);
+                    break;
+            }
+        }
+
+        return stream;
+    }
+
+    /**
+     * Open a stream to float-valued events associated with the specified
+     * IntervalQueryParams.
+     *
+     * Generally you'll want to use try-with-resources around a call to this
+     * method to ensure you close the stream properly.
      *
      * @param params The IntervalQueryParams
      * @return a stream
@@ -78,10 +121,11 @@ public class IntervalService extends QueryService {
     }
 
     /**
-     * Open a stream to int-valued events associated with the specified IntervalQueryParams.
+     * Open a stream to int-valued events associated with the specified
+     * IntervalQueryParams.
      *
-     * Generally you'll want to use try-with-resources around a call to this method to ensure you
-     * close the stream properly.
+     * Generally you'll want to use try-with-resources around a call to this
+     * method to ensure you close the stream properly.
      *
      * @param params The IntervalQueryParams
      * @return a stream
@@ -101,8 +145,8 @@ public class IntervalService extends QueryService {
      * Open a stream to multi-string-valued events associated with the specified
      * IntervalQueryParams.
      *
-     * Generally you'll want to use try-with-resources around a call to this method to ensure you
-     * close the stream properly.
+     * Generally you'll want to use try-with-resources around a call to this
+     * method to ensure you close the stream properly.
      *
      * @param params The IntervalQueryParams
      * @return a stream
