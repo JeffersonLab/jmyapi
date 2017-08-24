@@ -12,17 +12,19 @@ import org.jlab.mya.QueryParams;
 public class PointQueryParams extends QueryParams {
 
     private final Instant timestamp;
-    private final boolean lessThanOrEqual;
+    private final boolean lessThan;
+    private final boolean orEqual;
 
     /**
-     * Create a new PointQueryParams with the default behavior of searching for the event occurring
-     * at a time less than or equal to the timestamp provided.
+     * Create a new PointQueryParams with the default behavior of searching for
+     * the event occurring at a time less than or equal to the timestamp
+     * provided.
      *
      * @param metadata The PV metadata
      * @param timestamp The point in time
      */
     public PointQueryParams(Metadata metadata, Instant timestamp) {
-        this(metadata, timestamp, true);
+        this(metadata, timestamp, true, true);
     }
 
     /**
@@ -30,13 +32,16 @@ public class PointQueryParams extends QueryParams {
      *
      * @param metadata The PV metadata
      * @param timestamp The point in time
-     * @param lessThanOrEqual true an event less than or equal to the point-in-time, false for an
-     * event greater than or equal to the point-in-time.
+     * @param lessThan true if an event less than the point-in-time, false for
+     * an event greater than the point-in-time.
+     * @param orEqual true if the point exactly at the given timestamp is
+     * returned, false if the timestamp is exclusive
      */
-    public PointQueryParams(Metadata metadata, Instant timestamp, boolean lessThanOrEqual) {
+    public PointQueryParams(Metadata metadata, Instant timestamp, boolean lessThan, boolean orEqual) {
         super(metadata);
         this.timestamp = timestamp;
-        this.lessThanOrEqual = lessThanOrEqual;
+        this.lessThan = lessThan;
+        this.orEqual = orEqual;
     }
 
     /**
@@ -49,12 +54,24 @@ public class PointQueryParams extends QueryParams {
     }
 
     /**
-     * Return true if the event search looks for the last event before (or equal) the point-in-time
-     * or false if the event search looks for the first event after (or equal) the point in time.
+     * Return true if the event search looks for the last event before the
+     * point-in-time or false if the event search looks for the first event
+     * after the point in time.
      *
-     * @return true if the direction of the search is most recent value up to the point-in-time
+     * @return true if the direction of the search is most recent value up to
+     * the point-in-time
      */
-    public boolean isLessThanOrEqual() {
-        return lessThanOrEqual;
+    public boolean isLessThan() {
+        return lessThan;
+    }
+
+    /**
+     * Return true if the event search looks for the event exactly at the
+     * point-in-time or false if that point is excluded.
+     *
+     * @return true if the exact point-in-time is included
+     */
+    public boolean isOrEqual() {
+        return orEqual;
     }
 }
