@@ -4,14 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Deployment;
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.params.PointQueryParams;
 
 /**
  * A Mya DataNexus which creates resources on-demand and closes them immediately after use.
