@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Deployment;
-import org.jlab.mya.EventCode;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
