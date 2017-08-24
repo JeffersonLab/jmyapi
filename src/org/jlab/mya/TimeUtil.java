@@ -64,8 +64,6 @@ public final class TimeUtil {
 
         hi = (int) instant.getEpochSecond(); // Hope this part doesn't overflow...
 
-        // This is a slower way to do the above
-        //hi = Math.toIntExact(instant.getEpochSecond()); // throws ArithmeticException if overflow
         lo = instant.getNano();
 
         // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer              
@@ -92,23 +90,10 @@ public final class TimeUtil {
         // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer        
         long unsignedLo = timestamp & HI_MASK;
 
-        // This is a slightly slower way to do the above
-        //lo = (int) timestamp; // cast will truncate to lowest 32 bits.
-        //long unsignedLo = Integer.toUnsignedLong(lo);
         unsignedLo = (long) (unsignedLo * TO_NANO_SCALER);
 
         lo = (int) unsignedLo;
 
-        // This is a slightly slower way to do the above
-        //lo = Math.toIntExact(tmp); // Throw ArithmeticException if overflow (unlike with cast)
-        // Unnecessary sanity checks
-        /*if (lo < 0) {
-            throw new ArithmeticException("Underflow: negative nanoseconds");
-        }
-
-        if (lo > 999999999) {
-            throw new ArithmeticException("Overflow: nanoseconds forming seconds");
-        }*/
         Instant instant = Instant.ofEpochSecond(hi, lo);
         return instant;
     }
