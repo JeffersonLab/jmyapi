@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jlab.mya.stream;
 
 import java.util.ArrayList;
@@ -40,7 +35,7 @@ public class FloatEventBucket {
     }
     
     /**
-     * This iterates over events in bucket finding the point which creates the largest  trianglular area with the two provided points.
+     * This iterates over events in bucket finding the point which creates the largest  triangular area with the two provided points.
      * This also finds and saves any other points that will be included in the downsampled output.
      * @param e1 The first point to be used in the LTTB triangle area calculation (typically the LTTB point from the preceding bucket)
      * @param e3 The last point to be used in the LTTB triangle area calculation (typically the LTTB point from the following bucket)
