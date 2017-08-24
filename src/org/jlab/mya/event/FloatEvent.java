@@ -75,18 +75,7 @@ public class FloatEvent extends Event {
      * @return The String representation
      */
     public String toString(int f) {
-        String format = "yyyy-MM-dd HH:mm:ss";
-
-        if (f > 9) {
-            f = 9;
-        }
-
-        if (f > 0) {
-            format = format + ".S";
-            for (int i = 1; i < f; i++) {
-                format = format + "S";
-            }
-        }
+        String format = TimeUtil.getFractionalSecondsTimestampFormat(f);
 
         return timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
                 + " " + ((code == EventCode.UPDATE) ? String.valueOf(value) : "<"

@@ -97,6 +97,27 @@ public abstract class DataNexus {
         String query = "select * from channels where name = ?";
         return con.prepareStatement(query);
     }
+    
+    /**
+     * Return a prepared statement for the given connection to query extra info.
+     *
+     * Note: clever implementations may be caching / pooling statements.
+     *
+     * @param con The connection the statement belongs to
+     * @param type The type of info to query, null for all
+     * @return The PreparedStatement
+     * @throws SQLException If unable to prepare a statement
+     */    
+    public PreparedStatement getExtraInfoStatement(Connection con, String type) throws SQLException {
+        String query = "select * from metadata where chan_id = ? ";
+        
+        if(type != null) {
+            query = query + "and keyword = ? ";
+        }
+        
+        query = query + "order by stamp asc";
+        return con.prepareStatement(query);
+    }    
 
     /**
      * Return a prepared statement for the given connection and parameters to query a time interval
