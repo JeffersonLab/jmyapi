@@ -7,10 +7,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 import org.jlab.mya.event.IntEvent;
+import org.jlab.mya.event.LabeledEnumEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.service.IntervalService;
 import org.jlab.mya.stream.IntEventStream;
+import org.jlab.mya.stream.LabeledEnumStream;
 import org.junit.Test;
 
 /**
@@ -46,10 +48,18 @@ public class ExtraInfoTest {
         
         try (IntEventStream stream = service.openIntStream(params)) {
 
-            IntEvent event;
+            /*IntEvent event;
 
             while ((event = stream.read()) != null) {
                 System.out.println(event.toString(0, infoList.get(0).getValueAsArray()));
+            }*/
+            
+            LabeledEnumEvent event;
+            
+            LabeledEnumStream les = new LabeledEnumStream(stream, infoList);
+            
+            while((event = les.read()) != null) {
+                System.out.println(event);
             }
         }        
     }

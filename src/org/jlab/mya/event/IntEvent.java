@@ -16,7 +16,7 @@ import org.jlab.mya.TimeUtil;
  */
 public class IntEvent extends Event {
 
-    private final int value;
+    protected final int value;
 
     /**
      * Create new IntEvent.
@@ -63,7 +63,7 @@ public class IntEvent extends Event {
      */
     @Override
     public String toString() {
-        return toString(0, null);
+        return toString(0);
     }
 
     /**
@@ -74,21 +74,16 @@ public class IntEvent extends Event {
      * conversion).
      *
      * @param f The fractional seconds (-f in myget)
-     * @param enumLabels Optional enum labels to use, null if not needed
      * @return The String representation
      */
-    public String toString(int f, String[] enumLabels) {
+    public String toString(int f) {
         String format = TimeUtil.getFractionalSecondsTimestampFormat(f);
 
         String result = timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
                 + " ";
 
         if (code == EventCode.UPDATE) {
-            if (enumLabels != null && enumLabels.length > value) {
-                result = result + enumLabels[value];
-            } else {
-                result = result + String.valueOf(value);
-            }
+            result = result + String.valueOf(value);
         } else {
             result = result + "<" + code.getDescription() + ">";
         }
