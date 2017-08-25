@@ -1,21 +1,18 @@
-package org.jlab.mya.stream;
+package org.jlab.mya.stream.wrapped;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
-import org.jlab.mya.EventStream;
 import org.jlab.mya.ExtraInfo;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.LabeledEnumEvent;
+import org.jlab.mya.stream.IntEventStream;
 
 /**
  *
  * @author ryans
  */
-public class LabeledEnumStream extends EventStream<LabeledEnumEvent> {
-
-    private final IntEventStream stream;
+public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEvent, IntEvent> {
     private final List<ExtraInfo> enumLabelList;
 
     /**
@@ -25,15 +22,9 @@ public class LabeledEnumStream extends EventStream<LabeledEnumEvent> {
      * @param enumLabelList The history of enum labels
      */
     public LabeledEnumStream(IntEventStream stream, List<ExtraInfo> enumLabelList) {
-        super(null, null, null, null);
-
-        this.stream = stream;
+        super(stream);
+        
         this.enumLabelList = enumLabelList;
-    }
-
-    @Override
-    protected LabeledEnumEvent rowToEvent() throws SQLException {
-        return null;
     }
 
     /**
@@ -45,7 +36,7 @@ public class LabeledEnumStream extends EventStream<LabeledEnumEvent> {
      */
     @Override
     public LabeledEnumEvent read() throws IOException {
-        IntEvent iEvent = stream.read();
+        IntEvent iEvent = wrapped.read();
         LabeledEnumEvent lEvent = null;
 
         if (iEvent != null) {
@@ -84,24 +75,4 @@ public class LabeledEnumStream extends EventStream<LabeledEnumEvent> {
 
         return lEvent;
     }
-
-    /**
-     * Tells whether or not this channel is open.
-     *
-     * @return true if, and only if, this channel is open
-     */
-    @Override
-    public boolean isOpen() {
-        return stream.isOpen();
-    }
-
-    /**
-     * Closes the channel.
-     *
-     * @throws IOException If an I/O error occurs
-     */
-    @Override
-    public void close() throws IOException {
-        stream.close();
-    }  
 }

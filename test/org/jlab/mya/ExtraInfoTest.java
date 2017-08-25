@@ -6,13 +6,12 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.LabeledEnumEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.service.IntervalService;
 import org.jlab.mya.stream.IntEventStream;
-import org.jlab.mya.stream.LabeledEnumStream;
+import org.jlab.mya.stream.wrapped.LabeledEnumStream;
 import org.junit.Test;
 
 /**
