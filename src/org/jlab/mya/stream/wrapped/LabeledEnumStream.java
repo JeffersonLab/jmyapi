@@ -2,6 +2,7 @@ package org.jlab.mya.stream.wrapped;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import org.jlab.mya.ExtraInfo;
 import org.jlab.mya.event.IntEvent;
@@ -13,6 +14,7 @@ import org.jlab.mya.stream.IntEventStream;
  * @author ryans
  */
 public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEvent, IntEvent> {
+
     private final List<ExtraInfo> enumLabelList;
 
     /**
@@ -23,8 +25,17 @@ public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEven
      */
     public LabeledEnumStream(IntEventStream stream, List<ExtraInfo> enumLabelList) {
         super(stream);
-        
-        this.enumLabelList = enumLabelList;
+
+        this.enumLabelList = new ArrayList<>(enumLabelList); // We make a copy because later we may modify the list
+
+        // Verify that extra info is only enum_strings and nothing else
+        for (int i = 0; i < enumLabelList.size(); i++) {
+            ExtraInfo info = enumLabelList.get(i);
+            boolean enumStrings = "enum_strings".equals(info.getType());
+            if (!enumStrings) {
+                throw new IllegalArgumentException("ExtraInfo must only contain enum_strings");
+            }
+        }
     }
 
     /**
@@ -45,19 +56,23 @@ public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEven
             Instant timestamp = iEvent.getTimestamp();
             String label = null;
 
+            // We just assume enumLabelList is sorted asc; I hope we're right!
+            // We also assume events are sorted asc;  I hope we're right!
             if (enumLabelList != null) {
+                int skipped = 0;
+
                 for (int i = 0; i < enumLabelList.size(); i++) {
                     ExtraInfo info = enumLabelList.get(i);
-                    boolean enumStrings = "enum_strings".equals(info.getType());
                     boolean infoLessThanOrEqual = info.getTimestamp().isBefore(timestamp) || info.getTimestamp().equals(timestamp);
                     boolean nextInfoGreaterThan = true;
                     if (enumLabelList.size() > i + 1) { // has next
                         ExtraInfo next = enumLabelList.get(i + 1);
                         if (next.getTimestamp().isBefore(timestamp) || next.getTimestamp().equals(timestamp)) {
                             nextInfoGreaterThan = false; // Keep looking
+                            skipped++;
                         }
                     }
-                    if (enumStrings && infoLessThanOrEqual && nextInfoGreaterThan) {
+                    if (infoLessThanOrEqual && nextInfoGreaterThan) {
                         String[] labelArray = info.getValueAsArray();
                         boolean valueInRange = labelArray.length > value;
 
@@ -68,9 +83,14 @@ public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEven
                         break;
                     }
                 }
+
+                // This optimization just says if we've already passed old historical enum labels disgard them so they aren't considered in future events
+                for (int i = 0; i < skipped; i++) {
+                    enumLabelList.remove(0);
+                }
             }
 
-            lEvent = new LabeledEnumEvent(iEvent.getTimestamp(), iEvent.getCode(), iEvent.getValue(), label);
+            lEvent = new LabeledEnumEvent(timestamp, iEvent.getCode(), value, label);
         }
 
         return lEvent;
