@@ -9,19 +9,33 @@ import org.jlab.mya.ExtraInfo;
 import org.jlab.mya.TimeUtil;
 
 /**
- *
+ * Represents a Mya history event for a PV of data type enum, which has been assigned a label.
+ * 
  * @author ryans
  */
 public class LabeledEnumEvent extends IntEvent {
 
     private final String label;
 
+    /**
+     * Create a new LabeledEnumEvent.
+     * 
+     * @param timestamp The event timestamp
+     * @param code The event type code
+     * @param value The event value
+     * @param label The enum label
+     */
     public LabeledEnumEvent(Instant timestamp, EventCode code, int value, String label) {
         super(timestamp, code, value);
 
         this.label = label;
     }
 
+    /**
+     * Return the enum label.
+     * 
+     * @return The label
+     */
     public String getLabel() {
         return label;
     }
