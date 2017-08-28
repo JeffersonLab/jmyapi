@@ -6,25 +6,40 @@ package org.jlab.mya;
  * @author slominskir
  */
 public enum EventCode {
-    UPDATE("Normal channel data point"),
-    NETWORK_DISCONNECTION("Network disconnection"),
-    ARCHIVING_OF_CHANNEL_TURNED_OFF("Archiving of channel turned off"),
-    ARCHIVER_SHUTDOWN("Archiver shutdown"),
-    UNKNOWN_UNAVAILABILTY("Unknown unavailability"),
-    ORIGIN_OF_CHANNELS_HISTORY("Origin of channel's history"),
-    CHANNELS_PRIOR_DATA_MOVED_OFFLINE("Channel's prior data moved offline"),
-    CHANNELS_PRIOR_DATA_DISCARDED("Channel's prior data discarded"),
-    UNDEFINED("undefined");
+    UPDATE(0, "Normal channel data point", false),
+    NETWORK_DISCONNECTION(1, "Network disconnection", true),
+    ARCHIVING_OF_CHANNEL_TURNED_OFF(2, "Archiving of channel turned off", true),
+    ARCHIVER_SHUTDOWN(3, "Archiver shutdown", true),
+    UNKNOWN_UNAVAILABILTY(4, "Unknown unavailability", true),
+    ORIGIN_OF_CHANNELS_HISTORY(16, "Origin of channel's history", false),
+    CHANNELS_PRIOR_DATA_MOVED_OFFLINE(32, "Channel's prior data moved offline", false),
+    CHANNELS_PRIOR_DATA_DISCARDED(48, "Channel's prior data discarded", false),
+    UNDEFINED(128, "undefined", false);
     
+    private final int codeNumber;    
     private final String description;
+    private final boolean disconnection;
     
     /**
      * Create a new EventCode enum value with the specified description.
      * 
+     * @param codeNumber The event code number
      * @param description The description, which is intended to match the core C++ based MYA tools
+     * @param disconnection Whether the event represents a disconnection
      */
-    private EventCode(String description) {
+    private EventCode(int codeNumber, String description, boolean disconnection) {
+        this.codeNumber = codeNumber;        
         this.description = description;
+        this.disconnection = disconnection;
+    }
+
+    /**
+     * Return the code number of the EventCode.
+     * 
+     * @return The code number
+     */
+    public int getCodeNumber() {
+        return codeNumber;
     }
 
     /**
@@ -34,6 +49,15 @@ public enum EventCode {
      */
     public String getDescription() {
         return description;
+    }
+
+    /**
+     * Return whether the event is a "disconnection" event.
+     * 
+     * @return true if a disconnection event, false otherwise
+     */
+    public boolean isDisconnection() {
+        return disconnection;
     }
     
     /**
