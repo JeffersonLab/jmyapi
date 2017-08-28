@@ -18,27 +18,29 @@ public class PointQueryParams extends QueryParams {
     /**
      * Create a new PointQueryParams with the default behavior of searching for
      * the event occurring at a time less than or equal to the timestamp
-     * provided.
+     * provided and including all event types.
      *
      * @param metadata The PV metadata
      * @param timestamp The point in time
      */
     public PointQueryParams(Metadata metadata, Instant timestamp) {
-        this(metadata, timestamp, true, true);
+        this(metadata, false, timestamp, true, true);
     }
 
     /**
      * Create a new PointQueryParams.
      *
      * @param metadata The PV metadata
+     * @param updatesOnly true to include updates only, false for all event
+     * types
      * @param timestamp The point in time
      * @param lessThan true if an event less than the point-in-time, false for
      * an event greater than the point-in-time.
      * @param orEqual true if the point exactly at the given timestamp is
      * returned, false if the timestamp is exclusive
      */
-    public PointQueryParams(Metadata metadata, Instant timestamp, boolean lessThan, boolean orEqual) {
-        super(metadata);
+    public PointQueryParams(Metadata metadata, boolean updatesOnly, Instant timestamp, boolean lessThan, boolean orEqual) {
+        super(metadata, updatesOnly);
         this.timestamp = timestamp;
         this.lessThan = lessThan;
         this.orEqual = orEqual;
