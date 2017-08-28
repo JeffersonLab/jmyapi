@@ -4,7 +4,7 @@ import java.time.Instant;
 import org.jlab.mya.Metadata;
 
 /**
- * Parameters for the improved sampler; similar to Naive, but performs
+ * Parameters for the improved sampler; similar to Basic, but performs
  * application layer filtering. This sampler is good for when you want a large
  * percent of the data in the result.
  *
