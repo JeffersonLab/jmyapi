@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import org.jlab.mya.params.PointQueryParams;
 
@@ -132,8 +134,32 @@ public abstract class DataNexus {
      */
     public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params) throws
             SQLException {
-        String query = "select * from table_" + params.getMetadata().getId()
-                + " where time >= ? and time < ? order by time asc";
+
+        List<String> filterList = new ArrayList<>();
+
+        filterList.add("time >= ?");
+        filterList.add("time < ?");
+
+        if (params.isUpdatesOnly()) {
+            filterList.add("code = " + EventCode.UPDATE.getCodeNumber());
+        }
+
+        String where = "";
+
+        if (!filterList.isEmpty()) {
+            where = " where " + filterList.get(0);
+
+            for (int i = 1; i < filterList.size(); i++) {
+                where = where + " and " + filterList.get(i);
+            }
+        }
+
+        String query = "select * from table_" + params.getMetadata().getId();
+
+        query = query + where;
+
+        query = query + " order by time asc";
+
         PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY,
                 ResultSet.CONCUR_READ_ONLY);
         stmt.setFetchSize(Integer.MIN_VALUE); // MySQL Driver specific hint
@@ -152,8 +178,29 @@ public abstract class DataNexus {
      */
     public PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
             SQLException {
-        String query = "select count(*) from table_" + params.getMetadata().getId()
-                + " where time >= ? and time < ?";
+
+        List<String> filterList = new ArrayList<>();
+
+        filterList.add("time >= ?");
+        filterList.add("time < ?");
+
+        if (params.isUpdatesOnly()) {
+            filterList.add("code = " + EventCode.UPDATE.getCodeNumber());
+        }
+
+        String where = "";
+
+        if (!filterList.isEmpty()) {
+            where = " where " + filterList.get(0);
+
+            for (int i = 1; i < filterList.size(); i++) {
+                where = where + " and " + filterList.get(i);
+            }
+        }
+
+        String query = "select count(*) from table_" + params.getMetadata().getId();
+
+        query = query + where;
 
         return con.prepareStatement(query);
     }
@@ -185,8 +232,29 @@ public abstract class DataNexus {
             sort = "desc";
         }
 
-        String query = "select * from table_" + params.getMetadata().getId()
-                + " where time " + sign + equal + " ? order by time " + sort + " limit 1";
+        List<String> filterList = new ArrayList<>();
+
+        filterList.add("time " + sign + equal + " ?");
+
+        if (params.isUpdatesOnly()) {
+            filterList.add("code = " + EventCode.UPDATE.getCodeNumber());
+        }
+
+        String where = "";
+
+        if (!filterList.isEmpty()) {
+            where = " where " + filterList.get(0);
+
+            for (int i = 1; i < filterList.size(); i++) {
+                where = where + " and " + filterList.get(i);
+            }
+        }
+
+        String query = "select * from table_" + params.getMetadata().getId();
+
+        query = query + where;
+
+        query = query + " order by time " + sort + " limit 1";
 
         return con.prepareStatement(query);
     }

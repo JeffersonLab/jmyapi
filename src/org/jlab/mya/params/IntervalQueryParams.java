@@ -36,7 +36,7 @@ public class IntervalQueryParams extends QueryParams {
      * @param end The end instant
      */
     public IntervalQueryParams(Metadata metadata, boolean updatesOnly, Instant begin, Instant end) {
-        super(metadata);
+        super(metadata, updatesOnly);
         this.begin = begin;
         this.end = end;
     }
