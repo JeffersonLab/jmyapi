@@ -11,7 +11,7 @@ import org.jlab.mya.TimeUtil;
 /**
  * Represents a Mya history event for a PV of data type enum, which has been assigned a label.
  * 
- * @author ryans
+ * @author slominskir
  */
 public class LabeledEnumEvent extends IntEvent {
 

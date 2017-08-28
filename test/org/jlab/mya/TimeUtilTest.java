@@ -16,8 +16,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
- * @author ryans
+ * Test the TimeUtil.
+ * 
+ * @author slominskir
  */
 public class TimeUtilTest {
 

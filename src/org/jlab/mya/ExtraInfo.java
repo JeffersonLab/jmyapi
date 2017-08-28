@@ -14,7 +14,7 @@ import java.time.Instant;
  * <li>"notes"</li>
  * </ul>
  *
- * @author ryans
+ * @author slominskir
  */
 public final class ExtraInfo {
 

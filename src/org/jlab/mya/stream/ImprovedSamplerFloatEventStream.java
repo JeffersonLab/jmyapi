@@ -9,10 +9,10 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.params.ImprovedSamplerParams;
 
 /**
- * EventStream for the Improved sampler. This stream reads the full dataset from the database and
- * returns a subset (performs application layer filtering).
+ * EventStream for the Improved sampler. This stream reads the full dataset from
+ * the database and returns a subset (performs application layer filtering).
  *
- * @author ryans
+ * @author slominskir
  */
 public class ImprovedSamplerFloatEventStream extends FloatEventStream {
 
@@ -23,7 +23,7 @@ public class ImprovedSamplerFloatEventStream extends FloatEventStream {
 
     /**
      * Create a new ImprovedSamplerFloatStream.
-     * 
+     *
      * @param params The query parameters
      * @param con The database connection
      * @param stmt The database statement

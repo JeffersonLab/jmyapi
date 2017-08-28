@@ -9,7 +9,7 @@ import org.jlab.mya.EventStream;
  * Adaptor for classes wishing to wrap an EventStream. The Event Type may be
  * different between the outer and inner streams.
  *
- * @author ryans
+ * @author slominskir
  * @param <T> The Outer Event Type
  * @param <E> The Inner (Wrapped) Event Type
  */

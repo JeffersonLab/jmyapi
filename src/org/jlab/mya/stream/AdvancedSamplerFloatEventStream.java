@@ -16,7 +16,7 @@ import org.jlab.mya.params.AdvancedSamplerParams;
  * EventStream for the Improved sampler. This stream reads the full dataset from the database and
  * returns a subset (performs application layer filtering).
  *
- * @author ryans
+ * @author acarp
  */
 public class AdvancedSamplerFloatEventStream extends FloatEventStream {
 

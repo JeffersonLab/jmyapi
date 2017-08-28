@@ -12,7 +12,7 @@ import org.jlab.mya.stream.IntEventStream;
  * Wraps an IntEventStream and provides LabelEnumEvents by assigning enumeration
  * labels to integer values.
  *
- * @author ryans
+ * @author slominskir
  */
 public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEvent, IntEvent> {
 

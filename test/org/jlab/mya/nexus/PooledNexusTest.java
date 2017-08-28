@@ -19,8 +19,9 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
- *
- * @author ryans
+ * Test the pooled nexus.
+ * 
+ * @author slominskir
  */
 public class PooledNexusTest {
 

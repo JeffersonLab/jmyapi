@@ -15,8 +15,9 @@ import org.jlab.mya.stream.wrapped.LabeledEnumStream;
 import org.junit.Test;
 
 /**
- *
- * @author ryans
+ * Test the ExtraInfo query.
+ * 
+ * @author slominskir
  */
 public class ExtraInfoTest {
 

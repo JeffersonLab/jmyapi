@@ -4,13 +4,16 @@ import java.time.Instant;
 import org.jlab.mya.Metadata;
 
 /**
+ * Parameters for the improved sampler; similar to Naive, but performs
+ * application layer filtering. This sampler is good for when you want a large
+ * percent of the data in the result.
  *
- * @author ryans
+ * @author slominskir
  */
 public class ImprovedSamplerParams extends NaiveSamplerParams {
-    
+
     private final long count;
-    
+
     public ImprovedSamplerParams(Metadata metadata, Instant begin, Instant end, long limit, long count) {
         super(metadata, begin, end, limit);
         this.count = count;

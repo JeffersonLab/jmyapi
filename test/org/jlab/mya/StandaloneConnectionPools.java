@@ -6,8 +6,6 @@ import java.nio.channels.Channel;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -22,7 +20,7 @@ import static org.jlab.mya.nexus.OnDemandNexus.CREDENTIALS_PROPERTIES;
  * inside of an application server such as Tomcat. This class creates DataSources using the DBCP
  * pooling library to fill the role of an application server when there isn't one configured.
  *
- * @author ryans
+ * @author slominskir
  */
 public class StandaloneConnectionPools implements Channel {
 

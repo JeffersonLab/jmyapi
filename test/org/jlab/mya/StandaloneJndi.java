@@ -13,8 +13,9 @@ import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
 /**
- *
- * @author ryans
+ * Support class for testing JNDI.
+ * 
+ * @author slominskir
  */
 public class StandaloneJndi implements InitialContextFactory {
     
