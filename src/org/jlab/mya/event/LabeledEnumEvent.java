@@ -3,7 +3,9 @@ package org.jlab.mya.event;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import org.jlab.mya.EventCode;
+import org.jlab.mya.ExtraInfo;
 import org.jlab.mya.TimeUtil;
 
 /**
@@ -11,18 +13,18 @@ import org.jlab.mya.TimeUtil;
  * @author ryans
  */
 public class LabeledEnumEvent extends IntEvent {
-    
+
     private final String label;
-    
+
     public LabeledEnumEvent(Instant timestamp, EventCode code, int value, String label) {
         super(timestamp, code, value);
-        
+
         this.label = label;
     }
 
     public String getLabel() {
         return label;
-    }   
+    }
 
     /**
      * Return a String representation of this IntEvent using a timestamp with
@@ -34,7 +36,7 @@ public class LabeledEnumEvent extends IntEvent {
     public String toString() {
         return toString(0);
     }
-    
+
     /**
      * Return a String representation of this IntEvent using a timestamp with
      * the specified fractional second precision displayed. Note: using a value
@@ -59,5 +61,68 @@ public class LabeledEnumEvent extends IntEvent {
         }
 
         return result;
-    }      
+    }
+
+    /**
+     * Find the enum label given the int value and the history labels. NOTE: the
+     * enumLabelList may be modified as old enum labels that are not used are
+     * dropped from the list as an optimization for future calls, which are
+     * assumed to be made in asc order.
+     *
+     * @param iEvent The IntEvent to be labeled
+     * @param enumLabelList The list of historical enum labels; which may be
+     * modified when the call completes
+     * @return A LabeledEnumEvent
+     */
+    public static LabeledEnumEvent findLabelFromHistory(IntEvent iEvent, List<ExtraInfo> enumLabelList) {
+
+        LabeledEnumEvent lEvent = null;
+
+        if (iEvent != null) {
+
+            int value = iEvent.getValue();
+            Instant timestamp = iEvent.getTimestamp();
+            String label = null;
+
+            // We just assume enumLabelList is sorted asc; I hope we're right!
+            // We also assume events are sorted asc;  I hope we're right!
+            if (enumLabelList != null) {
+                int skipped = 0;
+
+                for (int i = 0; i < enumLabelList.size(); i++) {
+                    ExtraInfo info = enumLabelList.get(i);
+                    boolean infoLessThanOrEqual = info.getTimestamp().isBefore(timestamp) || info.getTimestamp().equals(timestamp);
+                    boolean nextInfoGreaterThan = true;
+                    if (enumLabelList.size() > i + 1) { // has next
+                        ExtraInfo next = enumLabelList.get(i + 1);
+                        if (next.getTimestamp().isBefore(timestamp) || next.getTimestamp().equals(timestamp)) {
+                            nextInfoGreaterThan = false; // Keep looking
+                            skipped++;
+                        }
+                    }
+                    if (infoLessThanOrEqual && nextInfoGreaterThan) {
+                        String[] labelArray = info.getValueAsArray();
+                        boolean valueInRange = labelArray.length > value;
+
+                        if (valueInRange) {
+                            label = labelArray[value];
+                        }
+
+                        break;
+                    }
+                }
+
+                // This optimization just says if we've already passed old historical enum labels disgard them so they aren't considered in future events
+                for (int i = 0; i < skipped; i++) {
+                    enumLabelList.remove(0);
+                }
+            }
+            
+            System.out.println("Found label: " + label);
+
+            lEvent = new LabeledEnumEvent(timestamp, iEvent.getCode(), value, label);
+        }
+
+        return lEvent;
+    }
 }

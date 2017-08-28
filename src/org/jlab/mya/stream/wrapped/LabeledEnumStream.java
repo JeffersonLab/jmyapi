@@ -48,51 +48,6 @@ public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEven
     @Override
     public LabeledEnumEvent read() throws IOException {
         IntEvent iEvent = wrapped.read();
-        LabeledEnumEvent lEvent = null;
-
-        if (iEvent != null) {
-
-            int value = iEvent.getValue();
-            Instant timestamp = iEvent.getTimestamp();
-            String label = null;
-
-            // We just assume enumLabelList is sorted asc; I hope we're right!
-            // We also assume events are sorted asc;  I hope we're right!
-            if (enumLabelList != null) {
-                int skipped = 0;
-
-                for (int i = 0; i < enumLabelList.size(); i++) {
-                    ExtraInfo info = enumLabelList.get(i);
-                    boolean infoLessThanOrEqual = info.getTimestamp().isBefore(timestamp) || info.getTimestamp().equals(timestamp);
-                    boolean nextInfoGreaterThan = true;
-                    if (enumLabelList.size() > i + 1) { // has next
-                        ExtraInfo next = enumLabelList.get(i + 1);
-                        if (next.getTimestamp().isBefore(timestamp) || next.getTimestamp().equals(timestamp)) {
-                            nextInfoGreaterThan = false; // Keep looking
-                            skipped++;
-                        }
-                    }
-                    if (infoLessThanOrEqual && nextInfoGreaterThan) {
-                        String[] labelArray = info.getValueAsArray();
-                        boolean valueInRange = labelArray.length > value;
-
-                        if (valueInRange) {
-                            label = labelArray[value];
-                        }
-
-                        break;
-                    }
-                }
-
-                // This optimization just says if we've already passed old historical enum labels disgard them so they aren't considered in future events
-                for (int i = 0; i < skipped; i++) {
-                    enumLabelList.remove(0);
-                }
-            }
-
-            lEvent = new LabeledEnumEvent(timestamp, iEvent.getCode(), value, label);
-        }
-
-        return lEvent;
+        return LabeledEnumEvent.findLabelFromHistory(iEvent, enumLabelList);
     }
 }
