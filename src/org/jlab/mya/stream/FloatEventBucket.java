@@ -121,7 +121,7 @@ public class FloatEventBucket {
      * @param e1 event 1 of the triangle
      * @param e2 event 2 of the triangle
      * @param e3 event 3 of the triangle
-     * @return
+     * @return The triangle area
      */
     protected static double calculateTriangleArea(FloatEvent e1, FloatEvent e2, FloatEvent e3) {
 

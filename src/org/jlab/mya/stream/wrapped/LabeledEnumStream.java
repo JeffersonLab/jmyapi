@@ -1,7 +1,6 @@
 package org.jlab.mya.stream.wrapped;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import org.jlab.mya.ExtraInfo;
@@ -10,6 +9,8 @@ import org.jlab.mya.event.LabeledEnumEvent;
 import org.jlab.mya.stream.IntEventStream;
 
 /**
+ * Wraps an IntEventStream and provides LabelEnumEvents by assigning enumeration
+ * labels to integer values.
  *
  * @author ryans
  */

@@ -82,11 +82,7 @@ public abstract class QueryService {
     }
 
     /**
-     * Query for PV extra info given PV metadata. Extra info types include:
-     * <ul>
-     * <li>'enum_strings'</li>
-     * <li>'notes'</li>
-     * </ul>
+     * Query for PV extra info given PV metadata.
      *
      * @param metadata The PV metadata
      * @param type The type of info to query, null for all

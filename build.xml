@@ -43,7 +43,7 @@
     <target name="doc">
         <javadoc sourcepath="${src.dir}" destdir="${dist.dir}/javadoc" overview="${src.dir}/overview.html">
             <classpath refid="project.class.path"/>
-            <header>jmyapi Version 0.2.0</header>
+            <header>jmyapi Version 0.3.0</header>
             <doctitle>jmyapi Overview</doctitle>
             <link href="http://docs.oracle.com/javase/8/docs/api/"/>
         </javadoc>

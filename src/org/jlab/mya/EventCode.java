@@ -1,8 +1,10 @@
 package org.jlab.mya;
 
 /**
- * Mya event codes.
- * 
+ * Mya event codes. There are two types of events: updates and informational.
+ * Some informational event types are also intended to represent disconnections,
+ * or gaps in event history.
+ *
  * @author slominskir
  */
 public enum EventCode {
@@ -15,27 +17,28 @@ public enum EventCode {
     CHANNELS_PRIOR_DATA_MOVED_OFFLINE(32, "Channel's prior data moved offline", false),
     CHANNELS_PRIOR_DATA_DISCARDED(48, "Channel's prior data discarded", false),
     UNDEFINED(128, "undefined", false);
-    
-    private final int codeNumber;    
+
+    private final int codeNumber;
     private final String description;
     private final boolean disconnection;
-    
+
     /**
      * Create a new EventCode enum value with the specified description.
-     * 
+     *
      * @param codeNumber The event code number
-     * @param description The description, which is intended to match the core C++ based MYA tools
+     * @param description The description, which is intended to match the core
+     * C++ based MYA tools
      * @param disconnection Whether the event represents a disconnection
      */
     private EventCode(int codeNumber, String description, boolean disconnection) {
-        this.codeNumber = codeNumber;        
+        this.codeNumber = codeNumber;
         this.description = description;
         this.disconnection = disconnection;
     }
 
     /**
      * Return the code number of the EventCode.
-     * 
+     *
      * @return The code number
      */
     public int getCodeNumber() {
@@ -44,7 +47,7 @@ public enum EventCode {
 
     /**
      * Return the EventCode description.
-     * 
+     *
      * @return The description
      */
     public String getDescription() {
@@ -52,23 +55,23 @@ public enum EventCode {
     }
 
     /**
-     * Return whether the event is a "disconnection" event.
-     * 
+     * Return whether the EventCode represents a "disconnection" event.
+     *
      * @return true if a disconnection event, false otherwise
      */
     public boolean isDisconnection() {
         return disconnection;
     }
-    
+
     /**
      * Convert a Mya event code number (as found in the database) to enum value.
-     * 
+     *
      * @param number The code number
      * @return The EventCode enum value
      */
     public static EventCode fromInt(int number) {
         EventCode code;
-        switch(number) {
+        switch (number) {
             case 0:
                 code = EventCode.UPDATE;
                 break;
@@ -96,7 +99,7 @@ public enum EventCode {
             default:
                 throw new IllegalArgumentException("Unknown code number: " + number);
         }
-        
+
         return code;
     }
 }
