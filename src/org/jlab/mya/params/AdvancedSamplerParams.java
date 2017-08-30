@@ -8,7 +8,7 @@ import org.jlab.mya.Metadata;
  * (LTTB) algorithm described in "Downsampling Time Series for Visual
  * Representation" (Steinarsson, 2013).
  *
- * @author acarp
+ * @author apcarp
  */
 public class AdvancedSamplerParams extends IntervalQueryParams {
 
