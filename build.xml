@@ -7,7 +7,7 @@
     <property name="lib.dir" value="lib"/>
     <property name="config.dir" value="config"/>
     <property name="dist.dir" value="dist"/>
-    <property name="dist.jar" value="${dist.dir}/jmyapi.jar"/>
+    <property name="dist.jar" value="${dist.dir}/${ant.project.name}.jar"/>
     <path id="project.class.path">       
         <pathelement path="${java.class.path}"/>
         <fileset dir="lib">
@@ -43,8 +43,8 @@
     <target name="doc">
         <javadoc sourcepath="${src.dir}" destdir="${dist.dir}/javadoc" overview="${src.dir}/overview.html">
             <classpath refid="project.class.path"/>
-            <header>jmyapi Version 0.3.0</header>
-            <doctitle>jmyapi Overview</doctitle>
+            <header>${ant.project.name} Version 0.3.0</header>
+            <doctitle>${ant.project.name} Overview</doctitle>
             <link href="http://docs.oracle.com/javase/8/docs/api/"/>
         </javadoc>
     </target>    
