@@ -1,0 +1,281 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.jlab.mya.analysis;
+
+import java.time.Duration;
+import org.jlab.mya.EventCode;
+import org.jlab.mya.event.FloatEvent;
+
+/**
+ *
+ * @author adamc
+ */
+public class RunningStatistics {
+
+    // Set to true once the first Update event has been push'ed
+    private boolean initialized = false;
+
+    // These will be null until sufficient data is available for the statistic to be valid.
+    private FloatEvent prev = null;
+    private FloatEvent curr = null;
+    // Primitives initialize to zero by default
+    private double min;
+    private double max;
+    private double mean;
+    private double sigmaSum;
+    private double duration; // Stored in seconds
+
+    private double integration; // PV Units * seconds
+    private double c; // Correction parameter used in calculating the integration
+
+    private long eventCount;
+    private long updateCount;
+
+    /**
+     * Create an instance of the RunningStatistics class.
+     */
+    public RunningStatistics() {
+    }
+
+    private void zeroNums() {
+        min = max = mean = sigmaSum = duration = integration = 0;
+    }
+
+    // All currently calculated statistics will be valid once we have processed the first two events.  prev is set to something not
+    // null when this happens.
+    private boolean statsValid() {
+        return (prev != null);
+    }
+
+    /**
+     * This method clears the running statistics calculated thus far, reseting
+     * the RunningStatistics object to it's initial state.
+     */
+    public void reset() {
+        initialized = false;
+        zeroNums();
+        prev = curr = null;
+    }
+
+    /**
+     * This function updates the set of running statistics for a given channel
+     * history for the given event.
+     *
+     * @param event The next event in the channel history to add to the
+     * calculation of statistics.
+     */
+    public void push(FloatEvent event) {
+        eventCount++;
+
+        // The fisrt event just gets saved.  Every duration calculation requires two events.
+        if (curr == null) {
+            curr = event;
+            return;
+        }
+        // Grab the next event
+        prev = curr;
+        curr = event;
+
+        // Statistics are only valid for UPDATEs and should be weighted/normalized over the time that we were in an UPDATE state
+        if (prev.getCode().equals(EventCode.UPDATE)) {
+            updateCount++;
+            double value = prev.getValue();
+
+            // Convert weight to seconds - helps both conceptually and with rounding errors (seconds will be more
+            // central than nanos or millis, which should on average yield more consistent scales for operations).
+            double weight = Duration.between(prev.getTimestamp(), curr.getTimestamp()).toNanos() / 1000000000.;
+            updateStatistics(value, weight);
+        }
+    }
+
+    /**
+     * Mean and variance are calculated using a modified version of a
+     * numerically stable one pass algorithm presented in "Incremental
+     * calculation of weighted mean and variance" by Tony Finch, University of
+     * Cambridge Computing Service, Feb 2009.
+     *
+     * The time integral of the MYA channel history is also calculated. Time
+     * domains without valid data are excluded, and due to the piece-wise
+     * constant nature of channel histories, the integral calculation is
+     * simplified to a time-weighted sum of the values of the channel history
+     * during the requested time period. This summation is performed using a
+     * Kahan/Numaier summation algorithm.
+     *
+     * Note: Events must be added in the chronological order they occurred and
+     * must include non Update events in order for the statistics be valid.
+     *
+     * Aside: The implementation for variance (sigma) calculation closely
+     * follows the algorithm in the C++ myapi. However, while that version
+     * specifies using this one pass algorithm for numerically stability and
+     * that API documentation makes a reference to using the "'Discrete Data
+     * Set' computation as referred to in mathematics", it is not explicitly
+     * stated why this is this correct algorithm for computing variance of a
+     * continuous time-domain function. I have created sketch of a proof as to
+     * why this is a reasonable way to calculate the variance of a channel
+     * history and will supply in github project documents.
+     *
+     * @param value The value of the event to be added
+     * @param weight The weight to be associated with the value. Typically the
+     * time duration of the value.
+     */
+    private void updateStatistics(double value, double weight) {
+        duration = duration + weight;  // Total duration of UPDATE Events so far
+        // Note: duration initialized to zero by default java contructor behavior
+        if (!initialized) {
+            initialized = true;
+            min = max = mean = value;
+            // Note: sigmaSum initialized to zero by default java constructor behavrior 
+
+        } else {
+            min = value < min ? value : min;
+            max = value > max ? value : max;
+
+            double delta = weight * (value - mean);
+            mean = mean + delta / duration;
+            sigmaSum = sigmaSum + delta * (value - mean);
+            updateIntegration(value, weight);
+        }
+    }
+
+    /**
+     * This updates the integration statistic using the Kahan/Neumaier summation
+     * algorithm.
+     */
+    private void updateIntegration(double value, double weight) {
+        double v = value * weight;
+        double t = integration + v;
+        if (Math.abs(integration) >= Math.abs(v)) {
+            c += (integration - t) + v;
+        } else {
+            c += (v - t) + integration;
+        }
+        integration = t;
+    }
+
+    /**
+     * Get the minimum value thus far.
+     *
+     * @return The minimum value of the channel history or null if the statistic
+     * is invalid
+     */
+    public Double getMin() {
+        if (!statsValid()) {
+            return null;
+        }
+        return min;
+    }
+
+    /**
+     * Get the maximum value thus far.
+     *
+     * @return The maximum value of the channel history or null if the statistic
+     * is invalid
+     */
+    public Double getMax() {
+        if (!statsValid()) {
+            return null;
+        }
+        return max;
+    }
+
+    /**
+     * Get the mean of the values seen so far
+     *
+     * @return The mean (average) value of the channel history or null if the
+     * statistic is invalid
+     */
+    public Double getMean() {
+        if (!statsValid()) {
+            return null;
+        }
+        return mean;
+    }
+
+    /**
+     * Get the standard deviation of the values seen so far. Note: This provides
+     * no bias correction. Users with knowledge of the underlying EPICS data may
+     * wish to apply a bias correction to sampling, e.g., multiplying by N /
+     * (N-1).
+     *
+     * @return The variance of the channel history or null if the statistic is
+     * invalid
+     */
+    public Double getSigma() {
+        if (duration == 0 || !statsValid()) {
+            return null;
+        }
+        return Math.sqrt(sigmaSum / duration);
+    }
+
+    /**
+     * Get the RMS of the values seen so far. This is a computed statistic
+     * equivalent to Math.sqrt(sigma*sigma + mean * mean);
+     *
+     * @return The RMS of the channel history or null if the statistic is
+     * invalid
+     */
+    public Double getRms() {
+        if (duration == 0 || !statsValid()) {
+            return null;
+        }
+
+        return Math.sqrt(sigmaSum / duration + mean * mean);
+    }
+
+    /**
+     * Get the amount of time for which valid data was available in the MYA
+     * channel history. This is generally not the same as the difference between
+     * begin and end parameters of a query as it excludes time for which the
+     * channel history last recorded a non Event.UPDATE event.
+     *
+     * @return The time duration of the channel history for which data was
+     * available or null if the statistic is invalid
+     */
+    public Double getDuration() {
+        if (!statsValid()) {
+            return null;
+        }
+        return duration;
+    }
+
+    /**
+     * Get the integrated value of the channel with respect to time.
+     *
+     * @return The result of integrating across the channel history for which
+     * data was available or null if the statistic is invalid.
+     */
+    // Use the Neumiar summation algorithm
+    public Double getIntegration() {
+        if (!statsValid()) {
+            return null;
+        }
+        return integration + c;
+    }
+
+    /**
+     * Get the number of events pushed to the RunningStatistics object. Excludes
+     * the "artificial" begin/end events
+     *
+     * @return The number of events
+     */
+    public long getEventCount() {
+        // The event count includes the artificial start and end events
+        return eventCount - 2;
+    }
+
+    /**
+     * Get the number of events pushed to the RunningStatistics whose EventCode
+     * was Event.UPDATE.
+     *
+     * @return The number of update events
+     */
+    public long getUpdateCount() {
+        // The update count includes only the artifical start event as the last point is only used to calculate the duration of the
+        // last "real" udpate event
+        return updateCount - 1;
+    }
+
+}
