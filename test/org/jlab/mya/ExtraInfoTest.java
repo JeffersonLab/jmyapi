@@ -23,7 +23,7 @@ public class ExtraInfoTest {
 
     @Test
     public void testEnumLabels() throws SQLException, IOException {
-        DataNexus nexus = new OnDemandNexus(Deployment.ops);
+        DataNexus nexus = new OnDemandNexus(Deployment.opsfb);
         IntervalService service = new IntervalService(nexus);
 
         String pv = "IPMBMOD";

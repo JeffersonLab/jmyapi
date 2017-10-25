@@ -81,7 +81,7 @@ public class TimeUtilTest {
     @Test
     public void testABunchOData() throws Exception {
         float delta = 100; // nanoseconds of fudge
-        DataNexus nexus = new OnDemandNexus(Deployment.ops);
+        DataNexus nexus = new OnDemandNexus(Deployment.opsfb);
         IntervalService service = new IntervalService(nexus);
         Metadata metadata = service.findMetadata("R123PMES");
         Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(

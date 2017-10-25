@@ -51,8 +51,8 @@ public class PooledNexusTest {
     public void testGetConnection() throws Exception {
         System.out.println("getConnection");
         new StandaloneJndi();
-        try (StandaloneConnectionPools pools = new StandaloneConnectionPools(Deployment.ops)) {
-            PooledNexus nexus = new PooledNexus(Deployment.ops);
+        try (StandaloneConnectionPools pools = new StandaloneConnectionPools(Deployment.opsfb)) {
+            PooledNexus nexus = new PooledNexus(Deployment.opsfb);
             PointService service = new PointService(nexus);
             String pv = "R123PMES";
             Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:00").atZone(

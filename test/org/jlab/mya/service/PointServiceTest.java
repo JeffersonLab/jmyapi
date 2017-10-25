@@ -40,7 +40,7 @@ public class PointServiceTest {
     
     @Before
     public void setUp() {
-        DataNexus nexus = new OnDemandNexus(Deployment.ops);
+        DataNexus nexus = new OnDemandNexus(Deployment.opsfb);
         service = new PointService(nexus);        
     }
     
