@@ -8,6 +8,7 @@ package org.jlab.mya.service;
 import java.io.IOException;
 import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
+import org.jlab.mya.TimeUtil;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.params.IntervalQueryParams;
@@ -36,7 +37,7 @@ public class AnalysisService extends IntervalService {
             // the interval query and the interval query should catch the first point if it existed inside the interval
             FloatEvent event = pqService.findFloatEvent(pqParams);
             if ( event != null ) {
-                rs.push(new FloatEvent(params.getBegin(), event.getCode(), event.getValue()));
+                rs.push(new FloatEvent(TimeUtil.toMyaTimestamp(params.getBegin()), event.getCode(), event.getValue()));
             }
             
             FloatEvent last = event;
@@ -48,7 +49,7 @@ public class AnalysisService extends IntervalService {
             
             // Create an event that represents the value of the signal at the end of the query
             if ( last != null ) {
-                rs.push(new FloatEvent(params.getEnd(), last.getCode(), last.getValue()));
+                rs.push(new FloatEvent(TimeUtil.toMyaTimestamp(params.getEnd()), last.getCode(), last.getValue()));
             }
         }
         

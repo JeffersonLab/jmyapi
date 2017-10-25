@@ -127,8 +127,8 @@ public class FloatEventBucket {
 
         // define the first point as the time origin, then normalize the other points
         double x1 = 0.0;
-        double x2 = e2.getTimestamp().getEpochSecond() - e1.getTimestamp().getEpochSecond();
-        double x3 = e3.getTimestamp().getEpochSecond() - e1.getTimestamp().getEpochSecond();
+        double x2 = e2.getTimestamp() - e1.getTimestamp();
+        double x3 = e3.getTimestamp() - e1.getTimestamp();
     
         // The values are floats that get cast to doubles, so I'm not too worried about adding extra rounding errors due to difference
         // in scale.

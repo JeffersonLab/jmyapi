@@ -20,6 +20,20 @@ public class LabeledEnumEvent extends IntEvent {
     /**
      * Create a new LabeledEnumEvent.
      * 
+     * @param timestamp The event Mya timestamp
+     * @param code The event type code
+     * @param value The event value
+     * @param label The enum label
+     */
+    public LabeledEnumEvent(long timestamp, EventCode code, int value, String label) {
+        super(timestamp, code, value);
+
+        this.label = label;
+    }
+
+        /**
+     * Create a new LabeledEnumEvent.
+     * 
      * @param timestamp The event timestamp
      * @param code The event type code
      * @param value The event value
@@ -65,7 +79,7 @@ public class LabeledEnumEvent extends IntEvent {
     public String toString(int f) {
         String format = TimeUtil.getFractionalSecondsTimestampFormat(f);
 
-        String result = timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
+        String result = this.getTimestampAsInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
                 + " ";
 
         if (code == EventCode.UPDATE) {
@@ -95,7 +109,7 @@ public class LabeledEnumEvent extends IntEvent {
         if (iEvent != null) {
 
             int value = iEvent.getValue();
-            Instant timestamp = iEvent.getTimestamp();
+            Instant timestamp = iEvent.getTimestampAsInstant();
             String label = null;
 
             // We just assume enumLabelList is sorted asc; I hope we're right!

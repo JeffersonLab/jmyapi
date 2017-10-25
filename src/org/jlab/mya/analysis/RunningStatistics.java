@@ -86,7 +86,7 @@ public class RunningStatistics {
 
             // Convert weight to seconds - helps both conceptually and with rounding errors (seconds will be more
             // central than nanos or millis, which should on average yield more consistent scales for operations).
-            double weight = Duration.between(prev.getTimestamp(), curr.getTimestamp()).toNanos() / 1000000000.;
+            double weight = curr.getTimestamp() - prev.getTimestamp();
             updateStatistics(value, weight);
         }
     }

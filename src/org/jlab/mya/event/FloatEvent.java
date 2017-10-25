@@ -21,7 +21,19 @@ public class FloatEvent extends Event {
     /**
      * Create new FloatEvent.
      *
-     * @param timestamp The timestamp of the event
+     * @param timestamp The Mya timestamp of the event
+     * @param code The event code
+     * @param value The event value
+     */
+    public FloatEvent(long timestamp, EventCode code, float value) {
+        super(timestamp, code);
+        this.value = value;
+    }
+
+    /**
+     * Create new FloatEvent.
+     *
+     * @param timestamp The Mya timestamp of the event
      * @param code The event code
      * @param value The event value
      */
@@ -38,11 +50,10 @@ public class FloatEvent extends Event {
      * @throws SQLException If unable to create an Event from the ResultSet
      */
     public static FloatEvent fromRow(ResultSet rs) throws SQLException {
-        Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
         EventCode code = EventCode.fromInt(codeOrdinal);
         float value = rs.getFloat(3);
-        return new FloatEvent(timestamp, code, value);
+        return new FloatEvent(rs.getLong(1), code, value);
     }
 
     /**
@@ -77,7 +88,7 @@ public class FloatEvent extends Event {
     public String toString(int f) {
         String format = TimeUtil.getFractionalSecondsTimestampFormat(f);
 
-        return timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
+        return this.getTimestampAsInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
                 + " " + ((code == EventCode.UPDATE) ? String.valueOf(value) : "<"
                         + code.getDescription() + ">");
     }

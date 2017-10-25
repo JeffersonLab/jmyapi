@@ -21,6 +21,18 @@ public class IntEvent extends Event {
     /**
      * Create new IntEvent.
      *
+     * @param timestamp The Mya timestamp of the event
+     * @param code The event code
+     * @param value The event value
+     */
+    public IntEvent(long timestamp, EventCode code, int value) {
+        super(timestamp, code);
+        this.value = value;
+    }
+
+    /**
+     * Create new IntEvent.
+     *
      * @param timestamp The timestamp of the event
      * @param code The event code
      * @param value The event value
@@ -39,11 +51,10 @@ public class IntEvent extends Event {
      * @throws SQLException If unable to create an Event from the ResultSet
      */
     public static IntEvent fromRow(ResultSet rs) throws SQLException {
-        Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
         int codeOrdinal = rs.getInt(2);
         EventCode code = EventCode.fromInt(codeOrdinal);
         int value = rs.getInt(3);
-        return new IntEvent(timestamp, code, value);
+        return new IntEvent(rs.getLong(1), code, value);
     }
 
     /**
@@ -79,7 +90,7 @@ public class IntEvent extends Event {
     public String toString(int f) {
         String format = TimeUtil.getFractionalSecondsTimestampFormat(f);
 
-        String result = timestamp.atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
+        String result = this.getTimestampAsInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
                 + " ";
 
         if (code == EventCode.UPDATE) {

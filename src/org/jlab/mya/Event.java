@@ -5,19 +5,22 @@ import java.time.Instant;
 /**
  * A Mya history event such as an update or discontinuity marker.
  *
- * This class is abstract as concrete implementations provide values of various data types which may
- * also be vector or scalar in nature. In practice Mya treats all vectors as collections of Strings
- * and only allows scalar floats and ints.
+ * This class is abstract as concrete implementations provide values of various
+ * data types which may also be vector or scalar in nature. In practice Mya
+ * treats all vectors as collections of Strings and only allows scalar floats
+ * and ints.
  *
  * @author slominskir
  */
 public abstract class Event implements Comparable<Event> {
 
+    private static final double MYATIME_TO_UNIX_SECONDS_WITH_FRACTION_SCALER = 2.3283064365386963e-10;
+
     /**
      * The timestamp of the event.
      */
-    protected final Instant timestamp;
-    
+    protected final long timestamp;
+
     /**
      * The event code.
      */
@@ -26,11 +29,22 @@ public abstract class Event implements Comparable<Event> {
     /**
      * Create a new Event with the specified timestamp and event code.
      *
+     * @param timestamp The Mya timestamp of the event
+     * @param code The event code
+     */
+    public Event(long timestamp, EventCode code) {
+        this.timestamp = timestamp;
+        this.code = code;
+    }
+
+    /**
+     * Create a new Event with the specified timestamp and event code.
+     *
      * @param timestamp The timestamp of the event
      * @param code The event code
      */
     public Event(Instant timestamp, EventCode code) {
-        this.timestamp = timestamp;
+        this.timestamp = TimeUtil.toMyaTimestamp(timestamp);
         this.code = code;
     }
 
@@ -39,13 +53,32 @@ public abstract class Event implements Comparable<Event> {
      *
      * @return The timestamp
      */
-    public Instant getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
     /**
+     * Return the timestamp as the number of seconds from UNIX Epoch including
+     * fraction
+     *
+     * @return
+     */
+    public double getTimstampAsSeconds() {
+        return timestamp * MYATIME_TO_UNIX_SECONDS_WITH_FRACTION_SCALER;
+    }
+
+    /**
+     * Return the timestamp as a Java Instant.
+     *
+     * @return The timestamp
+     */
+    public Instant getTimestampAsInstant() {
+        return TimeUtil.fromMyaTimestamp(timestamp);
+    }
+
+    /**
      * Return the event code.
-     * 
+     *
      * @return The event code
      */
     public EventCode getCode() {
@@ -54,11 +87,18 @@ public abstract class Event implements Comparable<Event> {
 
     /**
      * Compares Event objects according to their Instant timestamps.
+     *
      * @param e An Event object that is being compared
      * @return Negative if earlier, Positive if later.
      */
     @Override
     public int compareTo(Event e) {
-        return timestamp.compareTo(e.getTimestamp());
+        int cmp = 0;
+        if (timestamp > e.getTimestamp()) {
+            cmp = 1;
+        } else if (timestamp < e.getTimestamp()) {
+            cmp = -1;
+        }
+        return cmp;
     }
 }

@@ -64,7 +64,6 @@ public class BasicSamplerFloatEventStream extends FloatEventStream {
     }
 
     protected FloatEvent rowToEventSingleResultSet(Instant sampleTime, ResultSet result) throws SQLException {
-        //Instant timestamp = TimeUtil.fromMyaTimestamp(result.getLong(1));
         int codeOrdinal = result.getInt(2);
         EventCode code = EventCode.fromInt(codeOrdinal);
         float value = result.getFloat(3);
@@ -74,7 +73,7 @@ public class BasicSamplerFloatEventStream extends FloatEventStream {
             code = EventCode.UNDEFINED;
         }
         
-        return new FloatEvent(sampleTime, code, value);
+        return new FloatEvent(result.getLong(1), code, value);
     }
 
     @Override
