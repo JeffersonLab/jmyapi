@@ -68,6 +68,7 @@ public class RunningStatistics {
      * calculation of statistics.
      */
     public void push(FloatEvent event) {
+        
         eventCount++;
 
         // The fisrt event just gets saved.  Every duration calculation requires two events.
@@ -86,7 +87,7 @@ public class RunningStatistics {
 
             // Convert weight to seconds - helps both conceptually and with rounding errors (seconds will be more
             // central than nanos or millis, which should on average yield more consistent scales for operations).
-            double weight = curr.getTimestamp() - prev.getTimestamp();
+            double weight = curr.getTimstampAsSeconds() - prev.getTimstampAsSeconds();
             updateStatistics(value, weight);
         }
     }
@@ -127,6 +128,7 @@ public class RunningStatistics {
         if (!initialized) {
             initialized = true;
             min = max = mean = value;
+            integration = value * weight;
             // Note: sigmaSum initialized to zero by default java constructor behavrior 
 
         } else {
@@ -256,14 +258,13 @@ public class RunningStatistics {
     }
 
     /**
-     * Get the number of events pushed to the RunningStatistics object. Excludes
-     * the "artificial" begin/end events
+     * Get the number of events pushed to the RunningStatistics object.
      *
      * @return The number of events
      */
     public long getEventCount() {
         // The event count includes the artificial start and end events
-        return eventCount - 2;
+        return eventCount;
     }
 
     /**
@@ -273,9 +274,7 @@ public class RunningStatistics {
      * @return The number of update events
      */
     public long getUpdateCount() {
-        // The update count includes only the artifical start event as the last point is only used to calculate the duration of the
-        // last "real" udpate event
-        return updateCount - 1;
+        return updateCount;
     }
 
 }
