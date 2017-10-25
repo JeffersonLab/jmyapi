@@ -92,9 +92,9 @@ public class TimeUtilTest {
         try (FloatEventStream stream = service.openFloatStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
-                long t = TimeUtil.toMyaTimestamp(event.timestamp);
+                long t = TimeUtil.toMyaTimestamp(event.getTimestampAsInstant());
                 Instant i = TimeUtil.fromMyaTimestamp(t);
-                assertEquals(event.timestamp.getNano(), i.getNano(), delta);
+                assertEquals(event.getTimestampAsInstant().getNano(), i.getNano(), delta);
             }
         }
     }
