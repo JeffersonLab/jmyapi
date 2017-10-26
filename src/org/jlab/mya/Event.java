@@ -63,7 +63,7 @@ public abstract class Event implements Comparable<Event> {
      *
      * @return
      */
-    public double getTimstampAsSeconds() {
+    public double getTimestampAsSeconds() {
         return timestamp * MYATIME_TO_UNIX_SECONDS_WITH_FRACTION_SCALER;
     }
 
