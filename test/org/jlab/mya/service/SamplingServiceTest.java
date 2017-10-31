@@ -19,6 +19,7 @@ import org.jlab.mya.params.NaiveSamplerParams;
 import org.jlab.mya.stream.FloatEventStream;
 import org.junit.After;
 import org.junit.AfterClass;
+import static org.junit.Assert.assertEquals;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -74,7 +75,7 @@ public class SamplingServiceTest {
         NaiveSamplerParams params = new NaiveSamplerParams(metadata, begin,
                 end, limit);            
         
-        long expSize = 21; // We limit to 24, but we know historical data only has 21
+        long expSize = 24; // We limit to 24, but we know historical data only has 21
         List<FloatEvent> eventList = new ArrayList<>();
         try (FloatEventStream stream = sampleService.openNaiveSamplerFloatStream(params)) {
             FloatEvent event;
@@ -83,6 +84,7 @@ public class SamplingServiceTest {
         //        System.out.println(event.toString(fractionalDigits));
             }
         }
+        assertEquals(expSize, eventList.size());
         if (eventList.size() != expSize) {
             fail("List size does not match expected");
         }

@@ -53,7 +53,7 @@ public class TimeUtilTest {
                 ZoneId.systemDefault()).toInstant();
         long expResult = 6370496505408607835L;
         long result = TimeUtil.toMyaTimestamp(instant);
-        assertEquals(expResult, result);
+        assertEquals(expResult, result, 4);
     }
 
     /**
@@ -69,7 +69,7 @@ public class TimeUtilTest {
         Instant expResult = LocalDateTime.parse(dateStr).atZone(
                 ZoneId.systemDefault()).toInstant();
         Instant result = TimeUtil.fromMyaTimestamp(timestamp);
-        assertEquals(expResult, result);
+        assertEquals(expResult.getNano(), result.getNano(), 1);
     }
 
     /**
