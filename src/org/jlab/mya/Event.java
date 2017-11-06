@@ -61,7 +61,7 @@ public abstract class Event implements Comparable<Event> {
      * Return the timestamp as the number of seconds from UNIX Epoch including
      * fraction
      *
-     * @return
+     * @return The number of seconds since UNIX Epoch including fractional part
      */
     public double getTimestampAsSeconds() {
         return timestamp * MYATIME_TO_UNIX_SECONDS_WITH_FRACTION_SCALER;
