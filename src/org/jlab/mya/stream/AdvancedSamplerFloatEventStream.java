@@ -13,7 +13,7 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.params.AdvancedSamplerParams;
 
 /**
- * EventStream for the Improved sampler. This stream reads the full dataset from the database and
+ * EventStream for the Advanced sampler. This stream reads the full dataset from the database and
  * returns a subset (performs application layer filtering).
  *
  * @author apcarp
@@ -35,7 +35,7 @@ public class AdvancedSamplerFloatEventStream extends FloatEventStream {
         
     
     /**
-     * Create a new ImprovedSamplerFloatStream.
+     * Create a new AdvancedSamplerFloatStream.
      * 
      * @param params The query parameters
      * @param con The database connection

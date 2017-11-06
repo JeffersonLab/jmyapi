@@ -16,6 +16,9 @@ import org.jlab.mya.TimeUtil;
  */
 public class IntEvent extends Event {
 
+    /**
+     *MYA channel value
+     */
     protected final int value;
 
     /**

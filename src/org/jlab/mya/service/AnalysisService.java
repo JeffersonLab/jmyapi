@@ -16,15 +16,27 @@ import org.jlab.mya.params.PointQueryParams;
 import org.jlab.mya.stream.FloatEventStream;
 
 /**
- *
+ * Provides access to summary statistics about a MYA channel data.
  * @author adamc
  */
 public class AnalysisService extends IntervalService {
     
+    /**
+     *  Create a new service with the provided DataNexus
+     * @param nexus The DataNexus
+     */
     public AnalysisService(DataNexus nexus) {
         super(nexus);
     }
     
+    /**
+     * This calculates summary statistics based on the provided IntervalQueryParams object.  The statistics are accessed via
+     * the return RunningStatistics object.
+     * @param params Specify the details of the query
+     * @return A RunningStatistics object containing the summary statistic information of the query.
+     * @throws SQLException
+     * @throws IOException
+     */
     public RunningStatistics calculateRunningStatistics(IntervalQueryParams params) throws SQLException, IOException {
         
         RunningStatistics rs = new RunningStatistics();

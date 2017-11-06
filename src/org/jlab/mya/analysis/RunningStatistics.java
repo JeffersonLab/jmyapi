@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package org.jlab.mya.analysis;
 
 import java.time.Duration;
@@ -10,7 +6,8 @@ import org.jlab.mya.EventCode;
 import org.jlab.mya.event.FloatEvent;
 
 /**
- *
+ * This class provides summary statistics about the specified set of MYA data.  This class makes a best effort at using
+ * online and numerically stable algorithms for calculating the provided statistics.
  * @author adamc
  */
 public class RunningStatistics {
@@ -40,6 +37,7 @@ public class RunningStatistics {
     public RunningStatistics() {
     }
 
+    // Useful as a shorthand  for "initializing" an assortment of statistics
     private void zeroNums() {
         min = max = mean = sigmaSum = duration = integration = 0;
     }
@@ -116,7 +114,7 @@ public class RunningStatistics {
      * stated why this is this correct algorithm for computing variance of a
      * continuous time-domain function. I have created sketch of a proof as to
      * why this is a reasonable way to calculate the variance of a channel
-     * history and will supply in github project documents.
+     * history and will supply in GitHub project documents.
      *
      * @param value The value of the event to be added
      * @param weight The weight to be associated with the value. Typically the
