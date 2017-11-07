@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.params.AdvancedSamplerParams;
@@ -19,12 +18,14 @@ import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.stream.ImprovedSamplerFloatEventStream;
 
 /**
- * Provides query access to the Mya database for a set of sampled events in a given time interval.
+ * Provides query access to the Mya database for a set of sampled events in a
+ * given time interval.
  *
- * Sampling is sometimes performed in the database itself as a stored procedure to possibly minimize
- * the amount of data transferred. However, it is possible that sampling will actually increase the
- * size of the result set. This is because Mya data is stored as a set of deltas or changes. There
- * is no fixed update frequency.
+ * Sampling is sometimes performed in the database itself as a stored procedure
+ * to possibly minimize the amount of data transferred. However, it is possible
+ * that sampling will actually increase the size of the result set. This is
+ * because Mya data is stored as a set of deltas or changes. There is no fixed
+ * update frequency.
  *
  * @author slominskir
  */
@@ -35,19 +36,21 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified IntervalQueryParams and sampled
-     * using the naive algorithm.
+     * Open a stream to float events associated with the specified
+     * IntervalQueryParams and sampled using the naive algorithm.
      *
-     * The naive algorithm is the what you get with 'myget -l'. "Sampling" is a strong word here
-     * since the stored procedure used does not always provide a consistent spacing of data and does
-     * not weigh the data. I assume this is comparatively fast vs other sampling methods. It appears
-     * the procedure simply divides the interval into sub-intervals based on the number of requested
-     * points and then queries for the first event in each sub-interval. If no event is found in the
-     * sub-interval then no point is provided for that sub-interval meaning that the user may get
-     * less points then the limit. Sub-intervals are spaced by date.
+     * The naive algorithm is the what you get with 'myget -l'. "Sampling" is a
+     * strong word here since the stored procedure used does not always provide
+     * a consistent spacing of data and does not weigh the data. I assume this
+     * is comparatively fast vs other sampling methods. It appears the procedure
+     * simply divides the interval into sub-intervals based on the number of
+     * requested points and then queries for the first event in each
+     * sub-interval. If no event is found in the sub-interval then no point is
+     * provided for that sub-interval meaning that the user may get less points
+     * then the limit. Sub-intervals are spaced by date.
      *
-     * Generally you'll want to use try-with-resources around a call to this method to ensure you
-     * close the stream properly.
+     * Generally you'll want to use try-with-resources around a call to this
+     * method to ensure you close the stream properly.
      *
      * @param params The IntervalQueryParams
      * @return a stream
@@ -80,21 +83,21 @@ public class SamplingService extends QueryService {
         PreparedStatement stmtB = con.prepareStatement(query);
         ResultSet rs = stmtB.executeQuery();
 
-        // TODO: what the heck do we do with stmtC ... can't delete tmp table until results are consumed.... however closing connection will delete automatically for now....
+        // Note: We do not do anything with stmtC ... can't delete tmp table until results are consumed.... however closing connection will delete automatically for now....
         //query = "drop temporary table if exists table_x";
         //PreparedStatement stmtC = con.prepareStatement(query);        
         return new FloatEventStream(params, con, stmtB, rs);
     }
 
     /**
-     * Open a stream to float events associated with the specified IntervalQueryParams and sampled
-     * using the basic algorithm.
+     * Open a stream to float events associated with the specified
+     * IntervalQueryParams and sampled using the basic algorithm.
      *
-     * The basic algorithm is what you get with 'mySampler'. Each sample is obtained from a separate
-     * query. Bins are based on date.
+     * The basic algorithm is what you get with 'mySampler'. Each sample is
+     * obtained from a separate query. Bins are based on date.
      *
-     * Generally you'll want to use try-with-resources around a call to this method to ensure you
-     * close the stream properly.
+     * Generally you'll want to use try-with-resources around a call to this
+     * method to ensure you close the stream properly.
      *
      * @param params The IntervalQueryParams
      * @return a stream
@@ -113,20 +116,22 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified ImprovedSamplerParams and sampled
-     * using the improved algorithm.
+     * Open a stream to float events associated with the specified
+     * ImprovedSamplerParams and sampled using the improved algorithm.
      *
-     * This algorithm bins by count, not by date interval like many other sampling algorithms. There
-     * are pros and cons to this, but it means the event-based nature of the data is preserved and
-     * doesn't give periods of calm/idle time as many samples and give more samples to busy activity
+     * This algorithm bins by count, not by date interval like many other
+     * sampling algorithms. There are pros and cons to this, but it means the
+     * event-based nature of the data is preserved and doesn't give periods of
+     * calm/idle time as many samples and give more samples to busy activity
      * periods.
      *
-     * Another feature of this algorithm is it streams over the entire dataset once instead of
-     * issuing n-queries (n = # of bins). There are pros and cons to this as well. This algorithm
-     * will generally perform better than issuing n-queries would if there are only a few points per
-     * bin.
+     * Another feature of this algorithm is it streams over the entire dataset
+     * once instead of issuing n-queries (n = # of bins). There are pros and
+     * cons to this as well. This algorithm will generally perform better than
+     * issuing n-queries would if there are only a few points per bin.
      *
-     * TODO: Figure out number of events per bin threshold in which to use n-queries instead.
+     * Note: Users must figure out number of events per bin threshold in which
+     * to use n-queries instead.
      *
      * @param params The ImprovedSamplerParams
      * @return a stream
@@ -145,13 +150,19 @@ public class SamplingService extends QueryService {
     }
 
     /**
-     * Open a stream to float events associated with the specified IntervalQueryParams and sampled
-     * using the advanced algorithm (not supported yet).
+     * Open a stream to float events associated with the specified
+     * IntervalQueryParams and sampled using the advanced algorithm (not
+     * supported yet).
      *
-     * TODO: Describe advanced algorithm.
+     * The algorithm used is a modified version of largest triangle three bucket
+     * (LTTB) described in "Downsampling Time Series for Visual Representation"
+     * (Steinarsson, 2013). In addition to determining the LTTB point for this
+     * bucket, it also collects and non-update events, the minimum event by
+     * value, and the maximum event by value. This is an online algorithm and
+     * does not persist data.
      *
-     * Generally you'll want to use try-with-resources around a call to this method to ensure you
-     * close the stream properly.
+     * Generally you'll want to use try-with-resources around a call to this
+     * method to ensure you close the stream properly.
      *
      * @param params The IntervalQueryParams
      * @return a stream
@@ -159,7 +170,7 @@ public class SamplingService extends QueryService {
      */
     public FloatEventStream openAdvancedSamplerFloatStream(AdvancedSamplerParams params) throws
             SQLException {
-        
+
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);

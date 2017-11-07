@@ -1,6 +1,5 @@
 package org.jlab.mya.nexus;
 
-import java.sql.Connection;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;

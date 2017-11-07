@@ -2,11 +2,9 @@ package org.jlab.mya.service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.Month;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.DataType;
 import org.jlab.mya.Deployment;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.Metadata;

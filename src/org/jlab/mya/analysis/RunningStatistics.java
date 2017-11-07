@@ -1,14 +1,12 @@
-
 package org.jlab.mya.analysis;
 
-import java.time.Duration;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.event.FloatEvent;
 
 /**
  * This class provides summary statistics about the specified set of MYA data.  This class makes a best effort at using
  * online and numerically stable algorithms for calculating the provided statistics.
- * @author adamc
+ * @author apcarp
  */
 public class RunningStatistics {
 

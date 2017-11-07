@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jlab.mya.stream;
 
 import java.time.Instant;
@@ -10,14 +5,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.event.FloatEvent;
 import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -25,7 +18,7 @@ import static org.junit.Assert.*;
 
 /**
  *
- * @author adamc
+ * @author apcarp
  */
 public class FloatEventBucketTest {
     

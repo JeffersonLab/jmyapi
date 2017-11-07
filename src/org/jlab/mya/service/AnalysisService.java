@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package org.jlab.mya.service;
 
 import java.io.IOException;
@@ -17,7 +12,7 @@ import org.jlab.mya.stream.FloatEventStream;
 
 /**
  * Provides access to summary statistics about a MYA channel data.
- * @author adamc
+ * @author apcarp
  */
 public class AnalysisService extends IntervalService {
     
@@ -34,8 +29,8 @@ public class AnalysisService extends IntervalService {
      * the return RunningStatistics object.
      * @param params Specify the details of the query
      * @return A RunningStatistics object containing the summary statistic information of the query.
-     * @throws SQLException
-     * @throws IOException
+     * @throws SQLException If unable to query the database
+     * @throws IOException If unable to read from the stream
      */
     public RunningStatistics calculateRunningStatistics(IntervalQueryParams params) throws SQLException, IOException {
         
