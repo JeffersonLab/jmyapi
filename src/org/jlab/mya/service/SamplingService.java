@@ -151,8 +151,7 @@ public class SamplingService extends QueryService {
 
     /**
      * Open a stream to float events associated with the specified
-     * IntervalQueryParams and sampled using the advanced algorithm (not
-     * supported yet).
+     * IntervalQueryParams and sampled using the advanced algorithm.
      *
      * The algorithm used is a modified version of largest triangle three bucket
      * (LTTB) described in "Downsampling Time Series for Visual Representation"
