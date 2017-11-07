@@ -1,4 +1,5 @@
 org.jlab.mya
+org.jlab.mya.analysis
 org.jlab.mya.event
 org.jlab.mya.nexus
 org.jlab.mya.params
