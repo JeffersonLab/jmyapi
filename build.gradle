@@ -40,3 +40,8 @@ password=$password
         }
     }
 }
+
+task doc (type: Javadoc) {
+  source = sourceSets.main.allJava
+  options.overview = "src/overview.html"
+}
