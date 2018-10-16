@@ -2,7 +2,7 @@
 A Java client query API library for MYA (JLab's EPICS Archiver).  
 
 ## Automated Install
-Use Gradle build to download dependecies:
+Use Gradle build to download dependencies:
 ```
 git clone https://github.com/Jeffersonlab/jmyapi
 cd jmyapi
