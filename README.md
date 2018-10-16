@@ -1,6 +1,17 @@
 # jmyapi
 A Java client query API library for MYA (JLab's EPICS Archiver).  
 
+## Automated Install
+Use Gradle build to download dependecies:
+```
+git clone https://github.com/Jeffersonlab/jmyapi
+cd jmyapi
+gradlew build
+gradlew -Dorg.gradle.daemon=false config
+```
+## Manual Install
+Download jmyapi jar [here](https://github.com/JeffersonLab/jmyapi/releases).  Now download mysql driver jar [here](https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.42) and place in lib directory.  Create config/credentials.properites and config/deployments.properties files.
+
 ## API
 [javadocs](https://jeffersonlab.github.io/jmyapi/)   
 
