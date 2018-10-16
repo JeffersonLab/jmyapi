@@ -9,12 +9,22 @@ repositories {
 }
 
 dependencies {
-    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.6'
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.42'
     runtime files('config')
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
+    testCompile group: 'org.apache.commons', name: 'commons-pool2', version: '2.4.2'
 }
 
 sourceSets.main.java.srcDirs = ['src']
-mainClassName = 'org.jlab.mya.HelloWorld'
+sourceSets.test.java.srcDirs = ['test']
+
+task hello (type: JavaExec) {
+    group 'Application'
+    description 'Hello World Test'
+    main = 'org.jlab.mya.HelloWorld'
+    classpath = sourceSets.test.runtimeClasspath
+}
 
 task config {
     doLast {
