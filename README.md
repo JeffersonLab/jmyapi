@@ -8,6 +8,8 @@ git clone https://github.com/Jeffersonlab/jmyapi
 cd jmyapi
 gradlew build
 gradlew -Dorg.gradle.daemon=false config
+vi config/deployments.properties
+gradlew hello
 ```
 ## Manual Install
 Download jmyapi jar [here](https://github.com/JeffersonLab/jmyapi/releases).  Now download mysql driver jar [here](https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.42) and place in lib directory.  Create config/credentials.properites and config/deployments.properties files.
