@@ -11,6 +11,7 @@ gradlew -Dorg.gradle.daemon=false config
 vi config/deployments.properties
 gradlew hello
 ```
+__Note__: A copy of the deployment.properties file is stored in our internal ACE git repo under project __javacfg__.  Ideally we use a better strategy in the future such as Puppet to orchestrate deployments, or store it in a repository like Artifactory.
 ## Manual Install
 Download jmyapi jar [here](https://github.com/JeffersonLab/jmyapi/releases).  Now download mysql driver jar [here](https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.42) and place in lib directory.  Create config/credentials.properites and config/deployments.properties files.
 
