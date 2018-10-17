@@ -25,7 +25,10 @@ To publish changes to our internal ACE artifactory repo ensure you have a gradle
 artifactory_user=<user>
 artifactory_password=<password>
 ```
-
+Then execute:
+```
+gradlew artifactoryPublish
+```
 ## See Also
    - [Download](https://github.com/JeffersonLab/jmyapi/releases)    
    - [MYAPI DOCS (Internal)](http://devweb.acc.jlab.org/controls_web/certified/myapi/)
