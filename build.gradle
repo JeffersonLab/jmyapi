@@ -1,8 +1,10 @@
 description = 'Java MYA API'
 version = '1.1.0'
+group 'org.jlab'
 
 apply plugin: 'java'
 apply plugin: 'maven'
+apply plugin: 'maven-publish'
 
 repositories {
     jcenter()
@@ -48,4 +50,54 @@ password=$password
 task doc (type: Javadoc) {
   source = sourceSets.main.allJava
   options.overview = "src/overview.html"
+}
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url 'http://build.acc.jlab.org/artifactory/plugins-release'
+        }
+         
+    }
+    dependencies {
+        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+    }
+}
+ 
+allprojects {
+    apply plugin: "com.jfrog.artifactory"
+}
+ 
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}
+
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'gradle-release-local'
+            maven = true
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+        }
+        defaults {
+            publications('mavenJava')
+            publishArtifacts = true
+            publishPom = true
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'gradle-dev'
+            maven = true
+             
+        }
+    }
 }
