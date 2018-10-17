@@ -14,11 +14,17 @@ gradlew hello
 __Note__: [JLab Proxy Settings](https://github.com/JeffersonLab/jmyapi/wiki/JLab-Proxy)
 
 __Note__: A copy of the deployments.properties file is stored in our internal ACE git repo under project __javacfg__.  Ideally we use a better strategy in the future such as Puppet to orchestrate deployments, or store it in a repository like Artifactory.
-## Manual Install
-Download jmyapi jar [here](https://github.com/JeffersonLab/jmyapi/releases).  Now download mysql driver jar [here](https://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.42) and place in lib directory.  Create config/credentials.properites and config/deployments.properties files.
 
 ## API
 [javadocs](https://jeffersonlab.github.io/jmyapi/)   
+
+## Publishing Releases
+To publish changes to our internal ACE artifactory repo ensure you have a gradle.properties file either in your home directory with the following values:
+
+```
+artifactory_user=<user>
+artifactory_password=<password>
+```
 
 ## See Also
    - [Download](https://github.com/JeffersonLab/jmyapi/releases)    
