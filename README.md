@@ -23,4 +23,4 @@ Download jmyapi jar [here](https://github.com/JeffersonLab/jmyapi/releases).  No
 ## See Also
    - [Download](https://github.com/JeffersonLab/jmyapi/releases)    
    - [MYAPI DOCS (Internal)](http://devweb.acc.jlab.org/controls_web/certified/myapi/)
-   - [Trippy](https://github.com/JeffersonLab/trippy)
+   - [trippy](https://github.com/JeffersonLab/trippy)
