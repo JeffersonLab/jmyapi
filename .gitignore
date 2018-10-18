@@ -15,3 +15,4 @@
 /nbbuild.xml
 /lib/credentials.properties
 /.gradle/
+/.nb-gradle/
