@@ -24,7 +24,7 @@ public class HelloWorld {
      */
     public static void main(String[] args) throws SQLException, IOException {
 
-        DataNexus nexus = new OnDemandNexus(Deployment.opsfb);
+        DataNexus nexus = new OnDemandNexus(Deployment.history);
         IntervalService service = new IntervalService(nexus);
 
         String pv = "R123PMES";
