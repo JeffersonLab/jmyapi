@@ -16,3 +16,4 @@
 /lib/credentials.properties
 /.gradle/
 /.nb-gradle/
+/.nb-gradle-properties
