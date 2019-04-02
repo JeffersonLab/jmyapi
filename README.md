@@ -6,7 +6,7 @@ Use Gradle build to download dependencies:
 ```
 git clone https://github.com/JeffersonLab/jmyapi
 cd jmyapi
-gradlew build
+gradlew build -x test
 gradlew -Dorg.gradle.daemon=false config
 vi config/deployments.properties
 gradlew hello
