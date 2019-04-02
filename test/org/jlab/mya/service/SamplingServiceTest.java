@@ -45,7 +45,7 @@ public class SamplingServiceTest {
 
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
-        DataNexus nexus = new OnDemandNexus(Deployment.opsfb);
+        DataNexus nexus = new OnDemandNexus(Deployment.history);
         sampleService = new SamplingService(nexus);
         intervalService = new IntervalService(nexus);
     }

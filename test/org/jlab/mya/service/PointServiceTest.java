@@ -42,7 +42,7 @@ public class PointServiceTest {
 
     @Before
     public void setUp() {
-        DataNexus nexus = new OnDemandNexus(Deployment.opsfb);
+        DataNexus nexus = new OnDemandNexus(Deployment.history);
         service = new PointService(nexus);
     }
 
@@ -57,7 +57,7 @@ public class PointServiceTest {
     public void testFindFloatEvent() throws Exception {
         System.out.println("findFloatEvent");
         String pv = "R123PMES";
-        Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+        Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:05").atZone(
                 ZoneId.systemDefault()).toInstant();
 
         Metadata metadata = service.findMetadata(pv);
@@ -75,12 +75,12 @@ public class PointServiceTest {
         System.out.println("findIntEvent");
 
         String pv = "MFELINJC";
-        Instant timestamp = LocalDateTime.parse("2017-10-19T00:00:00").atZone(ZoneId.systemDefault()).toInstant();
+        Instant timestamp = LocalDateTime.parse("2017-09-08T14:50:38").atZone(ZoneId.systemDefault()).toInstant();
         Metadata metadata = service.findMetadata(pv);        
         PointQueryParams params = new PointQueryParams(metadata, timestamp);
         
-        // Roughly 2017-10-18 14:43:15
-        IntEvent expResult = new IntEvent(6478323349793338213L, EventCode.UPDATE, 0);
+        // Roughly 2017-09-08 14:50:37
+        IntEvent expResult = new IntEvent(6463481841234726650L, EventCode.UPDATE, 0);
         IntEvent result =  service.findIntEvent(params);
 
         assertEquals(expResult.getTimestamp(), result.getTimestamp());
