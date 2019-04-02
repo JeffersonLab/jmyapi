@@ -1,6 +1,7 @@
 # Port is same for all deployments 
 port=port
 
+# MUST use UNQUALIFIED names here as archiver master only stores short names.
 # Deployments
 ops.master.host=hostname
 ops.hosts=csv of hostnames
