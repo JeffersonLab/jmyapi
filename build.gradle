@@ -10,10 +10,6 @@ repositories {
     jcenter()
 }
 
-test {
-    exclude '**/*'
-}
-
 dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.42'
     runtime files('config')
