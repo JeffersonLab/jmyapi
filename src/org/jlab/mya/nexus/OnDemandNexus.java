@@ -7,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.Deployment;
 
 /**
  * A Mya DataNexus which creates resources on-demand and closes them immediately after use.
@@ -46,7 +45,7 @@ public class OnDemandNexus extends DataNexus {
      *
      * @param deployment The deployment
      */
-    public OnDemandNexus(Deployment deployment) {
+    public OnDemandNexus(String deployment) {
         super(deployment);
     }
 

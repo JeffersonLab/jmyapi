@@ -8,7 +8,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.Deployment;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.MultiStringEvent;
@@ -28,7 +27,7 @@ import org.junit.Test;
  */
 public class IntervalServiceTest {
 
-    public static final Deployment HISTORY_DEPLOYMENT = Deployment.history;
+    public static final String HISTORY_DEPLOYMENT = "history";
     public static final String TEST_PV = "MQA3S06M";
     public static final String TEST_PV_MULTI = "HLA:bta_uxtime_h";
     public static final Instant TEST_BEGIN = LocalDateTime.parse("2016-08-22T08:43:00").atZone(

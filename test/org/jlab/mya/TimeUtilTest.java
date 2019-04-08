@@ -51,9 +51,10 @@ public class TimeUtilTest {
 
         Instant instant = LocalDateTime.parse(dateStr).atZone(
                 ZoneId.systemDefault()).toInstant();
-        long expResult = 6370496505408607835L;
+        long expResult = 398156031588037989L;
         long result = TimeUtil.toMyaTimestamp(instant);
-        assertEquals(expResult, result, 4);
+        assertEquals(expResult, result);
+        
     }
 
     /**
@@ -62,10 +63,9 @@ public class TimeUtilTest {
     @Test
     public void testFromMyaTimestamp() {
         System.out.println("fromMyaTimestamp");
-
         String dateStr = "2017-01-01T00:00:01.749013325";
 
-        long timestamp = 6370496505408607835L;
+        long timestamp = 398156031588037989L;
         Instant expResult = LocalDateTime.parse(dateStr).atZone(
                 ZoneId.systemDefault()).toInstant();
         Instant result = TimeUtil.fromMyaTimestamp(timestamp);
@@ -81,7 +81,7 @@ public class TimeUtilTest {
     @Test
     public void testABunchOData() throws Exception {
         float delta = 100; // nanoseconds of fudge
-        DataNexus nexus = new OnDemandNexus(Deployment.opsfb);
+        DataNexus nexus = new OnDemandNexus("history");
         IntervalService service = new IntervalService(nexus);
         Metadata metadata = service.findMetadata("R123PMES");
         Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(

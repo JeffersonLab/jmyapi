@@ -24,9 +24,14 @@ public class HelloWorld {
      */
     public static void main(String[] args) throws SQLException, IOException {
 
-        DataNexus nexus = new OnDemandNexus(Deployment.history);
+        DataNexus nexus = new OnDemandNexus("history");
         IntervalService service = new IntervalService(nexus);
 
+        for (String name : DataNexus.getDeploymentNames()) {
+            System.out.println(name);
+        }
+        
+        
         String pv = "R123PMES";
         Instant begin
                 = LocalDateTime.parse("2017-01-01T00:00:00.123456").atZone(ZoneId.systemDefault()).toInstant();

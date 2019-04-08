@@ -9,7 +9,6 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.Deployment;
 
 /**
  * A Mya DataNexus which pools resources for later use.
@@ -32,7 +31,7 @@ public class PooledNexus extends DataNexus {
      * @param deployment The deployment
      * @throws NamingException If unable to lookup the underlying DBCP connection pool
      */
-    public PooledNexus(Deployment deployment) throws NamingException {
+    public PooledNexus(String deployment) throws NamingException {
         super(deployment);
 
         initCtx = new InitialContext();

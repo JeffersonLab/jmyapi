@@ -7,6 +7,7 @@ import java.time.ZoneOffset;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.event.FloatEvent;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -40,7 +41,8 @@ public class RunningStatisticsTest {
         // The mean should have been 2 before the reset and null after.  Check both to make sure things are working as expected.
         Double mean = rs.getMean();
         rs.reset();
-        assert (mean.equals(2.) && rs.getMean() == null);
+        assertEquals(mean, 2., delta);
+        assertEquals(null, rs.getMean());
     }
 
     /**
@@ -61,7 +63,7 @@ public class RunningStatisticsTest {
         rs.push(new FloatEvent(t3, EventCode.UPDATE, 3.f));
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
 
-        assert(rs.getDuration().equals(1800.));
+        assertEquals(1800., rs.getDuration(), delta);
     }
 
     /**
@@ -82,7 +84,7 @@ public class RunningStatisticsTest {
         rs.push(new FloatEvent(t3, EventCode.UPDATE, -3.f));
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
         
-        assert( Math.abs(rs.getMin() + 3.f) < delta );
+        assertEquals(-3.,rs.getMin(), delta);
     }
 
     /**
@@ -103,7 +105,7 @@ public class RunningStatisticsTest {
         rs.push(new FloatEvent(t3, EventCode.UPDATE, -3.f));
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
 
-        assert( Math.abs(rs.getMax() - 21.f) < delta );
+        assertEquals(21., rs.getMax(), delta);
     }
 
     /**
@@ -125,7 +127,7 @@ public class RunningStatisticsTest {
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
 
         // ( 1*10 + 2*10 + 3*20 ) / 40 = 9/4
-        assert( Math.abs(rs.getMean() - 9./4.) < delta );
+        assertEquals(9./4., rs.getMean(),delta);
     }
 
     /**
@@ -147,7 +149,7 @@ public class RunningStatisticsTest {
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
 
         // mean = 2, var = sum ( w_i * (x_i - mean)^2 ) / sum ( w_i ) = [ 1*(2-2)^2 + 2*(1-2)^2 + 2*(3-2)^2 ] / 5 = 4/5. sigma = sqrt(var) = sqrt(4/5)
-        assert( Math.abs(rs.getSigma() - Math.sqrt(4./5.)) < delta );
+        assertEquals(Math.sqrt(4./5.), rs.getSigma(), delta);
     }
 
     /**
@@ -169,7 +171,7 @@ public class RunningStatisticsTest {
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
 
         // mean = 2, var = sum ( w_i * (x_i - mean)^2 ) / sum ( w_i ) = [ 1*(2-2)^2 + 2*(1-2)^2 + 2*(3-2)^2 ] / 5 = 4/5. RMS = sqrt(var + mean^2) = sqrt(4/5 +4)
-        assert( Math.abs(rs.getRms() - Math.sqrt(4./5. + 4.)) < delta );
+        assertEquals(Math.sqrt(4./5. + 4.), rs.getRms(), delta);
     }
 
     /**
@@ -190,7 +192,8 @@ public class RunningStatisticsTest {
         rs.push(new FloatEvent(t3, EventCode.UPDATE, 3.f));
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
 
-        assert( Math.abs(rs.getDuration() - 3.) < delta );
+//        assert( Math.abs(rs.getDuration() - 3.) < delta );
+        assertEquals(3.,rs.getDuration(), delta);
     }
 
     /**
@@ -213,7 +216,7 @@ public class RunningStatisticsTest {
 
         // 2*1 + 1*2 + 3*2 = 10
         
-        assert( Math.abs(rs.getIntegration() - 10.) < delta );
+        assertEquals(10, rs.getIntegration(), delta);
     }
 
 }

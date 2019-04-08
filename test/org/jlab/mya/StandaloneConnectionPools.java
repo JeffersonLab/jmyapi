@@ -32,8 +32,10 @@ public class StandaloneConnectionPools implements Channel {
      * Creates DataSources for the deployment and publishes them to JNDI.
      *
      * @param deployment
+     * @throws javax.naming.NamingException
+     * @throws java.sql.SQLException
      */
-    public StandaloneConnectionPools(Deployment deployment) throws NamingException, SQLException {
+    public StandaloneConnectionPools(String deployment) throws NamingException, SQLException {
         initCtx = new InitialContext();
         envCtx = (Context) initCtx.lookup("java:comp/env");
 

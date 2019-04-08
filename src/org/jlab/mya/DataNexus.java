@@ -10,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 import org.jlab.mya.params.PointQueryParams;
 
 /**
@@ -45,15 +47,19 @@ public abstract class DataNexus {
         }
     }
 
-    private final Deployment deployment;
+    private final String deployment;
 
     /**
      * Create a new DataNexus for the given deployment.
      *
      * @param deployment The Mya deployment
      */
-    public DataNexus(Deployment deployment) {
-        this.deployment = deployment;
+    public DataNexus(String deployment) {
+        if (DataNexus.getDeploymentNames().contains(deployment)) {
+            this.deployment = deployment;
+        } else {
+            throw new IllegalArgumentException("Deployment definition not found: " + deployment);
+        }
     }
 
     /**
@@ -61,10 +67,25 @@ public abstract class DataNexus {
      *
      * @return The deployment
      */
-    public Deployment getDeployment() {
+    public String getDeployment() {
         return deployment;
     }
-
+    
+    /**
+     * Return the set of valid deployment names.
+     * @return The Set of valid deployment names.
+     */
+    public static Set<String> getDeploymentNames() {
+        Set<String> names = new TreeSet<>();
+        for(Object o : DEPLOYMENTS_PROPERTIES.keySet()) {
+            String prop = (String) o;
+            if (prop.matches("\\w+.master.host")) {
+                names.add(prop.split("\\.")[0]);
+            }
+        }
+        return names;
+    }
+    
     /**
      * Return the host name of the master host for the deployment associated
      * with this DataNexus.

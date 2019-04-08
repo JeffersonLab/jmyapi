@@ -3,7 +3,6 @@ package org.jlab.mya.nexus;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import org.jlab.mya.Deployment;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.StandaloneConnectionPools;
 import org.jlab.mya.StandaloneJndi;
@@ -50,9 +49,9 @@ public class PooledNexusTest {
     public void testGetConnection() throws Exception {
         System.out.println("getConnection");
         new StandaloneJndi();
-        try (StandaloneConnectionPools pools = new StandaloneConnectionPools(Deployment.history)) {
+        try (StandaloneConnectionPools pools = new StandaloneConnectionPools("history")) {
             System.out.println("After try");
-            PooledNexus nexus = new PooledNexus(Deployment.history);
+            PooledNexus nexus = new PooledNexus("history");
             PointService service = new PointService(nexus);
             String pv = "R123PMES";
             Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:05").atZone(

@@ -7,12 +7,13 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.Deployment;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.IntervalQueryParams;
+import org.junit.Assert;
 import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
@@ -33,7 +34,7 @@ public class AnalysisServiceTest {
 
         System.out.println("calculateRunningStatistics");
 
-        DataNexus nexus = new OnDemandNexus(Deployment.history);
+        DataNexus nexus = new OnDemandNexus("history");
         Instant begin = LocalDateTime.of(2016, Month.OCTOBER, 1, 0, 0, 0).atZone(ZoneId.of("America/New_York")).toInstant();
         Instant end = LocalDateTime.of(2017, Month.OCTOBER, 1, 0, 0, 0).atZone(ZoneId.of("America/New_York")).toInstant();
 
@@ -109,7 +110,7 @@ public class AnalysisServiceTest {
 
         System.out.println("Myapi   sigma: " + sigma);
         System.out.println("Jmyapi  sigma: " + result.getSigma());
-        System.out.println("Myapie rms:  " + rms);
+        System.out.println("Myapi  rms:  " + rms);
         System.out.println("Jmyapi rms: " + result.getRms());
         System.out.println("");
 
@@ -120,13 +121,15 @@ public class AnalysisServiceTest {
         double minMaxDiff = 0.000001;  // absolutely the same within 6 decimal places
         double percDiff = 0.0005;  // 0.05% difference
 
-        assert (Math.abs((min - result.getMin())) < minMaxDiff);
-        assert (Math.abs((max - result.getMax())) < minMaxDiff);
-        assert (Math.abs((mean - result.getMean()) / mean) < percDiff);
-        assert (Math.abs((sigma - result.getSigma()) / sigma) < percDiff);
-        assert (Math.abs((rms - result.getRms()) / rms) < percDiff);
+        // Make sure we get something back
+        Assert.assertNotEquals(null, result);
+        assertEquals(min, result.getMin(), minMaxDiff);
+        assertEquals(max, result.getMax(), minMaxDiff);
+        assertEquals(mean, result.getMean(), percDiff*mean);  // difference within a percentage of the expected value
+        assertEquals(sigma, result.getSigma(), percDiff * sigma);
+        assertEquals(rms, result.getRms(), percDiff * rms);
 
         // This test is known to fail as of now.  I believe this is due to a difference in time representation
-        //assert (Math.abs( (integration - result.getIntegration()) / integration ) < percDiff); 
+        assertEquals(integration, result.getIntegration(), percDiff * integration);
     }
 }

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.Deployment;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
@@ -42,7 +41,7 @@ public class PointServiceTest {
 
     @Before
     public void setUp() {
-        DataNexus nexus = new OnDemandNexus(Deployment.history);
+        DataNexus nexus = new OnDemandNexus("history");
         service = new PointService(nexus);
     }
 

@@ -20,7 +20,7 @@ public class PerformanceTest {
 
     @Test
     public void doTest() throws SQLException, IOException {
-        DataNexus nexus = new OnDemandNexus(Deployment.history);
+        DataNexus nexus = new OnDemandNexus("history");
         IntervalService service = new IntervalService(nexus);
 
         String pv = "IDC1G03sh_cur";

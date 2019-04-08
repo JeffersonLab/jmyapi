@@ -7,7 +7,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import org.jlab.mya.DataNexus;
-import org.jlab.mya.Deployment;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
@@ -45,7 +44,7 @@ public class SamplingServiceTest {
 
     @Before
     public void setUp() throws ClassNotFoundException, SQLException {
-        DataNexus nexus = new OnDemandNexus(Deployment.history);
+        DataNexus nexus = new OnDemandNexus("history");
         sampleService = new SamplingService(nexus);
         intervalService = new IntervalService(nexus);
     }
@@ -117,9 +116,7 @@ public class SamplingServiceTest {
         //        System.out.println(event);
             }
         }
-        if (eventList.size() != expSize) {
-            fail("List size does not match expected");
-        }
+        assertEquals("List size does not match expected", expSize, eventList.size());
     }
     
     /**
@@ -208,8 +205,6 @@ public class SamplingServiceTest {
             System.out.println("Downsampled num: " + eventList.size());
             System.out.println("Max Exepected update num: " + ( (numBins-2)*3 + 2) );
         }
-//        if (eventList.size() != expSize) {
-//            fail("List size does not match expected");
-//        }
+        assertEquals("List size does not match expected", expSize, eventList.size());
     }    
 }
