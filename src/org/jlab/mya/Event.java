@@ -14,8 +14,6 @@ import java.time.Instant;
  */
 public abstract class Event implements Comparable<Event> {
 
-    private static final double MYATIME_TO_UNIX_SECONDS_WITH_FRACTION_SCALER = 2.3283064365386963e-10;
-
     /**
      * The timestamp of the event.
      */
@@ -64,7 +62,7 @@ public abstract class Event implements Comparable<Event> {
      * @return The number of seconds since UNIX Epoch including fractional part
      */
     public double getTimestampAsSeconds() {
-        return timestamp * MYATIME_TO_UNIX_SECONDS_WITH_FRACTION_SCALER;
+        return timestamp * TimeUtil.MYATIME_TO_UNIX_SECONDS_WITH_FRACTION_SCALER;
     }
 
     /**
