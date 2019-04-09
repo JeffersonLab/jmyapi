@@ -10,7 +10,7 @@ import org.jlab.mya.DataNexus;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.params.AdvancedSamplerParams;
+import org.jlab.mya.params.GraphicalSamplerParams;
 import org.jlab.mya.params.BasicSamplerParams;
 import org.jlab.mya.params.ImprovedSamplerParams;
 import org.jlab.mya.params.IntervalQueryParams;
@@ -173,9 +173,9 @@ public class SamplingServiceTest {
 
         // Limited test        
         String pv = "R12XGMES";
-        Instant begin = LocalDateTime.parse("2017-02-11T02:45:23").atZone(
+        Instant begin = LocalDateTime.parse("2017-02-11T00:00:00").atZone(
                 ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-02-11T05:00:36").atZone(
+        Instant end = LocalDateTime.parse("2017-02-11T02:30:00").atZone(
                 ZoneId.systemDefault()).toInstant();        
 
 //        String pv = "R123PMES";
@@ -190,13 +190,15 @@ public class SamplingServiceTest {
         IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
         long count = intervalService.count(params);
         
-        AdvancedSamplerParams samplerParams = new AdvancedSamplerParams(metadata, begin,
+        GraphicalSamplerParams samplerParams = new GraphicalSamplerParams(metadata, begin,
                 end, numBins, count);
 
-        long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
+        // Impossible to know how many data points will be generated a priori since every disconnect will be represented.
+        // Beyond that, it should be min(data points, start point + end point + number of bins)
+        long expSize = 12; // Since we know ahead of time there are 20 points of data, start + end + 10 bin points + zero non-update events = 12
 
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = sampleService.openAdvancedSamplerFloatStream(samplerParams)) {
+        try (FloatEventStream stream = sampleService.openGraphicalSamplerFloatStream(samplerParams)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
