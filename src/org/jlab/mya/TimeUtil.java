@@ -24,48 +24,26 @@ import java.time.Instant;
 public final class TimeUtil {
 
     /**
-     * To seconds from a myatime timestamp. Similar to the nanosecond scaling factor times
-     * 10e-9 which scales from nanoseconds to seconds.  Will include fractional seconds.
-     */
-    public static final double MYATIME_TO_UNIX_SECONDS_WITH_FRACTION_SCALER = 3.725290298461914e-9;
-
-    /**
      * To Nanoseconds scaling factor.
      *
      * 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling
      * factor to convert from 2^32 fractional seconds to nanoseconds
      */
-//    private final static double TO_NANO_SCALER = 0.23283064365387;
-    /**
-     * To Nanoseconds scaling factor.
-     *
-     * 3.725290298461914 (3.7252902984619140625) {10^9/2^28} is a scaling factor
-     * to convert from 2^28 fractional seconds to nanoseconds
-     */
-    private final static double TO_NANO_SCALER = 3.725290298461914;
+    private final static double TO_NANO_SCALER = 0.23283064365387;
 
     /**
      * From Nanoseconds scaling factor.
-     *
      *
      * 4.294967296 = 1 / 0.23283064365386962890625 (scaling factor to convert
      * from nanoseconds to 2^32 fractional seconds)
      */
-//    private final static double FROM_NANO_SCALER = 4.294967296;
-    /**
-     * From Nanoseconds scaling factor.
-     *
-     *
-     * 0.268435456 = 1 / 3.725290298461914 (scaling factor to convert from
-     * nanoseconds to 2^28 fractional seconds)
-     */
-    private final static double FROM_NANO_SCALER = 0.268435456;
+    private final static double FROM_NANO_SCALER = 4.294967296;
 
     /**
-     * Bit mask for clearing high 36-bits of 64-bit long leaving only low
-     * 28-bits.
+     * Bit mask for clearing high 32-bits of 64-bit long leaving only low
+     * 32-bits.
      */
-    private final static long HI_MASK = (1L << 28) - 1;
+    private final static long HI_MASK = (1L << 32) - 1;
 
     /**
      * Instantiating one of these is useless so don't do it.
@@ -82,21 +60,18 @@ public final class TimeUtil {
      */
     public static long toMyaTimestamp(Instant instant) {
         int lo; // Integer to fill lower bits
-        long hi; // Integer to fill upper bits
+        int hi; // Integer to fill upper bits
 
-        // Given that myatime is a 36 bit unixtime (seconds since epoch) this conversion will overflow thousands of years into the future.
-        hi = instant.getEpochSecond();
+        hi = (int) instant.getEpochSecond(); // Hope this part doesn't overflow...
+
         lo = instant.getNano();
 
-        // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer
+        // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer              
         long unsignedLo = Integer.toUnsignedLong(lo);
         unsignedLo = (long) (unsignedLo * FROM_NANO_SCALER);
         lo = (int) unsignedLo;
 
-        // MYA time has two components in a single 64 bit long.  The upper 36 are an extended Unix time (seconds since epoch) and 
-        // the lower 28 bits is the fractional second component.  Shift the hi part over 28 bits and keep only the lower 28 of the 32 bit
-        // integer holding the count of 2^-28 seconds
-        long timestamp = (hi << 28) | (lo & 0xfffffffL);
+        long timestamp = (((long) hi) << 32) | (lo & 0xffffffffL);
         return timestamp;
     }
 
@@ -108,19 +83,15 @@ public final class TimeUtil {
      */
     public static Instant fromMyaTimestamp(long timestamp) {
         int lo;
-        long hi;
+        int hi;
 
-        hi = timestamp >>> 28; // >> 28 means sign extend; >>> 28 means zero-fill...
+        hi = (int) (timestamp >> 32); // >> 32 means sign extend; >>> 32 means zero-fill...
 
-        // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer.  This is the number
-        // of 2^-28 seconds.
+        // Java has no unsigned types, but we can use a long to hold the value of an unsigned integer        
         long unsignedLo = timestamp & HI_MASK;
 
-        // Now the number of nanoseconds should hopefully be no more than 30 bits of real data (28 + 2).  Implicit double conversion
-        // will result in at most a 30 bit integer component, and the fraction piece will get truncated on cast to long.
         unsignedLo = (long) (unsignedLo * TO_NANO_SCALER);
 
-        // Conversion to int is safe since we have at most 30 bits, and int has 31 bits for unsigned data
         lo = (int) unsignedLo;
 
         Instant instant = Instant.ofEpochSecond(hi, lo);
@@ -128,9 +99,9 @@ public final class TimeUtil {
     }
 
     /**
-     * Obtain a DateTimeFormatter pattern string with the specified number of
+     * Obtain a DateTimeFormatter pattern string with the specified number of 
      * fractional seconds.
-     *
+     * 
      * @param f The number of fractional seconds, min 0, max 9
      * @return The format pattern
      */
