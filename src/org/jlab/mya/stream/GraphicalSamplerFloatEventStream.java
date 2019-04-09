@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.params.AdvancedSamplerParams;
+import org.jlab.mya.params.GraphicalSamplerParams;
 
 /**
  * EventStream for the Advanced sampler. This stream reads the full dataset from
@@ -32,7 +32,7 @@ import org.jlab.mya.params.AdvancedSamplerParams;
  */
 public class GraphicalSamplerFloatEventStream extends FloatEventStream {
 
-    private final AdvancedSamplerParams samplerParams;
+    private final GraphicalSamplerParams samplerParams;
     private final long binSize;
     private final Queue<FloatEvent> queue = new PriorityQueue<>();
     private boolean hasFirst = false;
@@ -55,7 +55,7 @@ public class GraphicalSamplerFloatEventStream extends FloatEventStream {
      * @param stmt The database statement
      * @param rs The database result set
      */
-    public GraphicalSamplerFloatEventStream(AdvancedSamplerParams params, Connection con,
+    public GraphicalSamplerFloatEventStream(GraphicalSamplerParams params, Connection con,
             PreparedStatement stmt, ResultSet rs) {
         super(params, con, stmt, rs);
         this.samplerParams = params;
