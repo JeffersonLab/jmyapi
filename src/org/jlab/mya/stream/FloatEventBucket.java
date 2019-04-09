@@ -8,9 +8,9 @@ import org.jlab.mya.EventCode;
 import org.jlab.mya.event.FloatEvent;
 
 /**
- * This is intended to be used a the "bucket" in a modified implementation of the largest triangle three bucket (LTTB) algorithm
+ * This is intended to be used as the "bucket" in a modified implementation of the largest triangle three bucket (LTTB) algorithm
  * described in "Downsampling Time Series for Visual Representation" (Steinarsson, 2013).  In addition to determining the
- * LTTB point for this bucket, it also collects and non-update events, the minimum event by value, and the maximum event
+ * LTTB point for this bucket, it also collects any non-update events, the minimum event by value, and the maximum event
  * by value.
  * 
  * @author apcarp
