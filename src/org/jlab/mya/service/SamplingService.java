@@ -8,11 +8,11 @@ import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
-import org.jlab.mya.params.AdvancedSamplerParams;
+import org.jlab.mya.params.GraphicalSamplerParams;
 import org.jlab.mya.params.BasicSamplerParams;
 import org.jlab.mya.params.ImprovedSamplerParams;
 import org.jlab.mya.params.NaiveSamplerParams;
-import org.jlab.mya.stream.AdvancedSamplerFloatEventStream;
+import org.jlab.mya.stream.GraphicalSamplerFloatEventStream;
 import org.jlab.mya.stream.BasicSamplerFloatEventStream;
 import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.stream.ImprovedSamplerFloatEventStream;
@@ -167,7 +167,7 @@ public class SamplingService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openAdvancedSamplerFloatStream(AdvancedSamplerParams params) throws
+    public FloatEventStream openGraphicalSamplerFloatStream(GraphicalSamplerParams params) throws
             SQLException {
 
         String host = params.getMetadata().getHost();
@@ -176,6 +176,6 @@ public class SamplingService extends QueryService {
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();
-        return new AdvancedSamplerFloatEventStream(params, con, stmt, rs);
+        return new GraphicalSamplerFloatEventStream(params, con, stmt, rs);
     }
 }
