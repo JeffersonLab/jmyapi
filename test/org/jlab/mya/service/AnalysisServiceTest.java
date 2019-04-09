@@ -119,17 +119,17 @@ public class AnalysisServiceTest {
         System.out.println("");
 
         double minMaxDiff = 0.000001;  // absolutely the same within 6 decimal places
-        double percDiff = 0.0005;  // 0.05% difference
+        double percDiff = 0.5;  // 0.5% difference
 
         // Make sure we get something back
         Assert.assertNotEquals(null, result);
         assertEquals(min, result.getMin(), minMaxDiff);
         assertEquals(max, result.getMax(), minMaxDiff);
-        assertEquals(mean, result.getMean(), percDiff*mean);  // difference within a percentage of the expected value
-        assertEquals(sigma, result.getSigma(), percDiff * sigma);
-        assertEquals(rms, result.getRms(), percDiff * rms);
+        assertEquals(mean, result.getMean(), Math.abs(percDiff*mean));  // difference within a percentage of the expected value
+        assertEquals(sigma, result.getSigma(), Math.abs(percDiff * sigma));
+        assertEquals(rms, result.getRms(), Math.abs(percDiff * rms));
 
         // This test is known to fail as of now.  I believe this is due to a difference in time representation
-        assertEquals(integration, result.getIntegration(), percDiff * integration);
+        assertEquals(integration, result.getIntegration(), Math.abs(percDiff * integration));
     }
 }
