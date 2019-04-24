@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -45,7 +46,7 @@ public class PooledNexus extends DataNexus {
             try {
                 ds = (DataSource) envCtx.lookup("jdbc/" + host);
             } catch (NamingException e) {
-                // The NamingException thrown by Tomcat doesn't provide any info such as which 
+                // The NamingException thrown by Tomcat doesn't provide any info such as which
                 // name failed so we use our own
                 throw new NamingException("Unable to find DataSource: jdbc/" + host);
             }
@@ -64,7 +65,7 @@ public class PooledNexus extends DataNexus {
         try {
             return ds.getConnection();
         } catch (SQLException e) {
-            throw new SQLException("Unable to obtain Connection for: " + host, e);
+            throw new SQLException("Unable to obtain Connection for: " + host + "\nSQL State: " + e.getSQLState() + "\nSQL Exception Message: " + e.getMessage() + "\nError Code: " + e.getErrorCode(), e);
         }
     }
 }
