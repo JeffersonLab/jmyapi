@@ -1,5 +1,5 @@
 description = 'Java MYA API'
-version = '2.0.0-gs-snapshot'
+version = '2.0.3-gs-snapshot'
 group 'org.jlab'
 
 apply plugin: 'java'
