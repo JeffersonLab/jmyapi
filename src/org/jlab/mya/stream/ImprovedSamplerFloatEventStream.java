@@ -6,7 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.params.ImprovedSamplerParams;
+import org.jlab.mya.params.EventSamplerParams;
 
 /**
  * EventStream for the Improved sampler. This stream reads the full dataset from
@@ -16,7 +16,7 @@ import org.jlab.mya.params.ImprovedSamplerParams;
  */
 public class ImprovedSamplerFloatEventStream extends FloatEventStream {
 
-    private final ImprovedSamplerParams samplerParams;
+    private final EventSamplerParams samplerParams;
     private final long binSize;
     private final BigDecimal fractional;
     private BigDecimal fractionalCounter = BigDecimal.ZERO;
@@ -29,8 +29,8 @@ public class ImprovedSamplerFloatEventStream extends FloatEventStream {
      * @param stmt The database statement
      * @param rs The database result set
      */
-    public ImprovedSamplerFloatEventStream(ImprovedSamplerParams params, Connection con,
-            PreparedStatement stmt, ResultSet rs) {
+    public ImprovedSamplerFloatEventStream(EventSamplerParams params, Connection con,
+                                           PreparedStatement stmt, ResultSet rs) {
         super(params, con, stmt, rs);
         this.samplerParams = params;
 
