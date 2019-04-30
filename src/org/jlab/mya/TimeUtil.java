@@ -32,26 +32,11 @@ public final class TimeUtil {
     /**
      * To Nanoseconds scaling factor.
      *
-     * 0.23283064365387 (0.23283064365386962890625) {10^9/2^32} is a scaling
-     * factor to convert from 2^32 fractional seconds to nanoseconds
-     */
-//    private final static double TO_NANO_SCALER = 0.23283064365387;
-    /**
-     * To Nanoseconds scaling factor.
-     *
      * 3.725290298461914 (3.7252902984619140625) {10^9/2^28} is a scaling factor
      * to convert from 2^28 fractional seconds to nanoseconds
      */
     private final static double TO_NANO_SCALER = 3.725290298461914;
 
-    /**
-     * From Nanoseconds scaling factor.
-     *
-     *
-     * 4.294967296 = 1 / 0.23283064365386962890625 (scaling factor to convert
-     * from nanoseconds to 2^32 fractional seconds)
-     */
-//    private final static double FROM_NANO_SCALER = 4.294967296;
     /**
      * From Nanoseconds scaling factor.
      *
@@ -96,8 +81,7 @@ public final class TimeUtil {
         // MYA time has two components in a single 64 bit long.  The upper 36 are an extended Unix time (seconds since epoch) and 
         // the lower 28 bits is the fractional second component.  Shift the hi part over 28 bits and keep only the lower 28 of the 32 bit
         // integer holding the count of 2^-28 seconds
-        long timestamp = (hi << 28) | (lo & 0xfffffffL);
-        return timestamp;
+        return (hi << 28) | (lo & 0xfffffffL);
     }
 
     /**
@@ -123,8 +107,8 @@ public final class TimeUtil {
         // Conversion to int is safe since we have at most 30 bits, and int has 31 bits for unsigned data
         lo = (int) unsignedLo;
 
-        Instant instant = Instant.ofEpochSecond(hi, lo);
-        return instant;
+
+        return Instant.ofEpochSecond(hi, lo);
     }
 
     /**
