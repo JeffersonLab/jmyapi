@@ -79,7 +79,7 @@ public class PointServiceTest {
         PointQueryParams params = new PointQueryParams(metadata, timestamp);
         
         // Roughly 2017-09-08 14:50:37
-        IntEvent expResult = new IntEvent(6463481841234726650L, EventCode.UPDATE, 0);
+        IntEvent expResult = new IntEvent(403967615077170415L, EventCode.UPDATE, 0);
         IntEvent result =  service.findIntEvent(params);
 
         assertEquals(expResult.getTimestamp(), result.getTimestamp());
