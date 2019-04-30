@@ -6,7 +6,7 @@ Use Gradle build to download dependencies:
 ```
 git clone https://github.com/JeffersonLab/jmyapi
 cd jmyapi
-gradlew build
+gradlew build -x test
 gradlew -Dorg.gradle.daemon=false config
 vi config/deployments.properties
 gradlew hello
@@ -19,7 +19,7 @@ __Note__: A copy of the deployments.properties file is stored in our internal AC
 [javadocs](https://jeffersonlab.github.io/jmyapi/)   
 
 ## Publishing Releases
-To publish changes to our internal ACE artifactory repo ensure you have a gradle.properties file in your home directory with the following values:
+To publish changes to our internal ACE artifactory repo ensure you have a gradle.properties file in your ~/gradle directory with the following values:
 
 ```
 artifactory_user=<user>
