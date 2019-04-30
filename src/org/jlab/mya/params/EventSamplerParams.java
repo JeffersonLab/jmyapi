@@ -10,11 +10,11 @@ import org.jlab.mya.Metadata;
  *
  * @author slominskir
  */
-public class ImprovedSamplerParams extends NaiveSamplerParams {
+public class EventSamplerParams extends BinnedSamplerParams {
 
     private final long count;
 
-    public ImprovedSamplerParams(Metadata metadata, Instant begin, Instant end, long limit, long count) {
+    public EventSamplerParams(Metadata metadata, Instant begin, Instant end, long limit, long count) {
         super(metadata, begin, end, limit);
         this.count = count;
     }

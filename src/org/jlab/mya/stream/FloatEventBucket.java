@@ -109,7 +109,7 @@ public class FloatEventBucket {
             sampledOutput.add(min);            
         }
         if ( max != null ) {
-            sampledOutput.add(lttb);            
+            sampledOutput.add(max);
         }
         sampledOutput.addAll(output);
         return sampledOutput;

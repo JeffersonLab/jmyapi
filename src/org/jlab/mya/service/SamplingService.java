@@ -8,10 +8,10 @@ import java.sql.SQLException;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.QueryService;
 import org.jlab.mya.TimeUtil;
+import org.jlab.mya.params.BinnedSamplerParams;
 import org.jlab.mya.params.GraphicalSamplerParams;
 import org.jlab.mya.params.BasicSamplerParams;
-import org.jlab.mya.params.ImprovedSamplerParams;
-import org.jlab.mya.params.NaiveSamplerParams;
+import org.jlab.mya.params.EventSamplerParams;
 import org.jlab.mya.stream.GraphicalSamplerFloatEventStream;
 import org.jlab.mya.stream.BasicSamplerFloatEventStream;
 import org.jlab.mya.stream.FloatEventStream;
@@ -52,11 +52,13 @@ public class SamplingService extends QueryService {
      * Generally you'll want to use try-with-resources around a call to this
      * method to ensure you close the stream properly.
      *
+     * Note: Implemented using a database stored procedure.
+     *
      * @param params The IntervalQueryParams
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openNaiveSamplerFloatStream(NaiveSamplerParams params) throws
+    public FloatEventStream openBinnedSamplerFloatStream(BinnedSamplerParams params) throws
             SQLException {
         long maxPoints = params.getLimit();
 
@@ -117,7 +119,7 @@ public class SamplingService extends QueryService {
 
     /**
      * Open a stream to float events associated with the specified
-     * ImprovedSamplerParams and sampled using the improved algorithm.
+     * EventSamplerParams and sampled using the improved algorithm.
      *
      * This algorithm bins by count, not by date interval like many other
      * sampling algorithms. There are pros and cons to this, but it means the
@@ -133,11 +135,11 @@ public class SamplingService extends QueryService {
      * Note: Users must figure out number of events per bin threshold in which
      * to use n-queries instead.
      *
-     * @param params The ImprovedSamplerParams
+     * @param params The EventSamplerParams
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openImprovedSamplerFloatStream(ImprovedSamplerParams params) throws
+    public FloatEventStream openEventSamplerFloatStream(EventSamplerParams params) throws
             SQLException {
 
         String host = params.getMetadata().getHost();

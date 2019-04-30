@@ -28,6 +28,12 @@ import org.jlab.mya.params.GraphicalSamplerParams;
  * graphical fidelty. See documentation on FloatEventBucket for more details on
  * the downsampling algorithm
  *
+ * Note: The the number of bins may vary from the specified number.  The exact
+ * number of bins is ceil( (count - 2) / ceil((count - 2) / (numBins - 2) + 2)) plus
+ * the first and last points.  In other words, we strip off the first and last points
+ * then divide the remaining events into bins of size k where k is the smallest size that
+ * requires at most numBins-2 to contain the entire event set.
+ *
  * @author apcarp
  */
 public class GraphicalSamplerFloatEventStream extends FloatEventStream {

@@ -8,19 +8,19 @@ import org.jlab.mya.Metadata;
  *
  * @author slominskir
  */
-public class NaiveSamplerParams extends IntervalQueryParams {
+public class BinnedSamplerParams extends IntervalQueryParams {
 
     private final long limit;
 
     /**
-     * Create a new NaiveSamplerParams.
+     * Create a new BinnedSamplerParams.
      * 
      * @param metadata The PV metadata
      * @param begin The begin instant
      * @param end The end instant
      * @param limit The limit
      */
-    public NaiveSamplerParams(Metadata metadata, Instant begin, Instant end, long limit) {
+    public BinnedSamplerParams(Metadata metadata, Instant begin, Instant end, long limit) {
         super(metadata, begin, end);
 
         this.limit = limit;
