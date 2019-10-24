@@ -38,10 +38,10 @@ public class SourceSamplingService extends QueryService {
      * Open a stream to float events associated with the specified
      * IntervalQueryParams and sampled using the naive algorithm.
      *
-     * The naive algorithm is the what you get with 'myget -l'. "Sampling" is a
-     * strong word here since the stored procedure used does not always provide
-     * a consistent spacing of data and does not weigh the data. I assume this
-     * is comparatively fast vs other sampling methods. It appears the procedure
+     * The myget algorithm is the what you get with MYA 'myget -l'. A stored procedure is used,
+     * and does not always provide
+     * a consistent spacing of data and does not weigh the data. This approach is generally comparatively fast
+     * vs other sampling methods. It appears the procedure
      * simply divides the interval into sub-intervals based on the number of
      * requested points and then queries for the first event in each
      * sub-interval. If no event is found in the sub-interval then no point is
@@ -92,9 +92,9 @@ public class SourceSamplingService extends QueryService {
 
     /**
      * Open a stream to float events associated with the specified
-     * IntervalQueryParams and sampled using the basic algorithm.
+     * IntervalQueryParams and sampled using the mySampler algorithm.
      *
-     * The basic algorithm is what you get with 'mySampler'. Each sample is
+     * The mySampler algorithm is what you get with MYA 'mySampler'. Each sample is
      * obtained from a separate query. Bins are based on date.
      *
      * Generally you'll want to use try-with-resources around a call to this
