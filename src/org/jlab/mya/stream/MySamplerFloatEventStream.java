@@ -12,7 +12,7 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.params.MySamplerParams;
 
 /**
- * EventStream for the Basic sampler.
+ * EventStream for the MySampler algorithm.
  * 
  * Unlike a standard EventStream this one actually creates a new ResultSet for each sample.
  * 
