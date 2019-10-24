@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 /**
- * Wraps a FloatEventStream and provides FloatEvents by that are down-sampled as they stream by using a simple
+ * Wraps a FloatEventStream and provides FloatEvents that are down-sampled as they stream by using a simple
  * algorithm.
  *
  * This stream reads the full dataset from the database and returns a subset (performs application layer filtering).
