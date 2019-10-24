@@ -3,6 +3,8 @@ package org.jlab.mya.stream.wrapped;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jlab.mya.EventStream;
 import org.jlab.mya.ExtraInfo;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.LabeledEnumEvent;
@@ -24,7 +26,7 @@ public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEven
      * @param stream The IntEventStream to wrap
      * @param enumLabelList The history of enum labels
      */
-    public LabeledEnumStream(IntEventStream stream, List<ExtraInfo> enumLabelList) {
+    public LabeledEnumStream(EventStream<IntEvent> stream, List<ExtraInfo> enumLabelList) {
         super(stream);
 
         this.enumLabelList = new ArrayList<>(enumLabelList); // We make a copy because later we may modify the list

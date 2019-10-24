@@ -1,6 +1,7 @@
 package org.jlab.mya.stream.wrapped;
 
 import org.jlab.mya.EventCode;
+import org.jlab.mya.EventStream;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.stream.FloatEventStream;
@@ -21,7 +22,7 @@ public class FloatIntegrationStream extends WrappedEventStreamAdaptor<FloatEvent
      *
      * @param stream The FloatEventStream to wrap
      */
-    public FloatIntegrationStream(FloatEventStream stream) {
+    public FloatIntegrationStream(EventStream<FloatEvent> stream) {
         super(stream);
     }
 

@@ -4,11 +4,11 @@ import java.time.Instant;
 import org.jlab.mya.Metadata;
 
 /**
- * Parameters for the basic sampler (mySampler).
+ * Parameters for the MYA mySampler algorithm (mySampler).
  * 
  * @author slominskir
  */
-public class BasicSamplerParams extends IntervalQueryParams {
+public class MySamplerParams extends IntervalQueryParams {
     private final long stepMilliseconds;
     private final long sampleCount;
 
@@ -20,7 +20,7 @@ public class BasicSamplerParams extends IntervalQueryParams {
      * @param stepMilliseconds The step size in milliseconds
      * @param sampleCount The number of samples
      */   
-    public BasicSamplerParams(Metadata metadata, Instant begin, long stepMilliseconds, long sampleCount) {
+    public MySamplerParams(Metadata metadata, Instant begin, long stepMilliseconds, long sampleCount) {
         super(metadata, begin, begin.plusMillis(stepMilliseconds * sampleCount));
         this.stepMilliseconds = stepMilliseconds;
         this.sampleCount = sampleCount;

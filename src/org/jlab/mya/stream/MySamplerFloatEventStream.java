@@ -9,7 +9,7 @@ import java.time.Instant;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.params.BasicSamplerParams;
+import org.jlab.mya.params.MySamplerParams;
 
 /**
  * EventStream for the Basic sampler.
@@ -18,9 +18,9 @@ import org.jlab.mya.params.BasicSamplerParams;
  * 
  * @author slominskir
  */
-public class BasicSamplerFloatEventStream extends FloatEventStream {
+public class MySamplerFloatEventStream extends FloatEventStream {
 
-    private final BasicSamplerParams basicParams;
+    private final MySamplerParams basicParams;
 
     private long sampleCursor = 0;
 
@@ -31,8 +31,8 @@ public class BasicSamplerFloatEventStream extends FloatEventStream {
      * @param con The database connection
      * @param stmt The database statement
      */
-    public BasicSamplerFloatEventStream(BasicSamplerParams params, Connection con,
-            PreparedStatement stmt) {
+    public MySamplerFloatEventStream(MySamplerParams params, Connection con,
+                                     PreparedStatement stmt) {
         super(params, con, stmt, null);
         this.basicParams = params;
     }

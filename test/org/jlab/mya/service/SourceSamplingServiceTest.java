@@ -13,6 +13,9 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.*;
 import org.jlab.mya.stream.FloatEventStream;
+import org.jlab.mya.stream.wrapped.FloatGraphicalEventBinSampleStream;
+import org.jlab.mya.stream.wrapped.FloatIntegrationStream;
+import org.jlab.mya.stream.wrapped.FloatSimpleEventBinSampleStream;
 import org.junit.After;
 import org.junit.AfterClass;
 
@@ -29,9 +32,9 @@ import static org.junit.Assert.fail;
  *
  * @author slominskir
  */
-public class SamplingServiceTest {
+public class SourceSamplingServiceTest {
 
-    private SamplingService sampleService;
+    private SourceSamplingService sampleService;
     private IntervalService intervalService;
 
     @BeforeClass
@@ -45,7 +48,7 @@ public class SamplingServiceTest {
     @Before
     public void setUp() {
         DataNexus nexus = new OnDemandNexus("history");
-        sampleService = new SamplingService(nexus);
+        sampleService = new SourceSamplingService(nexus);
         intervalService = new IntervalService(nexus);
     }
 
@@ -60,7 +63,7 @@ public class SamplingServiceTest {
      * Compare with "myget -l 24 -c R123PMES -b 2017-01-01 -e 2017-01-25 -f 6"
      */
     @Test
-    public void testBinnedSampler() throws Exception {
+    public void testMyGetSampler() throws Exception {
 
         String pv = "R123PMES";
         Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
@@ -71,12 +74,12 @@ public class SamplingServiceTest {
         int fractionalDigits = 6; // microseconds; seems to be max precision of myget
 
         Metadata metadata = sampleService.findMetadata(pv);
-        BinnedSamplerParams params = new BinnedSamplerParams(metadata, begin,
+        MyGetSampleParams params = new MyGetSampleParams(metadata, begin,
                 end, limit);
 
         long expSize = 24; // We limit to 24, but we know historical data only has 21
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = sampleService.openBinnedSamplerFloatStream(params)) {
+        try (FloatEventStream stream = sampleService.openMyGetSampleFloatStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -95,7 +98,7 @@ public class SamplingServiceTest {
      * Compare with: "mySampler -b 2017-01-01 -s 1d -n 24 R123PMES"
      */
     @Test
-    public void testBasicSampler() throws Exception {
+    public void testMySampler() throws Exception {
 
         String pv = "R123PMES";
         Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
@@ -104,12 +107,12 @@ public class SamplingServiceTest {
         long sampleCount = 24;
 
         Metadata metadata = sampleService.findMetadata(pv);
-        BasicSamplerParams params = new BasicSamplerParams(metadata, begin,
+        MySamplerParams params = new MySamplerParams(metadata, begin,
                 stepMilliseconds, sampleCount);
 
         long expSize = 24;
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = sampleService.openBasicSamplerFloatStream(params)) {
+        try (FloatEventStream stream = sampleService.openMySamplerFloatStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -120,10 +123,10 @@ public class SamplingServiceTest {
     }
 
     /**
-     * Test improved sampler.
+     * Test simple application layer event bin sampler.
      */
     @Test
-    public void testEventSampler() throws Exception {
+    public void testSimpleEventBinSampler() throws Exception {
 
         String pv = "R123PMES";
         // 20 second test
@@ -148,14 +151,15 @@ public class SamplingServiceTest {
 
         //System.out.println("count: " + count);
 
-        EventSamplerParams samplerParams = new EventSamplerParams(metadata, begin,
+        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(metadata, begin,
                 end, limit, count);
 
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = sampleService.openEventSamplerFloatStream(samplerParams)) {
+        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
+            FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(stream, samplerParams);
             FloatEvent event;
-            while ((event = stream.read()) != null) {
+            while ((event = sampleStream.read()) != null) {
                 eventList.add(event);
 //                System.out.println(event.toString(displayFractionalDigits));
             }
@@ -166,7 +170,55 @@ public class SamplingServiceTest {
     }
 
     /**
-     * Test advanced sampler.
+     * Test integrate stream then simple application layer event bin sampler.
+     */
+    @Test
+    public void testIntegrateThenSimpleEventBinSampler() throws Exception {
+
+        String pv = "R123PMES";
+        // 20 second test
+        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+                ZoneId.systemDefault()).toInstant();
+        Instant end = LocalDateTime.parse("2017-01-01T00:00:20").atZone(
+                ZoneId.systemDefault()).toInstant();
+
+        // One year test
+//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
+//                ZoneId.systemDefault()).toInstant();
+//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+//                ZoneId.systemDefault()).toInstant();
+        long limit = 10;
+        int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
+
+        Metadata metadata = sampleService.findMetadata(pv);
+
+        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
+
+        long count = intervalService.count(params);
+
+        //System.out.println("count: " + count);
+
+        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(metadata, begin,
+                end, limit, count);
+
+        long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
+        List<FloatEvent> eventList = new ArrayList<>();
+        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
+            FloatIntegrationStream integrationStream = new FloatIntegrationStream(stream);
+            FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(integrationStream, samplerParams);
+            FloatEvent event;
+            while ((event = sampleStream.read()) != null) {
+                eventList.add(event);
+//                System.out.println(event.toString(displayFractionalDigits));
+            }
+        }
+        if (eventList.size() != expSize) {
+            fail("List size does not match expected");
+        }
+    }
+
+    /**
+     * Test advanced application level event bin sampler.
      */
     @Test
     public void testGraphicalSampler() throws Exception {
@@ -190,7 +242,7 @@ public class SamplingServiceTest {
         IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
         long count = intervalService.count(params);
 
-        GraphicalSamplerParams samplerParams = new GraphicalSamplerParams(metadata, begin,
+        GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(metadata, begin,
                 end, numBins, count);
 
         // Impossible to know how many data points will be generated a priori since every disconnect will be represented.
@@ -201,9 +253,10 @@ public class SamplingServiceTest {
         long expSize = 15; // 2 + 1*8 = 10, 2 + 3*8 = 26, so it's a broad range
 
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = sampleService.openGraphicalSamplerFloatStream(samplerParams)) {
+        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
+            FloatGraphicalEventBinSampleStream sampleStream = new FloatGraphicalEventBinSampleStream(stream, samplerParams);
             FloatEvent event;
-            while ((event = stream.read()) != null) {
+            while ((event = sampleStream.read()) != null) {
                 eventList.add(event);
                 System.out.println("##READ :" + event.toString(displayFractionalDigits));
             }

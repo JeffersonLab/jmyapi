@@ -4,11 +4,11 @@ import java.time.Instant;
 import org.jlab.mya.Metadata;
 
 /**
- * Parameters for the naive sampler (myget -l).
+ * Parameters for the myget sampler algorithm (myget -l).
  *
  * @author slominskir
  */
-public class BinnedSamplerParams extends IntervalQueryParams {
+public class MyGetSampleParams extends IntervalQueryParams {
 
     private final long limit;
 
@@ -20,7 +20,7 @@ public class BinnedSamplerParams extends IntervalQueryParams {
      * @param end The end instant
      * @param limit The limit
      */
-    public BinnedSamplerParams(Metadata metadata, Instant begin, Instant end, long limit) {
+    public MyGetSampleParams(Metadata metadata, Instant begin, Instant end, long limit) {
         super(metadata, begin, end);
 
         this.limit = limit;
