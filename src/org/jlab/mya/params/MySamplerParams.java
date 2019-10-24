@@ -13,7 +13,7 @@ public class MySamplerParams extends IntervalQueryParams {
     private final long sampleCount;
 
     /**
-     * Create a new BasicSamplerParams.
+     * Create a new MySamplerParams.
      * 
      * @param metadata The PV metadata
      * @param begin The begin instant

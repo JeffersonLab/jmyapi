@@ -13,7 +13,7 @@ public class MyGetSampleParams extends IntervalQueryParams {
     private final long limit;
 
     /**
-     * Create a new BinnedSamplerParams.
+     * Create a new MyGetSampleParams.
      * 
      * @param metadata The PV metadata
      * @param begin The begin instant

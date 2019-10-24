@@ -16,7 +16,7 @@ public class GraphicalEventBinSamplerParams extends IntervalQueryParams {
     private final long numBins;
 
     /**
-     * Create a new AdvancedSamplerParams.
+     * Create a new GraphicalEventBinSamplerParams.
      * 
      * @param metadata The metadata
      * @param begin The inclusive begin time
