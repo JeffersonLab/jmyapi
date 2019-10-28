@@ -41,6 +41,7 @@ public class FloatSimpleEventBinSampleStream extends WrappedEventStreamAdaptor<F
      * Create a new FloatSimpleEventBinStream by wrapping a FloatEventStream.
      *
      * @param stream The FloatEventStream to wrap
+     * @param params THe SimpleEventBinSamplerParams
      */
     public FloatSimpleEventBinSampleStream(EventStream<FloatEvent> stream, SimpleEventBinSamplerParams params) {
         super(stream);

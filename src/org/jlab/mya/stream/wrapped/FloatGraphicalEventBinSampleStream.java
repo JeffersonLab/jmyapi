@@ -64,6 +64,7 @@ public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdapto
      * Create a new FloatGraphicalEventBinSampleStream by wrapping a FloatEventStream.
      *
      * @param stream The FloatEventStream to wrap
+     * @param params The GraphiaclEventBinSampleParams
      */
     public FloatGraphicalEventBinSampleStream(EventStream<FloatEvent> stream, GraphicalEventBinSamplerParams params) {
         super(stream);
