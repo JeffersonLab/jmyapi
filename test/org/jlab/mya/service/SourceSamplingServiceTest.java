@@ -13,9 +13,6 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.*;
 import org.jlab.mya.stream.FloatEventStream;
-import org.jlab.mya.stream.wrapped.FloatGraphicalEventBinSampleStream;
-import org.jlab.mya.stream.wrapped.FloatIntegrationStream;
-import org.jlab.mya.stream.wrapped.FloatSimpleEventBinSampleStream;
 import org.junit.After;
 import org.junit.AfterClass;
 
@@ -28,14 +25,13 @@ import org.junit.Test;
 import static org.junit.Assert.fail;
 
 /**
- * Unit tests for sampling sampleService.
+ * Unit tests for SourceSamplingService.  Sampling done in-database.   See also: stream.wrapped.ApplicationLevelSamplingTest.
  *
  * @author slominskir
  */
 public class SourceSamplingServiceTest {
 
     private SourceSamplingService sampleService;
-    private IntervalService intervalService;
 
     @BeforeClass
     public static void setUpClass() {
@@ -49,7 +45,6 @@ public class SourceSamplingServiceTest {
     public void setUp() {
         DataNexus nexus = new OnDemandNexus("history");
         sampleService = new SourceSamplingService(nexus);
-        intervalService = new IntervalService(nexus);
     }
 
     @After
@@ -119,152 +114,6 @@ public class SourceSamplingServiceTest {
                 //        System.out.println(event);
             }
         }
-        assertEquals("List size does not match expected", expSize, eventList.size());
-    }
-
-    /**
-     * Test simple application layer event bin sampler.
-     */
-    @Test
-    public void testSimpleEventBinSampler() throws Exception {
-
-        String pv = "R123PMES";
-        // 20 second test
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-01-01T00:00:20").atZone(
-                ZoneId.systemDefault()).toInstant();
-
-        // One year test
-//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();   
-        long limit = 10;
-        int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
-
-        Metadata metadata = sampleService.findMetadata(pv);
-
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
-
-        long count = intervalService.count(params);
-
-        //System.out.println("count: " + count);
-
-        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(metadata, begin,
-                end, limit, count);
-
-        long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
-        List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
-            FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(stream, samplerParams);
-            FloatEvent event;
-            while ((event = sampleStream.read()) != null) {
-                eventList.add(event);
-//                System.out.println(event.toString(displayFractionalDigits));
-            }
-        }
-        if (eventList.size() != expSize) {
-            fail("List size does not match expected");
-        }
-    }
-
-    /**
-     * Test integrate stream then simple application layer event bin sampler.
-     */
-    @Test
-    public void testIntegrateThenSimpleEventBinSampler() throws Exception {
-
-        String pv = "R123PMES";
-        // 20 second test
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-01-01T00:00:20").atZone(
-                ZoneId.systemDefault()).toInstant();
-
-        // One year test
-//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-        long limit = 10;
-        int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
-
-        Metadata metadata = sampleService.findMetadata(pv);
-
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
-
-        long count = intervalService.count(params);
-
-        //System.out.println("count: " + count);
-
-        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(metadata, begin,
-                end, limit, count);
-
-        long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
-        List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
-            FloatIntegrationStream integrationStream = new FloatIntegrationStream(stream);
-            FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(integrationStream, samplerParams);
-            FloatEvent event;
-            while ((event = sampleStream.read()) != null) {
-                eventList.add(event);
-//                System.out.println(event.toString(displayFractionalDigits));
-            }
-        }
-        if (eventList.size() != expSize) {
-            fail("List size does not match expected");
-        }
-    }
-
-    /**
-     * Test advanced application level event bin sampler.
-     */
-    @Test
-    public void testGraphicalSampler() throws Exception {
-
-        // Limited test        
-        String pv = "R12XGMES";
-        Instant begin = LocalDateTime.parse("2017-02-11T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-02-11T02:30:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-
-//        String pv = "R123PMES";
-//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();        
-        long numBins = 10;
-        int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
-
-        Metadata metadata = sampleService.findMetadata(pv);
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
-        long count = intervalService.count(params);
-
-        GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(metadata, begin,
-                end, numBins, count);
-
-        // Impossible to know how many data points will be generated a priori since every disconnect will be represented.
-        // The expected size gets complicated to predict.  Number of actual bins is a complicated calculation based on determining
-        // the smallest bin size that produces no more than numBins-2.  Then each bin can produce min, max, and largest triangle three bucket (lttb) point
-        // and also return an unlimited number of non-update events plus surrounding update events.  A good rule of thumb for number of points returned is
-        // between 1*(numBins-2) + numNonUpdateEvents*3 + 2 and 3*(numBins-2) + numNonUpdateEvents*3 + 2
-        long expSize = 15; // 2 + 1*8 = 10, 2 + 3*8 = 26, so it's a broad range
-
-        List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
-            FloatGraphicalEventBinSampleStream sampleStream = new FloatGraphicalEventBinSampleStream(stream, samplerParams);
-            FloatEvent event;
-            while ((event = sampleStream.read()) != null) {
-                eventList.add(event);
-                System.out.println("##READ :" + event.toString(displayFractionalDigits));
-            }
-            System.out.println("Downsampled num: " + eventList.size());
-            System.out.println("Max Exepected update num: " + ((numBins - 2) * 3 + 2));
-        }
-
-        // Since we know ahead of time there are 20 points of data, start + end + (10 bins with min,max,lttb points) + zero non-update events = between 12 and 20
         assertEquals("List size does not match expected", expSize, eventList.size());
     }
 }
