@@ -7,6 +7,7 @@ import org.jlab.mya.stream.FloatEventStream;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  * Wraps a FloatEventStream and provides FloatEvents that are down-sampled as they stream by using a simple
@@ -79,8 +80,8 @@ public class FloatSimpleEventBinSampleStream extends WrappedEventStreamAdaptor<F
 
         //System.out.println("truncated old: " + old.setScale(0, BigDecimal.ROUND_DOWN));
         //System.out.println("truncated new: " + fractionalCounter.setScale(0, BigDecimal.ROUND_DOWN));
-        if (old.setScale(0, BigDecimal.ROUND_DOWN).compareTo(fractionalCounter.setScale(0,
-                BigDecimal.ROUND_DOWN)) == 0) {
+        if (old.setScale(0, RoundingMode.DOWN).compareTo(fractionalCounter.setScale(0,
+                RoundingMode.DOWN)) == 0) {
             effectiveBinSize = binSize;
         } else {
             effectiveBinSize = binSize + 1;

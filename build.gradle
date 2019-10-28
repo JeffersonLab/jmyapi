@@ -21,6 +21,10 @@ dependencies {
 sourceSets.main.java.srcDirs = ['src']
 sourceSets.test.java.srcDirs = ['test']
 
+compileJava {
+    options.compilerArgs += ["-Xlint:deprecation"]
+}
+
 task hello (type: JavaExec) {
     group 'Application'
     description 'Hello World Test'
