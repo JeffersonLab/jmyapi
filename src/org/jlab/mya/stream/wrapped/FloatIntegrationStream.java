@@ -36,17 +36,22 @@ public class FloatIntegrationStream extends WrappedEventStreamAdaptor<FloatEvent
     @Override
     public FloatEvent read() throws IOException {
         FloatEvent fEvent = wrapped.read();
+        FloatEvent iEvent = null;
 
-        stats.push(fEvent);
+        //System.out.println("fEvent: " + fEvent);
 
-        long timestamp = fEvent.getTimestamp();
-        EventCode code = fEvent.getCode(); // Should always be EventCode.UPDATE?
-        float value = 0; // If stats invalid we should use value of zero?
-        if(stats.getIntegration() != null) {
-            value = stats.getIntegration().floatValue();
+        if(fEvent != null) {
+            stats.push(fEvent);
+
+            long timestamp = fEvent.getTimestamp();
+            EventCode code = fEvent.getCode(); // Should always be EventCode.UPDATE?
+            float value = 0; // If stats invalid we should use value of zero?
+            if (stats.getIntegration() != null) {
+                value = stats.getIntegration().floatValue();
+            }
+
+            iEvent = new FloatEvent(timestamp, code, value);
         }
-
-        FloatEvent iEvent = new FloatEvent(timestamp, code, value);
 
         return iEvent;
     }

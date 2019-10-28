@@ -83,6 +83,9 @@ public class RunningStatistics {
 
             // Convert weight to seconds - helps both conceptually and with rounding errors (seconds will be more
             // central than nanos or millis, which should on average yield more consistent scales for operations).
+
+            //System.out.println("curr: " + curr + ", prev: " + prev);
+
             double weight = curr.getTimestampAsSeconds() - prev.getTimestampAsSeconds();
             updateStatistics(value, weight);
         }

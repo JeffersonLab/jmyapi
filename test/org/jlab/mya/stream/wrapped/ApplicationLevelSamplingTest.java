@@ -112,9 +112,9 @@ public class ApplicationLevelSamplingTest {
 
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
-            FloatIntegrationStream integrationStream = new FloatIntegrationStream(stream);
-            FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(integrationStream, samplerParams);
+        FloatEventStream stream = intervalService.openFloatStream(samplerParams);
+        FloatIntegrationStream integrationStream = new FloatIntegrationStream(stream);
+        try (FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(integrationStream, samplerParams)) {
             FloatEvent event;
             while ((event = sampleStream.read()) != null) {
                 eventList.add(event);
