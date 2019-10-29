@@ -24,9 +24,6 @@ compileJava   {
     targetCompatibility = '1.8'
 }
 
-sourceSets.main.java.srcDirs = ['src']
-sourceSets.test.java.srcDirs = ['test']
-
 task hello (type: JavaExec) {
     group 'Application'
     description 'Hello World Test'
@@ -53,6 +50,10 @@ javadoc {
     options.overview = "src/overview.html"
     //source = sourceSets.main.allJava
     //classpath = sourceSets.main.allSource
+    options.with {
+        links 'https://docs.oracle.com/javase/8/docs/api/'
+        //links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
+    }
 }
 
 buildscript {

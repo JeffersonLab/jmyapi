@@ -1,0 +1,57 @@
+package org.jlab.mya;
+
+import main.org.org.jlab.mya.event.FloatEvent;
+import main.org.org.jlab.mya.params.IntervalQueryParams;
+import main.org.org.jlab.mya.params.PointQueryParams;
+import main.org.org.jlab.mya.stream.FloatEventStream;
+import main.org.org.jlab.mya.nexus.OnDemandNexus;
+import main.org.org.jlab.mya.service.IntervalService;
+import main.org.org.jlab.mya.service.PointService;
+
+import java.io.IOException;
+import java.sql.SQLException;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+
+/**
+ *
+ * @author slominskir
+ */
+public class ConcurrencyTest {
+
+    /**
+     * @param args the command line arguments
+     * @throws SQLException
+     * @throws IOException
+     */
+    public static void main(String[] args) throws SQLException, IOException, InterruptedException {
+
+        DataNexus nexus = new OnDemandNexus("history");
+        IntervalService intervalService = new IntervalService(nexus);
+        PointService pointService = new PointService(nexus);
+
+        String pv = "R123PMES";
+        Instant begin
+                = LocalDateTime.parse("2016-01-01T00:00:00.123456").atZone(ZoneId.systemDefault()).toInstant();
+        Instant end
+                = LocalDateTime.parse("2017-01-01T00:01:00.123456").atZone(ZoneId.systemDefault()).toInstant();
+
+        Metadata metadata = intervalService.findMetadata(pv);
+        IntervalQueryParams intervalParams = new IntervalQueryParams(metadata, begin, end);
+        PointQueryParams pointParams = new PointQueryParams(metadata, begin);
+
+        try (FloatEventStream stream = intervalService.openFloatStream(intervalParams)) {
+
+            FloatEvent point = pointService.findFloatEvent(pointParams);
+            System.out.println("Point value: " + point.toString(6));
+
+            FloatEvent event;
+
+            while ((event = stream.read()) != null) {
+                System.out.println("Stream value: " + event.toString(6));
+            }
+        }
+    }
+
+}
