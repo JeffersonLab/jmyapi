@@ -9,7 +9,7 @@ import org.jlab.mya.stream.FloatEventStream;
 import java.io.IOException;
 
 /**
- * Wraps a FloatEventStream and provides FloatEvents by that are integrated as they stream by.
+ * Wraps a FloatEventStream and provides FloatEvents that are integrated as they stream by.
  *
  * @author slominskir
  */
