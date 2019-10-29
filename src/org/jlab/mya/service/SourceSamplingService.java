@@ -36,7 +36,7 @@ public class SourceSamplingService extends QueryService {
 
     /**
      * Open a stream to float events associated with the specified
-     * IntervalQueryParams and sampled using the naive algorithm.
+     * IntervalQueryParams and sampled using the myGet sampling algorithm.
      *
      * The myget algorithm is the what you get with MYA 'myget -l'. A stored procedure is used,
      * and does not always provide
