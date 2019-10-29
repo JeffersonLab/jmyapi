@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"org.jlab.mya"},{"l":"org.jlab.mya.analysis"},{"l":"org.jlab.mya.event"},{"l":"org.jlab.mya.nexus"},{"l":"org.jlab.mya.params"},{"l":"org.jlab.mya.service"},{"l":"org.jlab.mya.stream"},{"l":"org.jlab.mya.stream.wrapped"}]
