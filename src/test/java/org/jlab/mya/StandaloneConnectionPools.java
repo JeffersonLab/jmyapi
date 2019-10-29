@@ -10,7 +10,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import main.org.org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.nexus.OnDemandNexus;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 
 /**

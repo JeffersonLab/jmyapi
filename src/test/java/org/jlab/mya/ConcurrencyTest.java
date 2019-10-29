@@ -1,12 +1,12 @@
 package org.jlab.mya;
 
-import main.org.org.jlab.mya.event.FloatEvent;
-import main.org.org.jlab.mya.params.IntervalQueryParams;
-import main.org.org.jlab.mya.params.PointQueryParams;
-import main.org.org.jlab.mya.stream.FloatEventStream;
-import main.org.org.jlab.mya.nexus.OnDemandNexus;
-import main.org.org.jlab.mya.service.IntervalService;
-import main.org.org.jlab.mya.service.PointService;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.params.PointQueryParams;
+import org.jlab.mya.stream.FloatEventStream;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.service.IntervalService;
+import org.jlab.mya.service.PointService;
 
 import java.io.IOException;
 import java.sql.SQLException;

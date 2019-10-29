@@ -7,11 +7,11 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 
-import main.org.org.jlab.mya.DataNexus;
-import main.org.org.jlab.mya.Metadata;
-import main.org.org.jlab.mya.analysis.RunningStatistics;
-import main.org.org.jlab.mya.nexus.OnDemandNexus;
-import main.org.org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.DataNexus;
+import org.jlab.mya.Metadata;
+import org.jlab.mya.analysis.RunningStatistics;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.params.IntervalQueryParams;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;

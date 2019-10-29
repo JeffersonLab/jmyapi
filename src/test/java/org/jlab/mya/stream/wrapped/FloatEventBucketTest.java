@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import main.org.org.jlab.mya.EventCode;
-import main.org.org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.EventCode;
+import org.jlab.mya.event.FloatEvent;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

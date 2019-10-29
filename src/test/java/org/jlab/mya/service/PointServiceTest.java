@@ -5,14 +5,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import main.org.org.jlab.mya.DataNexus;
-import main.org.org.jlab.mya.EventCode;
-import main.org.org.jlab.mya.Metadata;
-import main.org.org.jlab.mya.event.FloatEvent;
-import main.org.org.jlab.mya.event.IntEvent;
-import main.org.org.jlab.mya.event.MultiStringEvent;
-import main.org.org.jlab.mya.nexus.OnDemandNexus;
-import main.org.org.jlab.mya.params.PointQueryParams;
+import org.jlab.mya.DataNexus;
+import org.jlab.mya.EventCode;
+import org.jlab.mya.Metadata;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.event.IntEvent;
+import org.jlab.mya.event.MultiStringEvent;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.params.PointQueryParams;
 import org.junit.*;
 
 import static org.junit.Assert.*;

@@ -4,17 +4,19 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
-import main.org.org.jlab.mya.params.PointQueryParams;
-import main.org.org.jlab.mya.Metadata;
+import org.jlab.mya.params.PointQueryParams;
+import org.jlab.mya.Metadata;
 import org.jlab.mya.StandaloneConnectionPools;
 import org.jlab.mya.StandaloneJndi;
-import main.org.org.jlab.mya.event.FloatEvent;
-import main.org.org.jlab.mya.service.PointService;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.service.PointService;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test the pooled nexus.

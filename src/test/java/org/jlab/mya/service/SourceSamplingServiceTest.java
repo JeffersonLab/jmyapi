@@ -7,14 +7,13 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.org.org.jlab.mya.DataNexus;
-import main.org.org.jlab.mya.Metadata;
-import main.org.org.jlab.mya.event.FloatEvent;
-import main.org.org.jlab.mya.nexus.OnDemandNexus;
-import main.org.org.jlab.mya.params.MyGetSampleParams;
-import main.org.org.jlab.mya.params.MySamplerParams;
-import main.org.org.jlab.mya.stream.FloatEventStream;
-import org.jlab.mya.params.*;
+import org.jlab.mya.DataNexus;
+import org.jlab.mya.Metadata;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.params.MyGetSampleParams;
+import org.jlab.mya.params.MySamplerParams;
+import org.jlab.mya.stream.FloatEventStream;
 import org.junit.After;
 import org.junit.AfterClass;
 

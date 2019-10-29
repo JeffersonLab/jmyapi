@@ -7,12 +7,12 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
 
-import main.org.org.jlab.mya.event.LabeledEnumEvent;
-import main.org.org.jlab.mya.nexus.OnDemandNexus;
-import main.org.org.jlab.mya.params.IntervalQueryParams;
-import main.org.org.jlab.mya.service.IntervalService;
-import main.org.org.jlab.mya.stream.IntEventStream;
-import main.org.org.jlab.mya.stream.wrapped.LabeledEnumStream;
+import org.jlab.mya.event.LabeledEnumEvent;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.service.IntervalService;
+import org.jlab.mya.stream.IntEventStream;
+import org.jlab.mya.stream.wrapped.LabeledEnumStream;
 import org.junit.Test;
 
 /**

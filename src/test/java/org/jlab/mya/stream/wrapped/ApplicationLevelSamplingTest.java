@@ -1,14 +1,14 @@
 package org.jlab.mya.stream.wrapped;
 
-import main.org.org.jlab.mya.Metadata;
-import main.org.org.jlab.mya.event.FloatEvent;
-import main.org.org.jlab.mya.nexus.OnDemandNexus;
-import main.org.org.jlab.mya.params.GraphicalEventBinSamplerParams;
-import main.org.org.jlab.mya.params.IntervalQueryParams;
-import main.org.org.jlab.mya.params.SimpleEventBinSamplerParams;
-import main.org.org.jlab.mya.stream.FloatEventStream;
-import main.org.org.jlab.mya.DataNexus;
-import main.org.org.jlab.mya.service.IntervalService;
+import org.jlab.mya.Metadata;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.params.GraphicalEventBinSamplerParams;
+import org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.params.SimpleEventBinSamplerParams;
+import org.jlab.mya.stream.FloatEventStream;
+import org.jlab.mya.DataNexus;
+import org.jlab.mya.service.IntervalService;
 import org.junit.Before;
 import org.junit.Test;
 
