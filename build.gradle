@@ -47,9 +47,10 @@ password=$password
     }
 }
 
-task doc (type: Javadoc) {
-  source = sourceSets.main.allJava
-  options.overview = "src/overview.html"
+javadoc {
+    options.overview = "src/overview.html"
+    //source = sourceSets.main.allJava
+    //classpath = sourceSets.main.allSource
 }
 
 buildscript {
