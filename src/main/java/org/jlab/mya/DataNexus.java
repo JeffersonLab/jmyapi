@@ -36,7 +36,7 @@ public abstract class DataNexus {
         // Load MYA Deployment Config
         try (InputStream is
                 = DataNexus.class.getClassLoader().getResourceAsStream(
-                "config/deployments.properties")) {
+                "deployments.properties")) {
             if (is == null) {
                 throw new IOException(
                         "File Not Found; Configuration File: deployments.properties");

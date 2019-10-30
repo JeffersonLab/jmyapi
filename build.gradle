@@ -37,7 +37,7 @@ task config {
         if (console) {
             def username = console.readLine('> Please enter mya username: ')
             def password = console.readPassword('> Please enter mya password: ')
-            new File("$projectDir/config/credentials.properties").text = """username=$username
+            new File("$projectDir/src/main/resoureces/credentials.properties").text = """username=$username
 password=$password
 """
         } else {

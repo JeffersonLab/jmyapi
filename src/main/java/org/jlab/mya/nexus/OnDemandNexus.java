@@ -28,7 +28,7 @@ public class OnDemandNexus extends DataNexus {
         // Load DB Credentials Config
         try (InputStream is
                 = DataNexus.class.getClassLoader().getResourceAsStream(
-                "config/credentials.properties")) {
+                "credentials.properties")) {
             if (is == null) {
                 throw new IOException(
                         "File Not Found; Configuration File: credentials.properties");

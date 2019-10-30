@@ -1,0 +1,21 @@
+# Port is same for all deployments 
+port=port
+
+# MUST use UNQUALIFIED names here as archiver master only stores short names.
+# Deployments
+ops.master.host=hostname
+ops.hosts=csv of hostnames
+dev.master.host=hostname
+dev.hosts=csv of hostnames
+opsfb.master.host=hostname
+opsfb.hosts=csv of hostnames
+devfb.master.host=hostname
+devfb.hosts=csv of hostnames
+history.master.host=hostname
+history.hosts=csv of hostnames
+bpm.master.host=hostname
+bpm.hosts=csv of hostnames
+
+# Proxies
+proxy.host.hostname=hostname
+proxy.port.hostname=port
