@@ -81,7 +81,7 @@ public class IntervalServiceTest {
     }
 
     /**
-     * Test of countRecords method, of class MyGet.
+     * Test of count method.
      */
     @Test
     public void testCount() throws Exception {
