@@ -109,7 +109,7 @@ public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdapto
             FloatEvent first;
 
             // Keep reading events and putting them on the queue until you find the first "update" event
-            while ((first = super.read()) != null && (!first.getCode().equals(EventCode.UPDATE))) {
+            while ((first = wrapped.read()) != null && (!first.getCode().equals(EventCode.UPDATE))) {
                 queue.add(first);
                 pointsProcessed++;
             }
@@ -128,7 +128,7 @@ public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdapto
         }
 
         prev = curr;
-        while ((curr = super.read()) != null) {
+        while ((curr = wrapped.read()) != null) {
             if (prev != null) {
                 events.add(prev);
                 pointsProcessed++;

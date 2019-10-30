@@ -151,6 +151,8 @@ public class ApplicationLevelSamplingTest {
         IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
         long count = intervalService.count(params);
 
+        System.out.println("count: " + count);
+
         GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(numBins, count);
 
         // Impossible to know how many data points will be generated a priori since every disconnect will be represented.
@@ -169,7 +171,7 @@ public class ApplicationLevelSamplingTest {
                     System.out.println("##READ :" + event.toString(displayFractionalDigits));
                 }
                 System.out.println("Downsampled num: " + eventList.size());
-                System.out.println("Max Exepected update num: " + ((numBins - 2) * 3 + 2));
+                System.out.println("Max Expected update num: " + ((numBins - 2) * 3 + 2));
             }
         }
 

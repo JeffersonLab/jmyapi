@@ -12,8 +12,8 @@ import org.jlab.mya.Metadata;
  */
 public class GraphicalEventBinSamplerParams {
 
-    private final long count;
     private final long numBins;
+    private final long count;
 
     /**
      * Create a new GraphicalEventBinSamplerParams.
@@ -22,8 +22,8 @@ public class GraphicalEventBinSamplerParams {
      * @param count The count
      */
     public GraphicalEventBinSamplerParams(long numBins, long count) {
-        this.count = count;
         this.numBins = numBins;
+        this.count = count;
     }
 
     /**
