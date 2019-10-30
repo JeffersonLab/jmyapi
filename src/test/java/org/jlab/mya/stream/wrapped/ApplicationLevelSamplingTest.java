@@ -1,14 +1,14 @@
 package org.jlab.mya.stream.wrapped;
 
+import org.jlab.mya.DataNexus;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.GraphicalEventBinSamplerParams;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.params.SimpleEventBinSamplerParams;
-import org.jlab.mya.stream.FloatEventStream;
-import org.jlab.mya.DataNexus;
 import org.jlab.mya.service.IntervalService;
+import org.jlab.mya.stream.FloatEventStream;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -60,12 +60,11 @@ public class ApplicationLevelSamplingTest {
 
         //System.out.println("count: " + count);
 
-        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(metadata, begin,
-                end, limit, count);
+        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(limit, count);
 
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
+        try (FloatEventStream stream = intervalService.openFloatStream(params)) {
             FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(stream, samplerParams);
             FloatEvent event;
             while ((event = sampleStream.read()) != null) {
@@ -107,18 +106,19 @@ public class ApplicationLevelSamplingTest {
 
         //System.out.println("count: " + count);
 
-        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(metadata, begin,
-                end, limit, count);
+        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(limit, count);
 
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
-        FloatEventStream stream = intervalService.openFloatStream(samplerParams);
-        FloatIntegrationStream integrationStream = new FloatIntegrationStream(stream);
-        try (FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(integrationStream, samplerParams)) {
-            FloatEvent event;
-            while ((event = sampleStream.read()) != null) {
-                eventList.add(event);
+        try (FloatEventStream stream = intervalService.openFloatStream(params)) {
+            try (FloatIntegrationStream integrationStream = new FloatIntegrationStream(stream)) {
+                try (FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(integrationStream, samplerParams)) {
+                    FloatEvent event;
+                    while ((event = sampleStream.read()) != null) {
+                        eventList.add(event);
 //                System.out.println(event.toString(displayFractionalDigits));
+                    }
+                }
             }
         }
         if (eventList.size() != expSize) {
@@ -151,8 +151,7 @@ public class ApplicationLevelSamplingTest {
         IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
         long count = intervalService.count(params);
 
-        GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(metadata, begin,
-                end, numBins, count);
+        GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(numBins, count);
 
         // Impossible to know how many data points will be generated a priori since every disconnect will be represented.
         // The expected size gets complicated to predict.  Number of actual bins is a complicated calculation based on determining
@@ -162,15 +161,16 @@ public class ApplicationLevelSamplingTest {
         long expSize = 15; // 2 + 1*8 = 10, 2 + 3*8 = 26, so it's a broad range
 
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = intervalService.openFloatStream(samplerParams)) {
-            FloatGraphicalEventBinSampleStream sampleStream = new FloatGraphicalEventBinSampleStream(stream, samplerParams);
-            FloatEvent event;
-            while ((event = sampleStream.read()) != null) {
-                eventList.add(event);
-                System.out.println("##READ :" + event.toString(displayFractionalDigits));
+        try (FloatEventStream stream = intervalService.openFloatStream(params)) {
+            try (FloatGraphicalEventBinSampleStream sampleStream = new FloatGraphicalEventBinSampleStream(stream, samplerParams)) {
+                FloatEvent event;
+                while ((event = sampleStream.read()) != null) {
+                    eventList.add(event);
+                    System.out.println("##READ :" + event.toString(displayFractionalDigits));
+                }
+                System.out.println("Downsampled num: " + eventList.size());
+                System.out.println("Max Exepected update num: " + ((numBins - 2) * 3 + 2));
             }
-            System.out.println("Downsampled num: " + eventList.size());
-            System.out.println("Max Exepected update num: " + ((numBins - 2) * 3 + 2));
         }
 
         // Since we know ahead of time there are 20 points of data, start + end + (10 bins with min,max,lttb points) + zero non-update events = between 12 and 20

@@ -10,22 +10,18 @@ import org.jlab.mya.Metadata;
  *
  * @author apcarp
  */
-public class GraphicalEventBinSamplerParams extends IntervalQueryParams {
+public class GraphicalEventBinSamplerParams {
 
     private final long count;
     private final long numBins;
 
     /**
      * Create a new GraphicalEventBinSamplerParams.
-     * 
-     * @param metadata The metadata
-     * @param begin The inclusive begin time
-     * @param end the exclusive end time
+     *
      * @param numBins The number of bins
      * @param count The count
      */
-    public GraphicalEventBinSamplerParams(Metadata metadata, Instant begin, Instant end, long numBins, long count) {
-        super(metadata, begin, end);
+    public GraphicalEventBinSamplerParams(long numBins, long count) {
         this.count = count;
         this.numBins = numBins;
     }

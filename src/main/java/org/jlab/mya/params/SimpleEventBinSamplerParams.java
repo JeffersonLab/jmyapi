@@ -9,16 +9,21 @@ import org.jlab.mya.Metadata;
  *
  * @author slominskir
  */
-public class SimpleEventBinSamplerParams extends MyGetSampleParams {
+public class SimpleEventBinSamplerParams {
 
+    private final long limit;
     private final long count;
 
-    public SimpleEventBinSamplerParams(Metadata metadata, Instant begin, Instant end, long limit, long count) {
-        super(metadata, begin, end, limit);
+    public SimpleEventBinSamplerParams(long limit, long count) {
+        this.limit = limit;
         this.count = count;
     }
 
     public long getCount() {
         return count;
+    }
+
+    public long getLimit() {
+        return limit;
     }
 }
