@@ -31,7 +31,7 @@ public class StandaloneJndi implements InitialContextFactory {
     
     public StandaloneJndi() {
                 System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
-                "StandaloneJndi");
+                "org.jlab.mya.StandaloneJndi");
     }
 
     @Override
