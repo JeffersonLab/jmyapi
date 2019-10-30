@@ -82,7 +82,7 @@ public class StandaloneConnectionPools implements Channel {
             pds.setPreparedStatementCacheSize(1024); // Each PV table requires a separate stmt
             pds.setCallableStatementCacheSize(8);  
             
-            // These look inteteresting, but can't find any docs on them
+            // These look interesting, but can't find any docs on them
             //pds.setUseServerPreparedStmts(true); // Should be true by default?
             //pds.setAutoClosePStmtStreams(true);
             //pds.setAutoReconnect(true);
