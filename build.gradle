@@ -12,7 +12,7 @@ repositories {
 
 dependencies {
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.42'
-    runtime files('config')
+    //runtime files('config')
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.apache.commons', name: 'commons-dbcp2', version: '2.1.1'
     testCompile group: 'org.apache.commons', name: 'commons-pool2', version: '2.4.2'
@@ -44,6 +44,13 @@ password=$password
             logger.error "Cannot get console, try running as: 'gradlew -Dorg.gradle.daemon=false config'"
         }
     }
+}
+
+// This is dumb, but works.  I can't get Gradle to add config dir to classpath when running JUnit tests so I move the
+// properties files where Gradle expects them.   But now I have to tell Gradle to not package our passwords
+// into the jar file!
+jar {
+    exclude('credentials.properties', 'deployments.properties', 'credentials.properties.template', 'deployments.properties.template')
 }
 
 javadoc {
