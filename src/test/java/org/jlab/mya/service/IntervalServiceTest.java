@@ -97,7 +97,7 @@ public class IntervalServiceTest {
      */
     @Test
     public void testOpenStream() throws Exception {
-        long expSize = 12616L;
+        long expSize = 12615L;
         List<FloatEvent> eventList = new ArrayList<>();
         try (FloatEventStream stream = service.openFloatStream(TEST_PARAMS)) {
             FloatEvent event;
