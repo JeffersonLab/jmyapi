@@ -82,10 +82,12 @@ public class IntervalServiceTest {
 
     /**
      * Test of count method.
+     *
+     * myget -c MQA3S06M -m history -b '2016-08-22 08:43:00' -e '2017-09-22 08:43:00' | wc -l
      */
     @Test
     public void testCount() throws Exception {
-        long expResult = 12616L;
+        long expResult = 12615L;
         long result = service.count(TEST_PARAMS);
         assertEquals(expResult, result);
     }
