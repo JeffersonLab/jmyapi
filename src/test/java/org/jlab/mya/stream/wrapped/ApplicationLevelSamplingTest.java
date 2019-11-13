@@ -1,6 +1,8 @@
 package org.jlab.mya.stream.wrapped;
 
 import org.jlab.mya.DataNexus;
+import org.jlab.mya.EventCode;
+import org.jlab.mya.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
@@ -11,9 +13,12 @@ import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.params.SimpleEventBinSamplerParams;
 import org.jlab.mya.service.IntervalService;
 import org.jlab.mya.stream.FloatEventStream;
+import org.jlab.mya.stream.ListStream;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -196,39 +201,39 @@ public class ApplicationLevelSamplingTest {
      */
     @Test
     public void testGraphicalSamplerNonUpdateEvents() throws Exception {
-
-        // Limited test
         String pv = "R123PMES";
-        Instant begin = LocalDateTime.parse("2019-05-30T09:07:17.999999").atZone( /*Network disconnection time*/
+        Instant begin = LocalDateTime.parse("2019-05-30T09:07:17").atZone( /*Network disconnection time*/
                 ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2019-05-30T09:56:49.999999").atZone(
+        Instant end = LocalDateTime.parse("2019-05-30T09:56:50").atZone(
                 ZoneId.systemDefault()).toInstant(); /*Network disconnection time*/
 
-//        String pv = "R123PMES";
-//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-        long numBins = 3;
+        long numBins = 30;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
 
-        Metadata metadata = intervalService.findMetadata(pv);
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
-        long count = intervalService.count(params);
+        List<FloatEvent> events = new ArrayList<FloatEvent>();
+        events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 1));
+        events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 2));
+        events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 3));
+        // bucket break for three buckets
+        events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 4));
+        events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 5));
+        events.add(new FloatEvent(Instant.now(), EventCode.NETWORK_DISCONNECTION, 0));
+        // bucket break for three buckets
+        events.add(new FloatEvent(Instant.now(), EventCode.NETWORK_DISCONNECTION, 0));
+        events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 6));
+        events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 7));
+        events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 8));
+
+        long count = events.size();
 
         System.out.println("count: " + count);
 
         GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(numBins, count);
 
-        // Impossible to know how many data points will be generated a priori since every disconnect will be represented.
-        // The expected size gets complicated to predict.  Number of actual bins is a complicated calculation based on determining
-        // the smallest bin size that produces no more than numBins-2.  Then each bin can produce min, max, and largest triangle three bucket (lttb) point
-        // and also return an unlimited number of non-update events plus surrounding update events.  A good rule of thumb for number of points returned is
-        // between 1*(numBins-2) + numNonUpdateEvents*3 + 2 and 3*(numBins-2) + numNonUpdateEvents*3 + 2
-        long expSize = 11; // 2 + 1*8 = 10, 2 + 3*8 = 26, so it's a broad range
+        long expSize = 10;
 
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = intervalService.openFloatStream(params)) {
+        try (EventStream<FloatEvent> stream = new ListStream<FloatEvent>(events)) {
             try (FloatGraphicalEventBinSampleStream sampleStream = new FloatGraphicalEventBinSampleStream(stream, samplerParams)) {
                 FloatEvent event;
                 while ((event = sampleStream.read()) != null) {
