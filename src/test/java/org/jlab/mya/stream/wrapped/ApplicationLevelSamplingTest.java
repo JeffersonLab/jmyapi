@@ -3,6 +3,7 @@ package org.jlab.mya.stream.wrapped;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.event.IntegratedFloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.GraphicalEventBinSamplerParams;
 import org.jlab.mya.params.IntervalQueryParams;
@@ -115,6 +116,10 @@ public class ApplicationLevelSamplingTest {
                 try (FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(integrationStream, samplerParams)) {
                     FloatEvent event;
                     while ((event = sampleStream.read()) != null) {
+                        if(event instanceof IntegratedFloatEvent) {
+                            IntegratedFloatEvent ife = (IntegratedFloatEvent)event;
+                            System.out.println(ife.toString(2) + ", integrated: " + ife.getIntegratedValue());
+                        }
                         eventList.add(event);
 //                System.out.println(event.toString(displayFractionalDigits));
                     }

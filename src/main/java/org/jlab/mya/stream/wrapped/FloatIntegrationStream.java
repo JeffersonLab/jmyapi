@@ -4,6 +4,7 @@ import org.jlab.mya.EventCode;
 import org.jlab.mya.EventStream;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.event.IntegratedFloatEvent;
 
 import java.io.IOException;
 
@@ -33,23 +34,26 @@ public class FloatIntegrationStream extends WrappedEventStreamAdaptor<FloatEvent
      * @throws IOException If unable to read the next event
      */
     @Override
-    public FloatEvent read() throws IOException {
+    public IntegratedFloatEvent read() throws IOException {
         FloatEvent fEvent = wrapped.read();
-        FloatEvent iEvent = null;
+        IntegratedFloatEvent iEvent = null;
 
         //System.out.println("fEvent: " + fEvent);
 
         if(fEvent != null) {
+
+            float value = fEvent.getValue();
+
             stats.push(fEvent);
 
             long timestamp = fEvent.getTimestamp();
             EventCode code = fEvent.getCode(); // Should always be EventCode.UPDATE?
-            float value = 0; // If stats invalid we should use value of zero?
+            double integratedValue = 0; // If stats invalid we should use value of zero?
             if (stats.getIntegration() != null) {
-                value = stats.getIntegration().floatValue();
+                integratedValue = stats.getIntegration();
             }
 
-            iEvent = new FloatEvent(timestamp, code, value);
+            iEvent = new IntegratedFloatEvent(timestamp, code, value, integratedValue);
         }
 
         return iEvent;
