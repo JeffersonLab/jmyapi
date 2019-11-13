@@ -190,4 +190,57 @@ public class ApplicationLevelSamplingTest {
         // Since we know ahead of time there are 20 points of data, start + end + (10 bins with min,max,lttb points) + zero non-update events = between 12 and 20
         assertEquals("List size does not match expected", expSize, eventList.size());
     }
+
+    /**
+     * Test advanced application level event bin sampler around non-update events.
+     */
+    @Test
+    public void testGraphicalSamplerNonUpdateEvents() throws Exception {
+
+        // Limited test
+        String pv = "R123PMES";
+        Instant begin = LocalDateTime.parse("2019-05-30T09:07:17.999999").atZone( /*Network disconnection time*/
+                ZoneId.systemDefault()).toInstant();
+        Instant end = LocalDateTime.parse("2019-05-30T09:56:49.999999").atZone(
+                ZoneId.systemDefault()).toInstant(); /*Network disconnection time*/
+
+//        String pv = "R123PMES";
+//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
+//                ZoneId.systemDefault()).toInstant();
+//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+//                ZoneId.systemDefault()).toInstant();
+        long numBins = 3;
+        int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
+
+        Metadata metadata = intervalService.findMetadata(pv);
+        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
+        long count = intervalService.count(params);
+
+        System.out.println("count: " + count);
+
+        GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(numBins, count);
+
+        // Impossible to know how many data points will be generated a priori since every disconnect will be represented.
+        // The expected size gets complicated to predict.  Number of actual bins is a complicated calculation based on determining
+        // the smallest bin size that produces no more than numBins-2.  Then each bin can produce min, max, and largest triangle three bucket (lttb) point
+        // and also return an unlimited number of non-update events plus surrounding update events.  A good rule of thumb for number of points returned is
+        // between 1*(numBins-2) + numNonUpdateEvents*3 + 2 and 3*(numBins-2) + numNonUpdateEvents*3 + 2
+        long expSize = 11; // 2 + 1*8 = 10, 2 + 3*8 = 26, so it's a broad range
+
+        List<FloatEvent> eventList = new ArrayList<>();
+        try (FloatEventStream stream = intervalService.openFloatStream(params)) {
+            try (FloatGraphicalEventBinSampleStream sampleStream = new FloatGraphicalEventBinSampleStream(stream, samplerParams)) {
+                FloatEvent event;
+                while ((event = sampleStream.read()) != null) {
+                    eventList.add(event);
+                    System.out.println("##READ :" + event.toString(displayFractionalDigits));
+                }
+                System.out.println("Downsampled num: " + eventList.size());
+                System.out.println("Max Expected update num: " + ((numBins - 2) * 3 + 2));
+            }
+        }
+
+        // Since we know ahead of time there are 20 points of data, start + end + (10 bins with min,max,lttb points) + zero non-update events = between 12 and 20
+        assertEquals("List size does not match expected", expSize, eventList.size());
+    }
 }
