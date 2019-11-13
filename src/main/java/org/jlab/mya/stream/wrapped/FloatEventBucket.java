@@ -130,9 +130,23 @@ public class FloatEventBucket {
         double x1 = 0.0;
         double x2 = e2.getTimestampAsSeconds() - e1.getTimestampAsSeconds();
         double x3 = e3.getTimestampAsSeconds() - e1.getTimestampAsSeconds();
-    
+
+        // If e3 is a non-update event, then just use the value of e1.  Keeping track of a running average (or something)
+        // may be a smarter choice, but this whole thing is complicated enough as it is.
+        //
+        // We assume e1 is always a non-update event.  Seems reasonable since we iterate over the initial points until
+        // we find an UPDATE event which becomes the first lttb/e1 point, and the downsample always passes forward the
+        // last good lttb point (e1) if no UPDATE events were in the bucket.
+        double y3;
+        if (e3.getCode() != EventCode.UPDATE) {
+            y3 = e1.getValue();
+        } else {
+            y3 = e3.getValue();
+        }
+
         // The values are floats that get cast to doubles, so I'm not too worried about adding extra rounding errors due to difference
         // in scale.
-        return 0.5 * Math.abs(x1 * (e2.getValue() - e3.getValue()) + x2 * (e3.getValue() - e1.getValue()) + x3 * (e1.getValue() - e2.getValue()) );
+        // Formula for trianlge in 2d space is x1*(y2-y3) - x2*(y3-y1) - x3*(y1-y2).  But we may have to be tricky with y3 here.
+        return 0.5 * Math.abs(x1 * (e2.getValue() - y3) + x2 * (y3 - e1.getValue()) + x3 * (e1.getValue() - e2.getValue()) );
     }
 }
