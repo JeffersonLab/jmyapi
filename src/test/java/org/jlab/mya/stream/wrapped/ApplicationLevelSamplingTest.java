@@ -121,15 +121,11 @@ public class ApplicationLevelSamplingTest {
         List<FloatEvent> eventList = new ArrayList<>();
         try (FloatEventStream stream = intervalService.openFloatStream(params)) {
             try (FloatAnalysisStream analysisStream = new FloatAnalysisStream(stream, eventStatsMap)) {
-                try (FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(analysisStream, samplerParams)) {
-                    FloatEvent event;
+                try (FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams)) {
+                    AnalyzedFloatEvent event;
                     while ((event = sampleStream.read()) != null) {
-                        if(event instanceof AnalyzedFloatEvent) {
-                            AnalyzedFloatEvent ife = (AnalyzedFloatEvent)event;
-                            System.out.println(ife.toString(2) + ", integration: " + ife.getEventStats()[0]);
-                        }
+                        System.out.println(event.toString(2) + ", integration: " + event.getEventStats()[0]);
                         eventList.add(event);
-//                System.out.println(event.toString(displayFractionalDigits));
                     }
                 }
 

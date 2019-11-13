@@ -15,19 +15,19 @@ import org.jlab.mya.event.FloatEvent;
  * 
  * @author apcarp
  */
-public class FloatEventBucket {
-    private List<FloatEvent> events;
-    private final List<FloatEvent> output = new ArrayList<>(); // Non-update events will be added here
-    private FloatEvent min = null;
-    private FloatEvent max = null;
-    private FloatEvent lttb = null;
+public class FloatEventBucket<T extends FloatEvent> {
+    private List<T> events;
+    private final List<T> output = new ArrayList<>(); // Non-update events will be added here
+    private T min = null;
+    private T max = null;
+    private T lttb = null;
     private double lttbArea = 0;
     
     /**
      * Instantiate a FloatEventBucket object
      * @param events A list of FloatEvents to be represented in this bucket
      */
-    public FloatEventBucket (List<FloatEvent> events) {
+    public FloatEventBucket (List<T> events) {
         if (events == null || events.isEmpty()) {
             throw new IllegalArgumentException("FloatEventBucket requires non-null, non-empty list of events.");
         }
@@ -41,7 +41,7 @@ public class FloatEventBucket {
      * @param e3 The last point to be used in the LTTB triangle area calculation (typically the LTTB point from the following bucket)
      * @return Returns the found LTTB point.  Meant to be used in downSample calls on following bins.
      */
-    public FloatEvent downSample (FloatEvent e1, FloatEvent e3) {
+    public T downSample (T e1, T e3) {
         if ( e1 == null || e3 == null ) {
             throw new IllegalArgumentException("Two non-null events required");
         }
@@ -52,9 +52,9 @@ public class FloatEventBucket {
         
         // Since we are saving non-update events, we should also include the adjacent points to accurately display the
         // disconnect.  If non-update event, look back for last point.  If update, look back to see if last was non-update.
-        FloatEvent prev = null;
+        T prev = null;
 
-        for(FloatEvent e : events) {
+        for(T e : events) {
 
             // Non-update events - filter these out first since they don't have meaningful values
             if ( e.getCode() != EventCode.UPDATE ) {
@@ -101,8 +101,8 @@ public class FloatEventBucket {
      * Return the downSampled representation of this bucket.
      * @return Downsampled set of FloatEvents representing this FloatEventBucket
      */
-    public SortedSet<FloatEvent> getDownSampledOutput() {
-        SortedSet<FloatEvent> sampledOutput = new TreeSet<>();
+    public SortedSet<T> getDownSampledOutput() {
+        SortedSet<T> sampledOutput = new TreeSet<>();
         if ( lttb != null ) {
             sampledOutput.add(lttb);
         }

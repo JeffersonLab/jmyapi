@@ -52,20 +52,20 @@ import java.util.Queue;
  * @author apcarp
  * @author slominskir
  */
-public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdaptor<FloatEvent, FloatEvent> {
+public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends WrappedEventStreamAdaptor<T, T> {
 
     private final GraphicalEventBinSamplerParams samplerParams;
     private final long binSize;
-    private final Queue<FloatEvent> queue = new PriorityQueue<>();
+    private final Queue<T> queue = new PriorityQueue<>();
     private boolean hasFirst = false;
-    private FloatEvent lastLTTB = null;
+    private T lastLTTB = null;
     private long binBoundary = 0;
     private long pointsProcessed = 0;
-    private final List<FloatEvent> events = new ArrayList<>();
+    private final List<T> events = new ArrayList<>();
 
     // We use to points so we can look ahead and handle the last point similar to the first and process the last "real" bucket
-    private FloatEvent prev = null;
-    private FloatEvent curr = null;
+    private T prev = null;
+    private T curr = null;
 
     /**
      * Create a new FloatGraphicalEventBinSampleStream by wrapping a FloatEventStream.
@@ -73,7 +73,7 @@ public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdapto
      * @param stream The FloatEventStream to wrap
      * @param params The GraphiaclEventBinSampleParams
      */
-    public FloatGraphicalEventBinSampleStream(EventStream<FloatEvent> stream, GraphicalEventBinSamplerParams params) {
+    public FloatGraphicalEventBinSampleStream(EventStream<T> stream, GraphicalEventBinSamplerParams params) {
         super(stream);
 
         this.samplerParams = params;
@@ -94,7 +94,7 @@ public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdapto
      * @throws IOException If unable to read the next event
      */
     @Override
-    public FloatEvent read() throws IOException {
+    public T read() throws IOException {
         // If the queue is empty, process some more of the stream which should add data to the queue
         if (queue.peek() == null) {
             processStream();
@@ -114,7 +114,7 @@ public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdapto
         // The first real point should be included no matter what and should be used as the first LTTB point.
         // Queue up any non-update points before the first real update.
         if (!hasFirst) {
-            FloatEvent first;
+            T first;
 
             // Keep reading events and putting them on the queue until you find the first "update" event
             while ((first = wrapped.read()) != null && (!first.getCode().equals(EventCode.UPDATE))) {
@@ -143,7 +143,7 @@ public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdapto
 
                 if (pointsProcessed == binBoundary) {
                     binBoundary = binBoundary + binSize;
-                    FloatEventBucket feb = new FloatEventBucket(events);
+                    FloatEventBucket<T> feb = new FloatEventBucket<>(events);
                     lastLTTB = feb.downSample(lastLTTB, curr);
                     queue.addAll(feb.getDownSampledOutput());
                     events.clear();
@@ -159,7 +159,7 @@ public class FloatGraphicalEventBinSampleStream extends WrappedEventStreamAdapto
             // the listand when a subsequent read/procesStream happens, processStream will not queue anything else up and the
             // queue will return null.
             if (!events.isEmpty()) {
-                FloatEventBucket feb = new FloatEventBucket(events);
+                FloatEventBucket<T> feb = new FloatEventBucket<>(events);
                 lastLTTB = feb.downSample(lastLTTB, prev);
                 queue.addAll(feb.getDownSampledOutput());
                 events.clear();

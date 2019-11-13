@@ -37,7 +37,7 @@ import java.math.RoundingMode;
  * </p>
  * @author slominskir
  */
-public class FloatSimpleEventBinSampleStream extends WrappedEventStreamAdaptor<FloatEvent, FloatEvent> {
+public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends WrappedEventStreamAdaptor<T, T> {
 
     private final SimpleEventBinSamplerParams samplerParams;
     private final long binSize;
@@ -50,7 +50,7 @@ public class FloatSimpleEventBinSampleStream extends WrappedEventStreamAdaptor<F
      * @param stream The FloatEventStream to wrap
      * @param params THe SimpleEventBinSamplerParams
      */
-    public FloatSimpleEventBinSampleStream(EventStream<FloatEvent> stream, SimpleEventBinSamplerParams params) {
+    public FloatSimpleEventBinSampleStream(EventStream<T> stream, SimpleEventBinSamplerParams params) {
         super(stream);
 
         this.samplerParams = params;
@@ -73,8 +73,8 @@ public class FloatSimpleEventBinSampleStream extends WrappedEventStreamAdaptor<F
      * @throws IOException If unable to read the next event
      */
     @Override
-    public FloatEvent read() throws IOException {
-        FloatEvent event = null;
+    public T read() throws IOException {
+        T event = null;
 
         BigDecimal old = fractionalCounter;
 
