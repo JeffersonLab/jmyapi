@@ -2,8 +2,9 @@ package org.jlab.mya.stream.wrapped;
 
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Metadata;
+import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.event.IntegratedFloatEvent;
+import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.GraphicalEventBinSamplerParams;
 import org.jlab.mya.params.IntervalQueryParams;
@@ -82,7 +83,7 @@ public class ApplicationLevelSamplingTest {
      * Test integrate stream then simple application layer event bin sampler.
      */
     @Test
-    public void testIntegrateThenSimpleEventBinSampler() throws Exception {
+    public void testAnalyzeThenSimpleEventBinSampler() throws Exception {
 
         String pv = "R123PMES";
         // 20 second test
@@ -112,18 +113,24 @@ public class ApplicationLevelSamplingTest {
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
         try (FloatEventStream stream = intervalService.openFloatStream(params)) {
-            try (FloatIntegrationStream integrationStream = new FloatIntegrationStream(stream)) {
-                try (FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(integrationStream, samplerParams)) {
+            try (FloatAnalysisStream analysisStream = new FloatAnalysisStream(stream)) {
+                try (FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(analysisStream, samplerParams)) {
                     FloatEvent event;
                     while ((event = sampleStream.read()) != null) {
-                        if(event instanceof IntegratedFloatEvent) {
-                            IntegratedFloatEvent ife = (IntegratedFloatEvent)event;
-                            System.out.println(ife.toString(2) + ", integrated: " + ife.getIntegratedValue());
+                        if(event instanceof AnalyzedFloatEvent) {
+                            AnalyzedFloatEvent ife = (AnalyzedFloatEvent)event;
+                            System.out.println(ife.toString(2) + ", stats: " + ife.getEventStats());
                         }
                         eventList.add(event);
 //                System.out.println(event.toString(displayFractionalDigits));
                     }
                 }
+
+                RunningStatistics stats = analysisStream.getLatestStats();
+
+                System.out.println("Max: " + stats.getMax());
+                System.out.println("Min: " + stats.getMin());
+                System.out.println("Mean: " + stats.getMean());
             }
         }
         if (eventList.size() != expSize) {

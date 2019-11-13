@@ -11,23 +11,30 @@ import java.math.RoundingMode;
 /**
  * Wraps a FloatEventStream and provides FloatEvents that are down-sampled as they stream by using a simple
  * algorithm.
- *
+ * <p>
  * This stream reads the full dataset from the database and returns a subset (performs application layer filtering).
- *
+ * </p>
+ * <p>
  * This algorithm bins by count, not by date interval like many other
  * sampling algorithms. There are pros and cons to this, but it means the
  * event-based nature of the data is preserved and doesn't give periods of
  * calm/idle time as many samples and give more samples to busy activity
  * periods.
- *
+ * </p>
+ * <p>
  * Another feature of this algorithm is it streams over the entire dataset
  * once instead of issuing n-queries (n = # of bins). There are pros and
  * cons to this as well. This algorithm will generally perform better than
  * issuing n-queries would if there are only a few points per bin.
- *
+ * </p>
+ * <p>
  * Note: Users must figure out number of events per bin threshold in which
  * to use n-queries instead.
- *
+ * </p>
+ * <p>
+ * Note: This algorithm promises not to create new FloatEvents.  Instead events are simply filtered out.  This
+ * means you can pass in FloatEvent subclasses such as AnalyzedFloatEvents and they'll come out untouched.
+ * </p>
  * @author slominskir
  */
 public class FloatSimpleEventBinSampleStream extends WrappedEventStreamAdaptor<FloatEvent, FloatEvent> {

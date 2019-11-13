@@ -2,27 +2,28 @@ package org.jlab.mya.stream.wrapped;
 
 import org.jlab.mya.EventCode;
 import org.jlab.mya.EventStream;
+import org.jlab.mya.analysis.EventStats;
 import org.jlab.mya.analysis.RunningStatistics;
+import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.event.IntegratedFloatEvent;
 
 import java.io.IOException;
 
 /**
- * Wraps a FloatEventStream and provides FloatEvents that are integrated as they stream by.
+ * Wraps a FloatEventStream and provides FloatEvents that are analyzed as they stream by.
  *
  * @author slominskir
  */
-public class FloatIntegrationStream extends WrappedEventStreamAdaptor<FloatEvent, FloatEvent> {
+public class FloatAnalysisStream extends WrappedEventStreamAdaptor<FloatEvent, FloatEvent> {
 
-    private final RunningStatistics stats = new RunningStatistics();
+    private final RunningStatistics seriesStats = new RunningStatistics();
 
     /**
      * Create a new FloatIntegrationStream by wrapping a FloatEventStream.
      *
      * @param stream The FloatEventStream to wrap
      */
-    public FloatIntegrationStream(EventStream<FloatEvent> stream) {
+    public FloatAnalysisStream(EventStream<FloatEvent> stream) {
         super(stream);
     }
 
@@ -34,9 +35,9 @@ public class FloatIntegrationStream extends WrappedEventStreamAdaptor<FloatEvent
      * @throws IOException If unable to read the next event
      */
     @Override
-    public IntegratedFloatEvent read() throws IOException {
+    public AnalyzedFloatEvent read() throws IOException {
         FloatEvent fEvent = wrapped.read();
-        IntegratedFloatEvent iEvent = null;
+        AnalyzedFloatEvent iEvent = null;
 
         //System.out.println("fEvent: " + fEvent);
 
@@ -44,16 +45,13 @@ public class FloatIntegrationStream extends WrappedEventStreamAdaptor<FloatEvent
 
             float value = fEvent.getValue();
 
-            stats.push(fEvent);
+            seriesStats.push(fEvent);
 
             long timestamp = fEvent.getTimestamp();
             EventCode code = fEvent.getCode(); // Should always be EventCode.UPDATE?
-            double integratedValue = 0; // If stats invalid we should use value of zero?
-            if (stats.getIntegration() != null) {
-                integratedValue = stats.getIntegration();
-            }
+            EventStats eventStats = seriesStats.getEventStats();
 
-            iEvent = new IntegratedFloatEvent(timestamp, code, value, integratedValue);
+            iEvent = new AnalyzedFloatEvent(timestamp, code, value, eventStats);
         }
 
         return iEvent;
@@ -65,6 +63,6 @@ public class FloatIntegrationStream extends WrappedEventStreamAdaptor<FloatEvent
      * @return The RunningStatistics
      */
     public RunningStatistics getLatestStats() {
-        return stats; // Should we return an immutable copy instead?
+        return seriesStats; // Should we return an immutable copy instead?
     }
 }

@@ -276,4 +276,7 @@ public class RunningStatistics {
         return updateCount;
     }
 
+    public EventStats getEventStats() {
+        return new EventStats(getIntegration(), getMean());
+    }
 }

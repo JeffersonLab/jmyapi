@@ -14,13 +14,15 @@ import java.util.Queue;
 /**
  * Wraps a FloatEventStream and provides FloatEvents that are down-sampled as they stream by using an algorithm
  * which attempts to maintain graphical fidelity of the data.
- *
+ * <p>
  * This stream reads the full dataset from the database and returns a subset (performs application layer filtering).
- *
+ * </p>
+ * <p>
  * The intention is to provide a sampling of the original data that maintains
  * critical data points such as first/last values or non-update (e.g.,
  * disconnect) events, and maintains graphical fidelity.
- *
+ * </p>
+ * <p>
  * Currently this is done using a custom streaming variant of the Largest
  * Triangle Three Bucket (LTTB) algorithm presented by Sveinn Steinarsson in his
  * Master's Thesis "Downsampling Time Series for Visual Representation" (Steinarsson, 2013). An
@@ -29,18 +31,24 @@ import java.util.Queue;
  * creating the largest triangular area. Other points are also kept to maintain
  * graphical fidelty. See documentation on FloatEventBucket for more details on
  * the downsampling algorithm.
- *
+ * </p>
+ * <p>
  * In addition to determining the LTTB point for this
  * bucket, it also collects and non-update events, the minimum event by
  * value, and the maximum event by value. This is an online algorithm and
  * does not persist data.
- *
+ * </p>
+ * <p>
  * Note: The the number of bins may vary from the specified number.  The exact
  * number of bins is ceil( (count - 2) / ceil((count - 2) / (numBins - 2) + 2)) plus
  * the first and last points.  In other words, we strip off the first and last points
  * then divide the remaining events into bins of size k where k is the smallest size that
  * requires at most numBins-2 to contain the entire event set.
- *
+ * </p>
+ * <p>
+ * Note: This algorithm promises not to create new FloatEvents.  Instead events are simply filtered out.  This
+ * means you can pass in FloatEvent subclasses such as AnalyzedFloatEvents and they'll come out untouched.
+ * </p>
  * @author apcarp
  * @author slominskir
  */
