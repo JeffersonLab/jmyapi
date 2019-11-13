@@ -1,11 +1,10 @@
 package org.jlab.mya.event;
 
 import org.jlab.mya.EventCode;
-import org.jlab.mya.analysis.EventStats;
 
 public class AnalyzedFloatEvent extends FloatEvent {
 
-    private final EventStats stats;
+    private final double[] stats;
 
     /**
      * Create new AnalyzedFloatEvent.
@@ -15,17 +14,19 @@ public class AnalyzedFloatEvent extends FloatEvent {
      * @param value The event value
      * @param stats The event stats
      */
-    public AnalyzedFloatEvent(long timestamp, EventCode code, float value, EventStats stats) {
+    public AnalyzedFloatEvent(long timestamp, EventCode code, float value, double[] stats) {
         super(timestamp, code, value);
         this.stats = stats;
     }
 
     /**
      * Return the event stats.
+     * <p>Stats are returns in a primitive double array for performance reasons.  The stats and their order is specified
+     * in the constructor to the FloatAnalysisStream.</p>
      *
      * @return The stats
      */
-    public EventStats getEventStats() {
+    public double[] getEventStats() {
         return stats;
     }
 }

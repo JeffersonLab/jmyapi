@@ -115,16 +115,18 @@ public class ApplicationLevelSamplingTest {
 
         SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(limit, count);
 
+        short[] eventStatsMap = new short[]{RunningStatistics.INTEGRATION};
+
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
         try (FloatEventStream stream = intervalService.openFloatStream(params)) {
-            try (FloatAnalysisStream analysisStream = new FloatAnalysisStream(stream)) {
+            try (FloatAnalysisStream analysisStream = new FloatAnalysisStream(stream, eventStatsMap)) {
                 try (FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(analysisStream, samplerParams)) {
                     FloatEvent event;
                     while ((event = sampleStream.read()) != null) {
                         if(event instanceof AnalyzedFloatEvent) {
                             AnalyzedFloatEvent ife = (AnalyzedFloatEvent)event;
-                            System.out.println(ife.toString(2) + ", stats: " + ife.getEventStats());
+                            System.out.println(ife.toString(2) + ", integration: " + ife.getEventStats()[0]);
                         }
                         eventList.add(event);
 //                System.out.println(event.toString(displayFractionalDigits));

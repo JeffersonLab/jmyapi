@@ -6,7 +6,11 @@ import org.jlab.mya.event.FloatEvent;
 /**
  * This class provides summary statistics about the specified set of MYA data.  This class makes a best effort at using
  * online and numerically stable algorithms for calculating the provided statistics.
+ * <p>
+ * The class can be used to obtain stats on the entire series, but also incrementally per event.
+ * </p>
  * @author apcarp
+ * @author slominskir
  */
 public class RunningStatistics {
 
@@ -24,20 +28,39 @@ public class RunningStatistics {
     private double duration; // Stored in seconds
 
     private double integration; // PV Units * seconds
-    private double c; // Correction parameter used in calculating the integration
+    private double correction; // Correction parameter used in calculating the integration
 
     private long eventCount;
     private long updateCount;
 
+    public static final short INTEGRATION = 0;
+
+    private final short[] eventStatsMap;
+
     /**
-     * Create an instance of the RunningStatistics class.
+     * Create an instance of the RunningStatistics class
+     * that tracks series stats, but no event stats.
      */
     public RunningStatistics() {
+        this(new short[0]);
+    }
+
+    /**
+     * Create an instance of the RunningStatistics class
+     * that tracks series stats, plus the specified event stats.
+     * <p>
+     * Event Stats are specified by short value and array index.  Valid values
+     * are assigned constants and include RunningStatisics.INTEGRATION.
+     * </p>
+     * @param eventStatsMap The event stats to track
+     */
+    public RunningStatistics(short[] eventStatsMap) {
+        this.eventStatsMap = eventStatsMap;
     }
 
     // Useful as a shorthand  for "initializing" an assortment of statistics
     private void zeroNums() {
-        min = max = mean = sigmaSum = duration = integration = 0;
+        min = max = mean = sigmaSum = duration = integration = 0; // TODO: should correction be reset to zero here too?
     }
 
     // All currently calculated statistics will be valid once we have processed the first two events.  prev is set to something not
@@ -149,9 +172,9 @@ public class RunningStatistics {
         double v = value * weight;
         double t = integration + v;
         if (Math.abs(integration) >= Math.abs(v)) {
-            c += (integration - t) + v;
+            correction += (integration - t) + v;
         } else {
-            c += (v - t) + integration;
+            correction += (v - t) + integration;
         }
         integration = t;
     }
@@ -253,7 +276,7 @@ public class RunningStatistics {
         if (!statsValid()) {
             return null;
         }
-        return integration + c;
+        return integration + correction;
     }
 
     /**
@@ -276,7 +299,26 @@ public class RunningStatistics {
         return updateCount;
     }
 
-    public EventStats getEventStats() {
-        return new EventStats(getIntegration(), getMean());
+    /**
+     * Obtain the event stats.
+     * <p>
+     * stats and their index (order) are specified in the constructor.
+     * </p>
+     * @return
+     */
+    public double[] getEventStats() {
+        double[] stats = new double[eventStatsMap.length];
+
+        for(short i = 0; i < stats.length; i++) {
+            switch(eventStatsMap[i]) {
+                case INTEGRATION:
+                    // We don't use getIntegration() method because it does boxing and also an isValidCheck
+                    // If stats are not valid (first point) then integration = 0, which is what we want anyways.
+                    stats[i] = integration + correction;
+                    break;
+            }
+        }
+
+        return stats;
     }
 }

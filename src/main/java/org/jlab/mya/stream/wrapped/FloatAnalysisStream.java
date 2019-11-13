@@ -2,7 +2,6 @@ package org.jlab.mya.stream.wrapped;
 
 import org.jlab.mya.EventCode;
 import org.jlab.mya.EventStream;
-import org.jlab.mya.analysis.EventStats;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.event.FloatEvent;
@@ -16,15 +15,22 @@ import java.io.IOException;
  */
 public class FloatAnalysisStream extends WrappedEventStreamAdaptor<FloatEvent, FloatEvent> {
 
-    private final RunningStatistics seriesStats = new RunningStatistics();
+    private final RunningStatistics seriesStats;
 
     /**
      * Create a new FloatIntegrationStream by wrapping a FloatEventStream.
+     * <p>
+     * Desired stats are specified via a statsMap which instructs the analysis service which stats to track
+     * and the order (index) in which to return them.  Valid values are defined as constants in the RunningStatistics
+     * class and include INTEGRATION.
+     * </p>
      *
      * @param stream The FloatEventStream to wrap
+     * @param statsMap The stat name and index of requested statistics
      */
-    public FloatAnalysisStream(EventStream<FloatEvent> stream) {
+    public FloatAnalysisStream(EventStream<FloatEvent> stream, short[] statsMap) {
         super(stream);
+        seriesStats = new RunningStatistics(statsMap);
     }
 
     /**
@@ -49,7 +55,7 @@ public class FloatAnalysisStream extends WrappedEventStreamAdaptor<FloatEvent, F
 
             long timestamp = fEvent.getTimestamp();
             EventCode code = fEvent.getCode(); // Should always be EventCode.UPDATE?
-            EventStats eventStats = seriesStats.getEventStats();
+            double[] eventStats = seriesStats.getEventStats();
 
             iEvent = new AnalyzedFloatEvent(timestamp, code, value, eventStats);
         }
