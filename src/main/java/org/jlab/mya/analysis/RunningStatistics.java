@@ -123,12 +123,12 @@ public class RunningStatistics {
      */
     private void updateStatistics(double value, double weight) {
         duration = duration + weight;  // Total duration of UPDATE Events so far
-        // Note: duration initialized to zero by default java contructor behavior
+        // Note: duration initialized to zero by default java constructor behavior
         if (!initialized) {
             initialized = true;
             min = max = mean = value;
             integration = value * weight;
-            // Note: sigmaSum initialized to zero by default java constructor behavrior 
+            // Note: sigmaSum initialized to zero by default java constructor behavior
 
         } else {
             min = value < min ? value : min;
