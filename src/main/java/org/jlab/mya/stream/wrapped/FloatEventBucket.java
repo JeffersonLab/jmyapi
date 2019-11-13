@@ -45,7 +45,7 @@ public class FloatEventBucket {
         if ( e1 == null || e3 == null ) {
             throw new IllegalArgumentException("Two non-null events required");
         }
-        
+
         // Search the list for the LTTB point and any other points of interest.  Specifically, we care about non-update events,
         // bucket min, and bucket max.
         double area;
@@ -91,9 +91,10 @@ public class FloatEventBucket {
         // If the bucket contained nothing but non-update events, you get the previous LTTB point back.  This seems better
         // than setting the point to another arbitrary point.
         if ( lttb == null ) {
-            lttb = e1;
+            return e1;
+        } else {
+            return lttb;
         }
-        return lttb;
     }
 
     /**
