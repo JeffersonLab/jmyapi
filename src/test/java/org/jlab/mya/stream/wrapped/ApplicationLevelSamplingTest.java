@@ -109,14 +109,32 @@ public class ApplicationLevelSamplingTest {
         long limit = 10;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
 
+        long start = System.currentTimeMillis();
+
         Metadata metadata = intervalService.findMetadata(pv);
+
+        long stop = System.currentTimeMillis();
+
+        System.out.println("Metadata lookup Took: " + (stop - start) / 1000.0 + " seconds");
 
         IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
 
+        start = System.currentTimeMillis();
+
         long count = intervalService.count(params);
+
+        stop = System.currentTimeMillis();
+
+        System.out.println("Count Took: " + (stop - start) / 1000.0 + " seconds");
+
+        start = System.currentTimeMillis();
 
         PointQueryParams pointParams = new PointQueryParams(metadata, begin);
         FloatEvent priorPoint = pointService.findFloatEvent(pointParams);
+
+        stop = System.currentTimeMillis();
+
+        System.out.println("Prior Point lookup Took: " + (stop - start) / 1000.0 + " seconds");
 
         System.out.println("count (excluding boundaries): " + count);
 
@@ -127,6 +145,7 @@ public class ApplicationLevelSamplingTest {
         long expSize = 12;
         List<FloatEvent> eventList = new ArrayList<>();
 
+        start = System.currentTimeMillis();
         try (
                 final FloatEventStream stream = intervalService.openFloatStream(params);
                 final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false);
@@ -150,6 +169,10 @@ public class ApplicationLevelSamplingTest {
                 fail("List size does not match expected");
             }
         }
+
+        stop = System.currentTimeMillis();
+
+        System.out.println("Stream Section Took: " + (stop - start) / 1000.0 + " seconds");
     }
 
     /**

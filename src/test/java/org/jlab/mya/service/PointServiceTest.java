@@ -57,10 +57,27 @@ public class PointServiceTest {
         Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:05").atZone(
                 ZoneId.systemDefault()).toInstant();
 
+        long start = System.currentTimeMillis();
+
         Metadata metadata = service.findMetadata(pv);
+
+        long stop = System.currentTimeMillis();
+
+        System.out.println("Metadata lookup Took: " + (stop - start) / 1000.0 + " seconds");
+
         PointQueryParams params = new PointQueryParams(metadata, timestamp);
         float expResult = -7.2f;
+
+        start = System.currentTimeMillis();
+
         FloatEvent result = service.findFloatEvent(params);
+
+        stop = System.currentTimeMillis();
+
+        System.out.println("Point lookup Took: " + (stop - start) / 1000.0 + " seconds");
+
+        System.out.println(result);
+
         assertEquals(expResult, result.getValue(), 0.01);
     }
 
