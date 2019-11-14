@@ -127,24 +127,24 @@ public class ApplicationLevelSamplingTest {
         long expSize = 12;
         List<FloatEvent> eventList = new ArrayList<>();
 
-        try (FloatEventStream stream = intervalService.openFloatStream(params)) {
-            try(BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false)) {
-                try (FloatAnalysisStream analysisStream = new FloatAnalysisStream(boundaryStream, eventStatsMap)) {
-                    try (FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams)) {
-                        AnalyzedFloatEvent event;
-                        while ((event = sampleStream.read()) != null) {
-                            System.out.println(event.toString(2) + ", integration: " + event.getEventStats()[0]);
-                            eventList.add(event);
-                        }
-                    }
+        try (
+                final FloatEventStream stream = intervalService.openFloatStream(params);
+                final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false);
+                final FloatAnalysisStream analysisStream = new FloatAnalysisStream(boundaryStream, eventStatsMap);
+                final FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams);
+        ) {
+            AnalyzedFloatEvent event;
 
-                    RunningStatistics stats = analysisStream.getLatestStats();
-
-                    System.out.println("Max: " + stats.getMax());
-                    System.out.println("Min: " + stats.getMin());
-                    System.out.println("Mean: " + stats.getMean());
-                }
+            while ((event = sampleStream.read()) != null) {
+                System.out.println(event.toString(2) + ", integration: " + event.getEventStats()[0]);
+                eventList.add(event);
             }
+
+            RunningStatistics stats = analysisStream.getLatestStats();
+
+            System.out.println("Max: " + stats.getMax());
+            System.out.println("Min: " + stats.getMin());
+            System.out.println("Mean: " + stats.getMean());
 
             if (eventList.size() != expSize) {
                 fail("List size does not match expected");
