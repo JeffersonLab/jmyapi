@@ -272,11 +272,13 @@ public abstract class DataNexus {
             }
         }
 
-        String query = "select * from table_" + params.getMetadata().getId();
+        String query = "select * from table_" + params.getMetadata().getId() + " force index for order by (primary)";
 
         query = query + where;
 
         query = query + " order by time " + sort + " limit 1";
+
+        //System.out.println(query);
 
         return con.prepareStatement(query);
     }

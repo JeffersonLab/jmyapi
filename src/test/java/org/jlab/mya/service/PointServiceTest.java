@@ -8,6 +8,7 @@ import java.time.ZonedDateTime;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.Metadata;
+import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;
@@ -49,6 +50,18 @@ public class PointServiceTest {
 
     /**
      * Test of findFloatEvent method, of class PointService.
+     *
+     * <pre>
+     * Compare with:
+     * myget -c R123PMES -m history -t "2017-01-01 00:00:05"
+     *
+     * mysql -A -h hstmya1 -u myapi -D archive -p
+     * select * from table_32108 force index for order by (primary) where time <= 398156032460718080 order by time desc limit 1;
+     *</pre>
+     * <p>
+     * Note: without query hint: "force index for order by (primary)" this unit test takes
+     * over 25 seconds vs less than 0.5 seconds
+     * </p>
      */
     @Test
     public void testFindFloatEvent() throws Exception {
@@ -57,6 +70,8 @@ public class PointServiceTest {
         Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:05").atZone(
                 ZoneId.systemDefault()).toInstant();
 
+        System.out.println("begin in myatime format: " + TimeUtil.toMyaTimestamp(timestamp));
+
         long start = System.currentTimeMillis();
 
         Metadata metadata = service.findMetadata(pv);
@@ -64,6 +79,8 @@ public class PointServiceTest {
         long stop = System.currentTimeMillis();
 
         System.out.println("Metadata lookup Took: " + (stop - start) / 1000.0 + " seconds");
+
+        System.out.println(metadata);
 
         PointQueryParams params = new PointQueryParams(metadata, timestamp);
         float expResult = -7.2f;
