@@ -53,6 +53,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedEventStreamAdap
      * @throws IOException If unable to read the next event
      */
     @Override
+    @SuppressWarnings("unchecked")
     public T read() throws IOException {
         T current;
 
