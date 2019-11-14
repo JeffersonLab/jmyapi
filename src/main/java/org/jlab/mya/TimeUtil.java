@@ -1,6 +1,8 @@
 package org.jlab.mya;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 /**
  * Utility methods for conversion between Mya's database time format and Java's
@@ -133,5 +135,17 @@ public final class TimeUtil {
         }
 
         return format;
+    }
+
+    /**
+     * Returns an Instant in the local timezone given the specified timezone-less date and time formatted as an
+     * ISO 8601 String.
+     *
+     * @param iso8601Timestamp The timestamp String
+     * @return The Instant
+     */
+    public static Instant toLocalDT(String iso8601Timestamp) {
+        return LocalDateTime.parse(iso8601Timestamp).atZone(
+                ZoneId.systemDefault()).toInstant();
     }
 }

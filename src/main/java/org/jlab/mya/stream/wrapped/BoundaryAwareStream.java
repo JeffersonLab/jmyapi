@@ -59,7 +59,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedEventStreamAdap
         if(started) {
             current = wrapped.read();
         } else {
-            if(buffered) {
+           if(buffered) {
                 current = secondPointBuffer;
                 started = true;
             } else {
@@ -78,6 +78,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedEventStreamAdap
         if(current == null) { // End-of-Stream
             if(lastEvent != null && lastEvent.getTimestampAsInstant().isBefore(end)) {
                 current = (T)lastEvent.copyTo(end);
+                lastEvent = current;
             }
         } else {
             if(updatesOnly) {
