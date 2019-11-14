@@ -10,8 +10,10 @@ import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.GraphicalEventBinSamplerParams;
 import org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.params.PointQueryParams;
 import org.jlab.mya.params.SimpleEventBinSamplerParams;
 import org.jlab.mya.service.IntervalService;
+import org.jlab.mya.service.PointService;
 import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.stream.ListStream;
 import org.junit.Before;
@@ -31,11 +33,13 @@ import static org.junit.Assert.fail;
 public class ApplicationLevelSamplingTest {
 
     private IntervalService intervalService;
+    private PointService pointService;
 
     @Before
     public void setUp() {
         DataNexus nexus = new OnDemandNexus("history");
         intervalService = new IntervalService(nexus);
+        pointService = new PointService(nexus);
     }
 
     /**
@@ -111,33 +115,40 @@ public class ApplicationLevelSamplingTest {
 
         long count = intervalService.count(params);
 
-        //System.out.println("count: " + count);
+        PointQueryParams pointParams = new PointQueryParams(metadata, begin);
+        FloatEvent priorPoint = pointService.findFloatEvent(pointParams);
+
+        System.out.println("count (excluding boundaries): " + count);
 
         SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(limit, count);
 
         short[] eventStatsMap = new short[]{RunningStatistics.INTEGRATION};
 
-        long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
+        long expSize = 12;
         List<FloatEvent> eventList = new ArrayList<>();
+
         try (FloatEventStream stream = intervalService.openFloatStream(params)) {
-            try (FloatAnalysisStream analysisStream = new FloatAnalysisStream(stream, eventStatsMap)) {
-                try (FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams)) {
-                    AnalyzedFloatEvent event;
-                    while ((event = sampleStream.read()) != null) {
-                        System.out.println(event.toString(2) + ", integration: " + event.getEventStats()[0]);
-                        eventList.add(event);
+            try(BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false)) {
+                try (FloatAnalysisStream analysisStream = new FloatAnalysisStream(boundaryStream, eventStatsMap)) {
+                    try (FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams)) {
+                        AnalyzedFloatEvent event;
+                        while ((event = sampleStream.read()) != null) {
+                            System.out.println(event.toString(2) + ", integration: " + event.getEventStats()[0]);
+                            eventList.add(event);
+                        }
                     }
+
+                    RunningStatistics stats = analysisStream.getLatestStats();
+
+                    System.out.println("Max: " + stats.getMax());
+                    System.out.println("Min: " + stats.getMin());
+                    System.out.println("Mean: " + stats.getMean());
                 }
-
-                RunningStatistics stats = analysisStream.getLatestStats();
-
-                System.out.println("Max: " + stats.getMax());
-                System.out.println("Min: " + stats.getMin());
-                System.out.println("Mean: " + stats.getMean());
             }
-        }
-        if (eventList.size() != expSize) {
-            fail("List size does not match expected");
+
+            if (eventList.size() != expSize) {
+                fail("List size does not match expected");
+            }
         }
     }
 
