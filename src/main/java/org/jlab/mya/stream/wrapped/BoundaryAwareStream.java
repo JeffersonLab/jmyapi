@@ -69,7 +69,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedEventStreamAdap
                     buffered = true;
                     current = (T) priorPoint.copyTo(begin);
                 } else {
-                    // current = current
+                    // current = current or current = null (end of stream / empty stream)
                     started = true;
                 }
             }
