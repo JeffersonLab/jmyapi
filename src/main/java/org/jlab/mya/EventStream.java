@@ -2,6 +2,7 @@ package org.jlab.mya;
 
 import java.io.IOException;
 import java.nio.channels.Channel;
+import java.nio.channels.ClosedChannelException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -65,9 +66,10 @@ public abstract class EventStream<T extends Event> implements Channel {
      * while loop.
      *
      * @return The next event or null if End-Of-Stream reached
+     * @throws ClosedChannelException If the channel is closed
      * @throws IOException If unable to read the next event
      */
-    public T read() throws IOException {
+    public T read() throws ClosedChannelException, IOException {
         try {
             if (rs.next()) {
                 return rowToEvent();
@@ -75,7 +77,11 @@ public abstract class EventStream<T extends Event> implements Channel {
                 return null;
             }
         } catch (SQLException e) {
-            throw new IOException(e);
+            if(!isOpen()) { // Channel interface says ClosedChannelException specifically should be used
+                throw new ClosedChannelException();
+            } else {
+                throw new IOException(e);
+            }
         }
     }
 
