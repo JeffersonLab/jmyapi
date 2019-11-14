@@ -71,4 +71,14 @@ public class MultiStringEvent extends Event {
     public String[] getValue() {
         return value;
     }
+
+    /**
+     * Deep Copy Event, but at a new instant in time.
+     *
+     * @return A new Event
+     */
+    @Override
+    public MultiStringEvent copyTo(Instant timeAsInstant) {
+        return new MultiStringEvent(timeAsInstant, this.getCode(), this.getValue());
+    }
 }

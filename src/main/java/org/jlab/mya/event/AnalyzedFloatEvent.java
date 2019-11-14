@@ -1,6 +1,10 @@
 package org.jlab.mya.event;
 
+import org.jlab.mya.Event;
 import org.jlab.mya.EventCode;
+import org.jlab.mya.TimeUtil;
+
+import java.time.Instant;
 
 public class AnalyzedFloatEvent extends FloatEvent {
 
@@ -28,6 +32,16 @@ public class AnalyzedFloatEvent extends FloatEvent {
      */
     public double[] getEventStats() {
         return stats;
+    }
+
+    /**
+     * Deep Copy Event, but at a new instant in time.
+     *
+     * @return A new Event
+     */
+    @Override
+    public AnalyzedFloatEvent copyTo(Instant timeAsInstant) {
+        return new AnalyzedFloatEvent(TimeUtil.toMyaTimestamp(timeAsInstant), this.getCode(), this.getValue(), this.getEventStats());
     }
 }
 

@@ -153,4 +153,14 @@ public class LabeledEnumEvent extends IntEvent {
 
         return lEvent;
     }
+
+    /**
+     * Deep Copy Event, but at a new instant in time.
+     *
+     * @return A new Event
+     */
+    @Override
+    public LabeledEnumEvent copyTo(Instant timeAsInstant) {
+        return new LabeledEnumEvent(timeAsInstant, this.getCode(), this.getValue(), this.getLabel());
+    }
 }

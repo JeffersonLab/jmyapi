@@ -104,4 +104,14 @@ public class IntEvent extends Event {
 
         return result;
     }
+
+    /**
+     * Deep Copy Event, but at a new instant in time.
+     *
+     * @return A new Event
+     */
+    @Override
+    public IntEvent copyTo(Instant timeAsInstant) {
+        return new IntEvent(timeAsInstant, this.getCode(), this.getValue());
+    }
 }

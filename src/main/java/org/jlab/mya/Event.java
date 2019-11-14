@@ -47,6 +47,13 @@ public abstract class Event implements Comparable<Event> {
     }
 
     /**
+     * Deep Copy Event, but at a new instant in time.
+     *
+     * @return A new Event
+     */
+    public abstract Event copyTo(Instant timeAsInstant);
+
+    /**
      * Return the timestamp.
      *
      * @return The timestamp

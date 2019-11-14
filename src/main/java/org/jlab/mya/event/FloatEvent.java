@@ -92,4 +92,13 @@ public class FloatEvent extends Event {
                 + " " + ((code == EventCode.UPDATE) ? String.valueOf(value) : "<"
                         + code.getDescription() + ">");
     }
+
+    /**
+     * Deep Copy Event, but at a new instant in time.
+     *
+     * @return A new Event
+     */
+    public FloatEvent copyTo(Instant timeAsInstant) {
+        return new FloatEvent(timeAsInstant, this.getCode(), this.getValue());
+    }
 }
