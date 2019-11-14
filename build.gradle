@@ -19,7 +19,7 @@ dependencies {
 }
 
 compileJava   {
-    options.compilerArgs += ["-Xlint:deprecation"]
+    options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
     sourceCompatibility = '1.8'
     targetCompatibility = '1.8'
 }
