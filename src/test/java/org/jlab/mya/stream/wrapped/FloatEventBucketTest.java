@@ -1,14 +1,13 @@
 package org.jlab.mya.stream.wrapped;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.jlab.mya.EventCode;
+import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -48,10 +47,8 @@ public class FloatEventBucketTest {
     @Test
     public void testDownSampleAndGetDownSample() {
         System.out.println("downSample");
-        Instant begin = LocalDateTime.parse("2017-03-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-03-02T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant begin = TimeUtil.toLocalDT("2017-03-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2017-03-02T00:00:00");
 
         FloatEvent e1 = new FloatEvent(begin.minusSeconds(1), EventCode.UPDATE, 1.0f);  // just before bucket
         FloatEvent e3 = new FloatEvent(end.plusSeconds(1), EventCode.UPDATE, 0.0f); // just after bucket

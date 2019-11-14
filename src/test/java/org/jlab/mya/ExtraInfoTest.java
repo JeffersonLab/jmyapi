@@ -3,8 +3,6 @@ package org.jlab.mya;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 
 import org.jlab.mya.event.LabeledEnumEvent;
@@ -29,9 +27,9 @@ public class ExtraInfoTest {
 
         String pv = "IPMBMOD";
         Instant begin
-                = LocalDateTime.parse("2007-01-01T00:00:00").atZone(ZoneId.systemDefault()).toInstant();
+                = TimeUtil.toLocalDT("2007-01-01T00:00:00");
         Instant end
-                = LocalDateTime.parse("2017-01-01T00:00:00").atZone(ZoneId.systemDefault()).toInstant();
+                = TimeUtil.toLocalDT("2017-01-01T00:00:00");
 
         Metadata metadata = service.findMetadata(pv);
         List<ExtraInfo> infoList = service.findExtraInfo(metadata, "enum_strings");

@@ -13,8 +13,6 @@ import org.jlab.mya.stream.FloatEventStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 import org.jlab.mya.stream.wrapped.BoundaryAwareStream;
 import org.jlab.mya.stream.wrapped.FloatAnalysisStream;
@@ -35,9 +33,9 @@ public class PerformanceTest {
 
         String pv = "IDC1G03sh_cur";
         Instant begin
-                = LocalDateTime.parse("2016-06-01T00:00:00").atZone(ZoneId.systemDefault()).toInstant();
+                = TimeUtil.toLocalDT("2016-06-01T00:00:00");
         Instant end
-                = LocalDateTime.parse("2017-07-01T00:00:00").atZone(ZoneId.systemDefault()).toInstant();
+                = TimeUtil.toLocalDT("2017-07-01T00:00:00");
 
         Runtime rt = Runtime.getRuntime();
         long startBytes;

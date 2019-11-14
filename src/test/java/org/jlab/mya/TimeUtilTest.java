@@ -1,8 +1,6 @@
 package org.jlab.mya;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
@@ -47,8 +45,7 @@ public class TimeUtilTest {
         System.out.println("toMyaTimestamp");
         String dateStr = "2017-01-01T00:00:01.749013325";
 
-        Instant instant = LocalDateTime.parse(dateStr).atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant instant = TimeUtil.toLocalDT(dateStr);
         long expResult = 398156031588037989L;
         long result = TimeUtil.toMyaTimestamp(instant);
         assertEquals(expResult, result, 4);
@@ -64,8 +61,7 @@ public class TimeUtilTest {
         String dateStr = "2017-01-01T00:00:01.749013325";
 
         long timestamp = 398156031588037989L;
-        Instant expResult = LocalDateTime.parse(dateStr).atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant expResult = TimeUtil.toLocalDT(dateStr);
         Instant result = TimeUtil.fromMyaTimestamp(timestamp);
         assertEquals(expResult.getNano(), result.getNano(), 1);
     }
@@ -82,10 +78,8 @@ public class TimeUtilTest {
         DataNexus nexus = new OnDemandNexus("history");
         IntervalService service = new IntervalService(nexus);
         Metadata metadata = service.findMetadata("R123PMES");
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-02-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2017-02-01T00:00:00");
         IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
         try (FloatEventStream stream = service.openFloatStream(params)) {
             FloatEvent event;

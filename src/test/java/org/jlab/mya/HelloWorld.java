@@ -9,8 +9,6 @@ import org.jlab.mya.stream.FloatEventStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 /**
  *
@@ -35,9 +33,9 @@ public class HelloWorld {
         
         String pv = "R123PMES";
         Instant begin
-                = LocalDateTime.parse("2017-01-01T00:00:00.123456").atZone(ZoneId.systemDefault()).toInstant();
+                = TimeUtil.toLocalDT("2017-01-01T00:00:00.123456");
         Instant end
-                = LocalDateTime.parse("2017-01-01T00:01:00.123456").atZone(ZoneId.systemDefault()).toInstant();
+                = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
 
         Metadata metadata = service.findMetadata(pv);
         IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);

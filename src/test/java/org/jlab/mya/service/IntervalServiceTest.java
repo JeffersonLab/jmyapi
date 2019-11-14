@@ -2,6 +2,7 @@ package org.jlab.mya.service;
 
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Metadata;
+import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.MultiStringEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
@@ -11,8 +12,6 @@ import org.jlab.mya.stream.MultiStringEventStream;
 
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,10 +31,8 @@ public class IntervalServiceTest {
     public static final String HISTORY_DEPLOYMENT = "history";
     public static final String TEST_PV = "MQA3S06M";
     public static final String TEST_PV_MULTI = "HLA:bta_uxtime_h";
-    public static final Instant TEST_BEGIN = LocalDateTime.parse("2016-08-22T08:43:00").atZone(
-            ZoneId.systemDefault()).toInstant();
-    public static final Instant TEST_END = LocalDateTime.parse("2017-09-22T08:43:00").atZone(
-            ZoneId.systemDefault()).toInstant();
+    public static final Instant TEST_BEGIN = TimeUtil.toLocalDT("2016-08-22T08:43:00");
+    public static final Instant TEST_END = TimeUtil.toLocalDT("2017-09-22T08:43:00");
 
     private IntervalService service;
     private Metadata TEST_METADATA;

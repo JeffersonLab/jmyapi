@@ -1,9 +1,8 @@
 package org.jlab.mya.nexus;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
+import org.jlab.mya.TimeUtil;
 import org.jlab.mya.params.PointQueryParams;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.StandaloneConnectionPools;
@@ -56,8 +55,7 @@ public class PooledNexusTest {
             PooledNexus nexus = new PooledNexus("history");
             PointService service = new PointService(nexus);
             String pv = "R123PMES";
-            Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:05").atZone(
-                    ZoneId.systemDefault()).toInstant();
+            Instant timestamp = TimeUtil.toLocalDT("2017-01-01T00:00:05");
 
             Metadata metadata = service.findMetadata(pv);
             PointQueryParams params = new PointQueryParams(metadata, timestamp);

@@ -1,7 +1,6 @@
 package org.jlab.mya.service;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
@@ -67,8 +66,7 @@ public class PointServiceTest {
     public void testFindFloatEvent() throws Exception {
         System.out.println("findFloatEvent");
         String pv = "R123PMES";
-        Instant timestamp = LocalDateTime.parse("2017-01-01T00:00:05").atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant timestamp = TimeUtil.toLocalDT("2017-01-01T00:00:05");
 
         System.out.println("begin in myatime format: " + TimeUtil.toMyaTimestamp(timestamp));
 
@@ -106,7 +104,7 @@ public class PointServiceTest {
         System.out.println("findIntEvent");
 
         String pv = "MFELINJC";
-        Instant timestamp = LocalDateTime.parse("2017-09-08T14:50:38").atZone(ZoneId.systemDefault()).toInstant();
+        Instant timestamp = TimeUtil.toLocalDT("2017-09-08T14:50:38");
         Metadata metadata = service.findMetadata(pv);        
         PointQueryParams params = new PointQueryParams(metadata, timestamp);
         

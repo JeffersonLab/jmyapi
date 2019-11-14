@@ -11,8 +11,6 @@ import org.jlab.mya.service.PointService;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 /**
  *
@@ -33,9 +31,9 @@ public class ConcurrencyTest {
 
         String pv = "R123PMES";
         Instant begin
-                = LocalDateTime.parse("2016-01-01T00:00:00.123456").atZone(ZoneId.systemDefault()).toInstant();
+                = TimeUtil.toLocalDT("2016-01-01T00:00:00.123456");
         Instant end
-                = LocalDateTime.parse("2017-01-01T00:01:00.123456").atZone(ZoneId.systemDefault()).toInstant();
+                = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
 
         Metadata metadata = intervalService.findMetadata(pv);
         IntervalQueryParams intervalParams = new IntervalQueryParams(metadata, begin, end);

@@ -1,9 +1,6 @@
 package org.jlab.mya.stream.wrapped;
 
-import org.jlab.mya.DataNexus;
-import org.jlab.mya.EventCode;
-import org.jlab.mya.EventStream;
-import org.jlab.mya.Metadata;
+import org.jlab.mya.*;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.AnalyzedFloatEvent;
@@ -19,11 +16,7 @@ import org.jlab.mya.stream.ListStream;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,15 +43,13 @@ public class ApplicationLevelSamplingTest {
 
         String pv = "R123PMES";
         // 20 second test
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-01-01T00:00:20").atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:20");
 
         // One year test
-//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
+//        Instant begin = TimeUtil.toLocalDT("2016-01-01T00:00:00").atZone(
 //                ZoneId.systemDefault()).toInstant();
-//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+//        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00").atZone(
 //                ZoneId.systemDefault()).toInstant();
         long limit = 10;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
@@ -96,15 +87,13 @@ public class ApplicationLevelSamplingTest {
 
         String pv = "R123PMES";
         // 20 second test
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-01-01T00:00:20").atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:20");
 
         // One year test
-//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
+//        Instant begin = TimeUtil.toLocalDT("2016-01-01T00:00:00").atZone(
 //                ZoneId.systemDefault()).toInstant();
-//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+//        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00").atZone(
 //                ZoneId.systemDefault()).toInstant();
         long limit = 10;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
@@ -183,15 +172,13 @@ public class ApplicationLevelSamplingTest {
 
         // Limited test
         String pv = "R12XGMES";
-        Instant begin = LocalDateTime.parse("2017-02-11T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-02-11T02:30:00").atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant begin = TimeUtil.toLocalDT("2017-02-11T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2017-02-11T02:30:00");
 
 //        String pv = "R123PMES";
-//        Instant begin = LocalDateTime.parse("2016-01-01T00:00:00").atZone(
+//        Instant begin = TimeUtil.toLocalDT("2016-01-01T00:00:00").atZone(
 //                ZoneId.systemDefault()).toInstant();
-//        Instant end = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
+//        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00").atZone(
 //                ZoneId.systemDefault()).toInstant();
         long numBins = 10;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
@@ -233,12 +220,6 @@ public class ApplicationLevelSamplingTest {
      */
     @Test
     public void testGraphicalSamplerNonUpdateEvents() throws Exception {
-        String pv = "R123PMES";
-        Instant begin = LocalDateTime.parse("2019-05-30T09:07:17").atZone( /*Network disconnection time*/
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2019-05-30T09:56:50").atZone(
-                ZoneId.systemDefault()).toInstant(); /*Network disconnection time*/
-
         long numBins = 30;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
 

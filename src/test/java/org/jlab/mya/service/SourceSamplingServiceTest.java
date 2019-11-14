@@ -2,13 +2,12 @@ package org.jlab.mya.service;
 
 import java.sql.SQLException;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Metadata;
+import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.MyGetSampleParams;
@@ -62,10 +61,8 @@ public class SourceSamplingServiceTest {
     public void testMyGetSampler() throws Exception {
 
         String pv = "R123PMES";
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-01-25T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2017-01-25T00:00:00");
         long limit = 24;
         int fractionalDigits = 6; // microseconds; seems to be max precision of myget
 
@@ -97,8 +94,7 @@ public class SourceSamplingServiceTest {
     public void testMySampler() throws Exception {
 
         String pv = "R123PMES";
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00").atZone(
-                ZoneId.systemDefault()).toInstant();
+        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
         long stepMilliseconds = 86400000;
         long sampleCount = 24;
 
