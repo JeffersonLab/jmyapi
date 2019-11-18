@@ -14,16 +14,17 @@ public class IntervalQueryParams extends QueryParams {
 
     private final Instant begin;
     private final Instant end;
+    private final IntervalQueryFetchStrategy fetch;
 
     /**
-     * Create a new IntervalQueryParams for all event types.
+     * Create a new IntervalQueryParams for all event types and with streaming fetch strategy.
      *
      * @param metadata The PV metadata
      * @param begin The begin instant
      * @param end The end instant
      */
     public IntervalQueryParams(Metadata metadata, Instant begin, Instant end) {
-        this(metadata, false, begin, end);
+        this(metadata, false, IntervalQueryFetchStrategy.STREAM, begin, end);
     }
 
     /**
@@ -32,11 +33,13 @@ public class IntervalQueryParams extends QueryParams {
      * @param metadata The PV metadata
      * @param updatesOnly true to include updates only, false for all event
      * types
+     * @param fetch The fetch strategy
      * @param begin The begin instant
      * @param end The end instant
      */
-    public IntervalQueryParams(Metadata metadata, boolean updatesOnly, Instant begin, Instant end) {
+    public IntervalQueryParams(Metadata metadata, boolean updatesOnly, IntervalQueryFetchStrategy fetch, Instant begin, Instant end) {
         super(metadata, updatesOnly);
+        this.fetch = fetch;
         this.begin = begin;
         this.end = end;
     }
@@ -57,5 +60,21 @@ public class IntervalQueryParams extends QueryParams {
      */
     public Instant getEnd() {
         return end;
+    }
+
+    /**
+     * Return the fetch strategy.
+     *
+     * @return
+     */
+    public IntervalQueryFetchStrategy getFetchStrategy() {
+        return fetch;
+    }
+
+    /**
+     * The fetch strategy.
+     */
+    public enum IntervalQueryFetchStrategy {
+        ALL, STREAM, CHUNK
     }
 }

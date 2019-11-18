@@ -147,14 +147,26 @@ public abstract class DataNexus {
     /**
      * Return a prepared statement for the given connection and parameters to
      * query a time interval for events.
+     * <p>
+     * The fetchSize parameter should be used carefully.  Use value Integer.MIN_VALUE to instruct MySQL driver to
+     * stream results.  This is the safest in terms of ensuring you don't run out of memory, but may not be the
+     * fastest method. If set to a positive number 'n' AND com.mysql.jdbc.Connection.setUseCursorFetch(true) then a
+     * server-side cursor (temporary table) is used to spoon feed the results 'n' at a time.  This is likely the worst
+     * option as results don't start arriving on the client until after the server has fully filled the temporary table.
+     * This option puts more stress on the server too. Finally, the third option is enabled if fetchSize is
+     * not Integer.MIN_VALUE and setUserCursorFetch(true) is also not set.  In this case the fetchSize value is ignored
+     * (as if set to zero) and the MySQL driver will fetch the entire ResultSet all at once into memory.
+     * This may be the fastest method (for small data), but may cause your JVM to run  out of memory (with large data).
+     * </p>
      *
      * @param con The connection the statement belongs to
      * @param params The query parameters associated with the statement (notably
      * metadata id)
+     * @param fetchSize MySQL Database Driver fetch size option
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params) throws
+    public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params, int fetchSize) throws
             SQLException {
 
         List<String> filterList = new ArrayList<>();
@@ -184,7 +196,7 @@ public abstract class DataNexus {
 
         PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY,
                 ResultSet.CONCUR_READ_ONLY);
-        stmt.setFetchSize(Integer.MIN_VALUE); // MySQL Driver specific hint
+        stmt.setFetchSize(fetchSize); // MySQL Driver specific hint that should be used wisely
         return stmt;
     }
 

@@ -115,10 +115,22 @@ public class IntervalService extends QueryService {
     public FloatEventStream openFloatStream(IntervalQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
-        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);
+        int fetchSize = 0;
+        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.STREAM) {
+            fetchSize = Integer.MIN_VALUE;
+        } else if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
+            fetchSize = 4098;
+            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(true);
+        }
+        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params, fetchSize);
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();
+
+        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
+            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(false);
+        }
+
         return new FloatEventStream(params, con, stmt, rs);
     }
 
@@ -136,10 +148,22 @@ public class IntervalService extends QueryService {
     public IntEventStream openIntStream(IntervalQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
-        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);
+        int fetchSize = 0;
+        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.STREAM) {
+            fetchSize = Integer.MIN_VALUE;
+        } else if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
+            fetchSize = 4098;
+            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(true);
+        }
+        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params, fetchSize);
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();
+
+        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
+            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(false);
+        }
+
         return new IntEventStream(params, con, stmt, rs);
     }
 
@@ -158,10 +182,22 @@ public class IntervalService extends QueryService {
             SQLException {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
-        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params);
+        int fetchSize = 0;
+        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.STREAM) {
+            fetchSize = Integer.MIN_VALUE;
+        } else if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
+            fetchSize = 4098;
+            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(true);
+        }
+        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params, fetchSize);
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();
+
+        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
+            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(false);
+        }
+
         return new MultiStringEventStream(params, con, stmt, rs);
     }
 }
