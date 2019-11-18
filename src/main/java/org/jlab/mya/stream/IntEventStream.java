@@ -24,7 +24,7 @@ public class IntEventStream extends EventStream<IntEvent> {
      * @param rs The database result set
      */    
     public IntEventStream(IntervalQueryParams params, Connection con, PreparedStatement stmt, ResultSet rs) {
-        super(params, con, stmt, rs);
+        super(params, con, stmt, rs, IntEvent.class);
     }
 
     @Override

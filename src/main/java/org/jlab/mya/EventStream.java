@@ -47,18 +47,25 @@ public abstract class EventStream<T extends Event> implements Channel {
     protected final ResultSet rs;
 
     /**
+     * The type of stream.
+     */
+    protected final Class<T> type;
+
+    /**
      * Create a new event stream.
      *
      * @param params The query parameters
      * @param con The database connection
      * @param stmt The database statement
      * @param rs The database result set
+     * @param type The type
      */
-    public EventStream(QueryParams params, Connection con, PreparedStatement stmt, ResultSet rs) {
+    public EventStream(QueryParams params, Connection con, PreparedStatement stmt, ResultSet rs, Class<T> type) {
         this.params = params;
         this.con = con;
         this.stmt = stmt;
         this.rs = rs;
+        this.type = type;
     }
 
     /**
@@ -92,6 +99,20 @@ public abstract class EventStream<T extends Event> implements Channel {
      * @throws SQLException If unable to convert a ResultSet row to an event.
      */
     protected abstract T rowToEvent() throws SQLException;
+
+    /**
+     * Obtain type of stream.
+     * <p>
+     * In Java, Generics are erased at runtime so if you want to know what type something is
+     * you must pass it as an argument.  That's why type info is specified twice in EventStream: once for the compiler
+     * and once for the runtime.   All so you can call the method getType() at runtime!
+     * </p>
+     *
+     * @return The type
+     */
+    public Class<T> getType() {
+        return type;
+    };
 
     /**
      * Tells whether or not this channel is open.

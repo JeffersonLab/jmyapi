@@ -16,8 +16,14 @@ public class ListStream<T extends Event> extends EventStream<T> {
     private int i = 0;
     private final List<T> events;
 
-    public ListStream(List<T> events) {
-        super(null, null, null, null);
+    /**
+     * Create a new ListStream.
+     *
+     * @param events The events that make up the stream
+     * @param type The type
+     */
+    public ListStream(List<T> events, Class<T> type) {
+        super(null, null, null, null, type);
         this.events = events;
     }
 

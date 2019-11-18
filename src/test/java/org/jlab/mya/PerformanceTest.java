@@ -103,7 +103,7 @@ public class PerformanceTest {
 
         try (
                 final FloatEventStream stream = service.openFloatStream(params);
-                final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false);
+                final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class);
         ) {
 
             FloatEvent event;
@@ -151,7 +151,7 @@ public class PerformanceTest {
 
         try (
                 final FloatEventStream stream = service.openFloatStream(params);
-                final FloatGraphicalEventBinSampleStream samplerStream = new FloatGraphicalEventBinSampleStream(stream, new GraphicalEventBinSamplerParams(3, count));
+                final FloatGraphicalEventBinSampleStream<FloatEvent> samplerStream = new FloatGraphicalEventBinSampleStream<>(stream, new GraphicalEventBinSamplerParams(3, count), FloatEvent.class);
         ) {
 
             FloatEvent event;

@@ -72,9 +72,10 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
      *
      * @param stream The FloatEventStream to wrap
      * @param params The GraphiaclEventBinSampleParams
+     * @param type The type
      */
-    public FloatGraphicalEventBinSampleStream(EventStream<T> stream, GraphicalEventBinSamplerParams params) {
-        super(stream);
+    public FloatGraphicalEventBinSampleStream(EventStream<T> stream, GraphicalEventBinSamplerParams params, Class<T> type) {
+        super(stream, type);
 
         this.samplerParams = params;
 

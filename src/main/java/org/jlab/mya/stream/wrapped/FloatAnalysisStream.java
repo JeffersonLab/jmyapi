@@ -29,7 +29,7 @@ public class FloatAnalysisStream extends WrappedEventStreamAdaptor<AnalyzedFloat
      * @param statsMap The stat name and index of requested statistics
      */
     public FloatAnalysisStream(EventStream<FloatEvent> stream, short[] statsMap) {
-        super(stream);
+        super(stream, AnalyzedFloatEvent.class);
         seriesStats = new RunningStatistics(statsMap);
     }
 

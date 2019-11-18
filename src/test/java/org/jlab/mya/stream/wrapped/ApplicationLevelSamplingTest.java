@@ -67,7 +67,7 @@ public class ApplicationLevelSamplingTest {
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
         try (FloatEventStream stream = intervalService.openFloatStream(params)) {
-            FloatSimpleEventBinSampleStream sampleStream = new FloatSimpleEventBinSampleStream(stream, samplerParams);
+            FloatSimpleEventBinSampleStream<FloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(stream, samplerParams, FloatEvent.class);
             FloatEvent event;
             while ((event = sampleStream.read()) != null) {
                 eventList.add(event);
@@ -137,9 +137,9 @@ public class ApplicationLevelSamplingTest {
         start = System.currentTimeMillis();
         try (
                 final FloatEventStream stream = intervalService.openFloatStream(params);
-                final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false);
+                final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class);
                 final FloatAnalysisStream analysisStream = new FloatAnalysisStream(boundaryStream, eventStatsMap);
-                final FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams);
+                final FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams, AnalyzedFloatEvent.class);
         ) {
             AnalyzedFloatEvent event;
 
@@ -200,7 +200,7 @@ public class ApplicationLevelSamplingTest {
 
         List<FloatEvent> eventList = new ArrayList<>();
         try (FloatEventStream stream = intervalService.openFloatStream(params)) {
-            try (FloatGraphicalEventBinSampleStream sampleStream = new FloatGraphicalEventBinSampleStream(stream, samplerParams)) {
+            try (FloatGraphicalEventBinSampleStream<FloatEvent> sampleStream = new FloatGraphicalEventBinSampleStream<>(stream, samplerParams, FloatEvent.class)) {
                 FloatEvent event;
                 while ((event = sampleStream.read()) != null) {
                     eventList.add(event);
@@ -246,8 +246,8 @@ public class ApplicationLevelSamplingTest {
         long expSize = 10;
 
         List<FloatEvent> eventList = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = new ListStream<FloatEvent>(events)) {
-            try (FloatGraphicalEventBinSampleStream sampleStream = new FloatGraphicalEventBinSampleStream(stream, samplerParams)) {
+        try (EventStream<FloatEvent> stream = new ListStream<>(events, FloatEvent.class)) {
+            try (FloatGraphicalEventBinSampleStream<FloatEvent> sampleStream = new FloatGraphicalEventBinSampleStream<>(stream, samplerParams, FloatEvent.class)) {
                 FloatEvent event;
                 while ((event = sampleStream.read()) != null) {
                     eventList.add(event);

@@ -48,10 +48,11 @@ public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends Wrapp
      * Create a new FloatSimpleEventBinStream by wrapping a FloatEventStream.
      *
      * @param stream The FloatEventStream to wrap
-     * @param params THe SimpleEventBinSamplerParams
+     * @param params The SimpleEventBinSamplerParams
+     * @param type The type
      */
-    public FloatSimpleEventBinSampleStream(EventStream<T> stream, SimpleEventBinSamplerParams params) {
-        super(stream);
+    public FloatSimpleEventBinSampleStream(EventStream<T> stream, SimpleEventBinSamplerParams params, Class<T> type) {
+        super(stream, type);
 
         this.samplerParams = params;
 

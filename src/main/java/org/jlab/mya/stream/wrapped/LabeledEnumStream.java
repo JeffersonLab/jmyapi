@@ -26,7 +26,7 @@ public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEven
      * @param enumLabelList The history of enum labels
      */
     public LabeledEnumStream(EventStream<IntEvent> stream, List<ExtraInfo> enumLabelList) {
-        super(stream);
+        super(stream, LabeledEnumEvent.class);
 
         this.enumLabelList = new ArrayList<>(enumLabelList); // We make a copy because later we may modify the list
 

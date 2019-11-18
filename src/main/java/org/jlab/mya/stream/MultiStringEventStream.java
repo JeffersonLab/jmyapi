@@ -25,7 +25,7 @@ public class MultiStringEventStream extends EventStream<MultiStringEvent> {
      */    
     public MultiStringEventStream(IntervalQueryParams params, Connection con, PreparedStatement stmt,
             ResultSet rs) {
-        super(params, con, stmt, rs);
+        super(params, con, stmt, rs, MultiStringEvent.class);
     }
 
     @Override

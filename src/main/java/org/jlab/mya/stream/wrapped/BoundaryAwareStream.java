@@ -36,9 +36,14 @@ public class BoundaryAwareStream<T extends Event> extends WrappedEventStreamAdap
      * Create a new BoundaryAwareStream.
      *
      * @param wrapped The wrapped EventStream
+     * @param begin The begin time
+     * @param end The end time
+     * @param priorPoint Prior point to copy to begin
+     * @param updatesOnly Should end point be an update
+     * @param type The type
      */
-    public BoundaryAwareStream(EventStream<T> wrapped, Instant begin, Instant end, T priorPoint, boolean updatesOnly) {
-        super(wrapped);
+    public BoundaryAwareStream(EventStream<T> wrapped, Instant begin, Instant end, T priorPoint, boolean updatesOnly, Class<T> type) {
+        super(wrapped, type);
         this.begin = begin;
         this.end = end;
         this.priorPoint = priorPoint;

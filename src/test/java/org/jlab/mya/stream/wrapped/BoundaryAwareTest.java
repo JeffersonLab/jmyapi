@@ -38,8 +38,8 @@ public class BoundaryAwareTest {
         long expSize = 6;
 
         List<FloatEvent> eventList = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = new ListStream<FloatEvent>(events)) {
-            try (BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false)) {
+        try (EventStream<FloatEvent> stream = new ListStream<FloatEvent>(events, FloatEvent.class)) {
+            try (BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class)) {
                 FloatEvent event;
                 while ((event = boundaryStream.read()) != null) {
                     eventList.add(event);
