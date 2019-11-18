@@ -1,5 +1,5 @@
 description = 'Java MYA API'
-version = '3.0.0'
+version = '4.0.0'
 group 'org.jlab'
 
 apply plugin: 'java'
