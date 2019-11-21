@@ -17,7 +17,7 @@ public abstract class Event implements Comparable<Event> {
     /**
      * The timestamp of the event.
      */
-    protected final long timestamp;
+    private final long timestamp;
 
     /**
      * The event code.
@@ -30,7 +30,7 @@ public abstract class Event implements Comparable<Event> {
      * @param timestamp The Mya timestamp of the event
      * @param code The event code
      */
-    public Event(long timestamp, EventCode code) {
+    protected Event(long timestamp, EventCode code) {
         this.timestamp = timestamp;
         this.code = code;
     }
@@ -41,7 +41,7 @@ public abstract class Event implements Comparable<Event> {
      * @param timestamp The timestamp of the event
      * @param code The event code
      */
-    public Event(Instant timestamp, EventCode code) {
+    protected Event(Instant timestamp, EventCode code) {
         this.timestamp = TimeUtil.toMyaTimestamp(timestamp);
         this.code = code;
     }
