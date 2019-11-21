@@ -27,7 +27,7 @@ public abstract class QueryParams {
      * @param metadata The PV metadata
      * @param updatesOnly true for updates events only, false otherwise
      */
-    public QueryParams(Metadata metadata, boolean updatesOnly) {
+    protected QueryParams(Metadata metadata, boolean updatesOnly) {
         this.metadata = metadata;
         this.updatesOnly = updatesOnly;
     }

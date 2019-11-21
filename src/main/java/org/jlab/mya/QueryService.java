@@ -32,7 +32,7 @@ public abstract class QueryService {
      *
      * @param nexus The DataNexus
      */
-    public QueryService(DataNexus nexus) {
+    protected QueryService(DataNexus nexus) {
         this.nexus = nexus;
     }
 
