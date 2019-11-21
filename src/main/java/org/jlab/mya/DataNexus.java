@@ -25,6 +25,7 @@ import java.util.TreeSet;
  *
  * @author slominskir
  */
+@SuppressWarnings("DuplicatedCode")
 public abstract class DataNexus {
 
     /**

@@ -61,7 +61,7 @@ public class FloatEventBucketTest {
         events.add(new FloatEvent(begin.plusSeconds(3),        EventCode.NETWORK_DISCONNECTION, 0.0f ));  // non-update
         events.add(new FloatEvent(begin.plusSeconds(5),        EventCode.UPDATE, 10.0f ));  // max
         events.add(new FloatEvent(begin.plusSeconds(3998),   EventCode.UPDATE, 0.9f ));  // Should be skipped
-        events.add(new FloatEvent(begin.plusSeconds(3999),   EventCode.UPDATE, 1.9f ));  // Included becuase it preceds a non-update
+        events.add(new FloatEvent(begin.plusSeconds(3999),   EventCode.UPDATE, 1.9f ));  // Included because it precedes a non-update
         events.add(new FloatEvent(begin.plusSeconds(4000),   EventCode.NETWORK_DISCONNECTION, 0.0f));  // non-update
         events.add(new FloatEvent(begin.plusSeconds(5000),   EventCode.UPDATE, 2.0f ));  // Included since it follows a non-update event
         events.add(new FloatEvent(begin.plusSeconds(43200), EventCode.UPDATE, 9.99f ));  // lttb with given e1, e3

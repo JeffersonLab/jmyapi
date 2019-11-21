@@ -101,7 +101,7 @@ public class AnalysisServiceTest {
         System.out.println("Myapi min:   " + min);
         System.out.println("Jmyapi min:  " + result.getMin());
         System.out.println("Myapi max:   " + max);
-        System.out.println("Jmyapia max:  " + result.getMax());
+        System.out.println("Jmyapi max:  " + result.getMax());
         System.out.println("Myapi mean:  " + mean);
         System.out.println("Jmyapi mean: " + result.getMean());
         System.out.println("");
