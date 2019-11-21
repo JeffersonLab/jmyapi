@@ -59,7 +59,7 @@ public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends Wrapp
         if (params.getCount() > params.getLimit() && params.getLimit() > 0) {
             this.binSize = params.getCount() / params.getLimit();
             this.fractional = BigDecimal.valueOf((params.getCount() % params.getLimit())
-                    / Double.valueOf(params.getLimit()));
+                    / (double) params.getLimit());
         } else {
             this.binSize = 1;
             this.fractional = BigDecimal.ZERO;

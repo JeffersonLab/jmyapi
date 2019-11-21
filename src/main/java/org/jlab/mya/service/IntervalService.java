@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jlab.mya.*;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.stream.IntEventStream;
@@ -191,7 +190,7 @@ public class IntervalService extends QueryService {
     /**
      * A common bundle of parameters used internally to avoid duplicating code.
      */
-    private class InternalIntervalParams {
+    private static class InternalIntervalParams {
         public Connection con;
         public PreparedStatement stmt;
         public ResultSet rs;

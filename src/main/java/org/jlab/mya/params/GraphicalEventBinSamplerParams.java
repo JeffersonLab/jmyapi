@@ -1,8 +1,5 @@
 package org.jlab.mya.params;
 
-import java.time.Instant;
-import org.jlab.mya.Metadata;
-
 /**
  * Parameters for the graphical application-level event-based sampler; uses the largest triangle three bucket
  * (LTTB) algorithm described in "Downsampling Time Series for Visual

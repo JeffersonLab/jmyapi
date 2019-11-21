@@ -3,7 +3,6 @@ package org.jlab.mya.stream.wrapped;
 import org.jlab.mya.Event;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.EventStream;
-import org.jlab.mya.params.IntervalQueryParams;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -26,7 +25,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedEventStreamAdap
     private T lastEvent = null;
     private boolean started = false;
     private boolean buffered = false;
-    private T priorPoint;
+    private final T priorPoint;
     private T secondPointBuffer;
     private final Instant begin;
     private final Instant end;

@@ -154,8 +154,8 @@ public class RunningStatistics {
             // Note: sigmaSum initialized to zero by default java constructor behavior
 
         } else {
-            min = value < min ? value : min;
-            max = value > max ? value : max;
+            min = Math.min(value, min);
+            max = Math.max(value, max);
 
             double delta = weight * (value - mean);
             mean = mean + delta / duration;

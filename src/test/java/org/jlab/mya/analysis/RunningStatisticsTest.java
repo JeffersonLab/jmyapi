@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class RunningStatisticsTest {
 
-    double delta = 0.000001;
+    final double delta = 0.000001;
     
     public RunningStatisticsTest() {
     }
@@ -43,7 +43,7 @@ public class RunningStatisticsTest {
         Double mean = rs.getMean();
         rs.reset();
         assertEquals(mean, 2., delta);
-        assertEquals(null, rs.getMean());
+        assertNull(rs.getMean());
     }
 
     /**

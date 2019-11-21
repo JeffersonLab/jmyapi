@@ -1,6 +1,5 @@
 package org.jlab.mya.service;
 
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +47,7 @@ public class SourceSamplingServiceTest {
     }
 
     @After
-    public void tearDown() throws SQLException {
+    public void tearDown() {
 
     }
 

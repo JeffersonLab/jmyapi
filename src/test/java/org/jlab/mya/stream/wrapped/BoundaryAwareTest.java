@@ -23,7 +23,7 @@ public class BoundaryAwareTest {
         Instant begin = TimeUtil.toLocalDT("2019-01-01T00:00:00");
         Instant end = TimeUtil.toLocalDT("2019-06-01T00:00:00");
 
-        List<FloatEvent> events = new ArrayList<FloatEvent>();
+        List<FloatEvent> events = new ArrayList<>();
         events.add(new FloatEvent(TimeUtil.toLocalDT("2019-02-01T00:00:00"), EventCode.UPDATE, 1));
         events.add(new FloatEvent(TimeUtil.toLocalDT("2019-03-01T00:00:00"), EventCode.UPDATE, 2));
         events.add(new FloatEvent(TimeUtil.toLocalDT("2019-04-01T00:00:00"), EventCode.UPDATE, 3));
@@ -38,7 +38,7 @@ public class BoundaryAwareTest {
         long expSize = 6;
 
         List<FloatEvent> eventList = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = new ListStream<FloatEvent>(events, FloatEvent.class)) {
+        try (EventStream<FloatEvent> stream = new ListStream<>(events, FloatEvent.class)) {
             try (BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class)) {
                 FloatEvent event;
                 while ((event = boundaryStream.read()) != null) {

@@ -53,7 +53,7 @@ public class IntervalServiceTest {
     }
 
     @Before
-    public void setUp() throws ClassNotFoundException, SQLException {
+    public void setUp() throws SQLException {
         DataNexus nexus = new OnDemandNexus(HISTORY_DEPLOYMENT);
         service = new IntervalService(nexus);
         TEST_METADATA = service.findMetadata(TEST_PV);
@@ -63,7 +63,7 @@ public class IntervalServiceTest {
     }
 
     @After
-    public void tearDown() throws SQLException {
+    public void tearDown() {
 
     }
 

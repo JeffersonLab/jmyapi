@@ -3,8 +3,6 @@ package org.jlab.mya.stream;
 import org.jlab.mya.Event;
 import org.jlab.mya.EventStream;
 
-import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -28,12 +26,12 @@ public class ListStream<T extends Event> extends EventStream<T> {
     }
 
     @Override
-    protected T rowToEvent() throws SQLException {
+    protected T rowToEvent() {
         return null;
     }
 
     @Override
-    public T read() throws IOException {
+    public T read() {
         if(i < events.size()) {
             return events.get(i++);
         } else {
@@ -42,7 +40,7 @@ public class ListStream<T extends Event> extends EventStream<T> {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
         // No op
     }
 }

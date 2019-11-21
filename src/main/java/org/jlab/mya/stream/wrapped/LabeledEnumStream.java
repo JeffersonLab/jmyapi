@@ -31,8 +31,7 @@ public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEven
         this.enumLabelList = new ArrayList<>(enumLabelList); // We make a copy because later we may modify the list
 
         // Verify that extra info is only enum_strings and nothing else
-        for (int i = 0; i < enumLabelList.size(); i++) {
-            ExtraInfo info = enumLabelList.get(i);
+        for (ExtraInfo info : enumLabelList) {
             boolean enumStrings = "enum_strings".equals(info.getType());
             if (!enumStrings) {
                 throw new IllegalArgumentException("ExtraInfo must only contain enum_strings");

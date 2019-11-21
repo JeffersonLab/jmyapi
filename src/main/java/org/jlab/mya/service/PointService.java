@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jlab.mya.*;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;

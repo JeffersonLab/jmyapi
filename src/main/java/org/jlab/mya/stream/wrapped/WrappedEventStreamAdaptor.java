@@ -1,7 +1,6 @@
 package org.jlab.mya.stream.wrapped;
 
 import java.io.IOException;
-import java.sql.SQLException;
 
 import org.jlab.mya.Event;
 import org.jlab.mya.EventStream;
@@ -30,7 +29,7 @@ public abstract class WrappedEventStreamAdaptor<T extends Event, E extends Event
     }
 
     @Override
-    protected T rowToEvent() throws SQLException {
+    protected T rowToEvent() {
         return null;
     }
 

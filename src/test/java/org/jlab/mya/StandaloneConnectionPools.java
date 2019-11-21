@@ -46,7 +46,7 @@ public class StandaloneConnectionPools implements Channel {
         int port = Integer.parseInt(DataNexus.DEPLOYMENTS_PROPERTIES.getProperty("port"));
 
         String hostCsv = DataNexus.DEPLOYMENTS_PROPERTIES.getProperty(deployment + ".hosts");
-        String hostList[] = hostCsv.split(",");
+        String[] hostList = hostCsv.split(",");
 
         for (String host : hostList) {
 

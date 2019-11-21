@@ -112,7 +112,7 @@ public abstract class EventStream<T extends Event> implements Channel {
      */
     public Class<T> getType() {
         return type;
-    };
+    }
 
     /**
      * Tells whether or not this channel is open.

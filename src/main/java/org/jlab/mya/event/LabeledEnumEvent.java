@@ -140,7 +140,7 @@ public class LabeledEnumEvent extends IntEvent {
                     }
                 }
 
-                // This optimization just says if we've already passed old historical enum labels disgard them so they aren't considered in future events
+                // This optimization just says if we've already passed old historical enum labels discard them so they aren't considered in future events
                 for (int i = 0; i < skipped; i++) {
                     enumLabelList.remove(0);
                 }

@@ -22,9 +22,6 @@ import static org.junit.Assert.*;
  */
 public class AnalysisServiceTest {
 
-    public AnalysisServiceTest() {
-    }
-
     /**
      * Test of calculateRunningStatistics method, of class AnalysisService.
      *

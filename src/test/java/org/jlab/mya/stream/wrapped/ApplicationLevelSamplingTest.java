@@ -223,7 +223,7 @@ public class ApplicationLevelSamplingTest {
         long numBins = 30;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
 
-        List<FloatEvent> events = new ArrayList<FloatEvent>();
+        List<FloatEvent> events = new ArrayList<>();
         events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 1));
         events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 2));
         events.add(new FloatEvent(Instant.now(), EventCode.UPDATE, 3));

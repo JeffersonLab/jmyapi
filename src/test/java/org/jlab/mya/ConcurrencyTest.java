@@ -23,7 +23,7 @@ public class ConcurrencyTest {
      * @throws SQLException
      * @throws IOException
      */
-    public static void main(String[] args) throws SQLException, IOException, InterruptedException {
+    public static void main(String[] args) throws SQLException, IOException {
 
         DataNexus nexus = new OnDemandNexus("history");
         IntervalService intervalService = new IntervalService(nexus);
