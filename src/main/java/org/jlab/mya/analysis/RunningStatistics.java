@@ -50,7 +50,7 @@ public class RunningStatistics {
      * that tracks series stats, plus the specified event stats.
      * <p>
      * Event Stats are specified by short value and array index.  Valid values
-     * are assigned constants and include RunningStatisics.INTEGRATION.
+     * are assigned constants and include RunningStatistics.INTEGRATION.
      * </p>
      * @param eventStatsMap The event stats to track
      */
@@ -70,7 +70,7 @@ public class RunningStatistics {
     }
 
     /**
-     * This method clears the running statistics calculated thus far, reseting
+     * This method clears the running statistics calculated thus far, resetting
      * the RunningStatistics object to it's initial state.
      */
     public void reset() {
@@ -90,7 +90,7 @@ public class RunningStatistics {
         
         eventCount++;
 
-        // The fisrt event just gets saved.  Every duration calculation requires two events.
+        // The first event just gets saved.  Every duration calculation requires two events.
         if (curr == null) {
             curr = event;
             return;
@@ -99,7 +99,7 @@ public class RunningStatistics {
         prev = curr;
         curr = event;
 
-        // Statistics are only valid for UPDATEs and should be weighted/normalized over the time that we were in an UPDATE state
+        // Statistics are only valid for UPDATE and should be weighted/normalized over the time that we were in an UPDATE state
         if (prev.getCode().equals(EventCode.UPDATE)) {
             updateCount++;
             double value = prev.getValue();
@@ -125,7 +125,7 @@ public class RunningStatistics {
      * constant nature of channel histories, the integral calculation is
      * simplified to a time-weighted sum of the values of the channel history
      * during the requested time period. This summation is performed using a
-     * Kahan/Numaier summation algorithm.
+     * Kahan/Neumaier summation algorithm.
      *
      * Note: Events must be added in the chronological order they occurred and
      * must include non Update events in order for the statistics be valid.
@@ -271,7 +271,7 @@ public class RunningStatistics {
      * @return The result of integrating across the channel history for which
      * data was available or null if the statistic is invalid.
      */
-    // Use the Neumiar summation algorithm
+    // Use the Neumaier summation algorithm
     public Double getIntegration() {
         if (!statsValid()) {
             return null;
