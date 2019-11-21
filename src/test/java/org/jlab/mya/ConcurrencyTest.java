@@ -16,12 +16,12 @@ import java.time.Instant;
  *
  * @author slominskir
  */
-public class ConcurrencyTest {
+class ConcurrencyTest {
 
     /**
      * @param args the command line arguments
-     * @throws SQLException
-     * @throws IOException
+     * @throws SQLException If an SQL problem arises
+     * @throws IOException If an IO problem arises
      */
     public static void main(String[] args) throws SQLException, IOException {
 

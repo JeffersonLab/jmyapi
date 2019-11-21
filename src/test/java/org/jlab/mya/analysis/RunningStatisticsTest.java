@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
  */
 public class RunningStatisticsTest {
 
-    final double delta = 0.000001;
+    private final double delta = 0.000001;
     
     public RunningStatisticsTest() {
     }

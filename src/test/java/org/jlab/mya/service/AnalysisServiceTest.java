@@ -25,7 +25,7 @@ public class AnalysisServiceTest {
     /**
      * Test of calculateRunningStatistics method, of class AnalysisService.
      *
-     * @throws java.lang.Exception
+     * @throws Exception If something goes wrong!
      */
     @Test
     public void testCalculateRunningStatistics() throws Exception {

@@ -178,8 +178,8 @@ public class PerformanceTest {
      * can begin processing the data nearly immediately (less latency) instead of waiting for a big chunk (or all of it)
      * to arrive.
      *
-     * @throws SQLException
-     * @throws IOException
+     * @throws SQLException If unable to query the SQL database
+     * @throws IOException If unable to stream data
      */
     @Test
     public void doIntervalFetchStrategyTest() throws SQLException, IOException {

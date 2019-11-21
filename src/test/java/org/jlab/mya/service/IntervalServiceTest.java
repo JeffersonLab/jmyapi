@@ -28,11 +28,11 @@ import org.junit.Test;
  */
 public class IntervalServiceTest {
 
-    public static final String HISTORY_DEPLOYMENT = "history";
-    public static final String TEST_PV = "MQA3S06M";
-    public static final String TEST_PV_MULTI = "HLA:bta_uxtime_h";
-    public static final Instant TEST_BEGIN = TimeUtil.toLocalDT("2016-08-22T08:43:00");
-    public static final Instant TEST_END = TimeUtil.toLocalDT("2017-09-22T08:43:00");
+    private static final String HISTORY_DEPLOYMENT = "history";
+    private static final String TEST_PV = "MQA3S06M";
+    private static final String TEST_PV_MULTI = "HLA:bta_uxtime_h";
+    private static final Instant TEST_BEGIN = TimeUtil.toLocalDT("2016-08-22T08:43:00");
+    private static final Instant TEST_END = TimeUtil.toLocalDT("2017-09-22T08:43:00");
 
     private IntervalService service;
     private Metadata TEST_METADATA;
