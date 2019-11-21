@@ -191,8 +191,8 @@ public class IntervalService extends QueryService {
      * A common bundle of parameters used internally to avoid duplicating code.
      */
     private static class InternalIntervalParams {
-        public Connection con;
-        public PreparedStatement stmt;
-        public ResultSet rs;
+        Connection con;
+        PreparedStatement stmt;
+        ResultSet rs;
     }
 }
