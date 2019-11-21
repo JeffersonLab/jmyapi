@@ -56,7 +56,7 @@ public abstract class DataNexus {
      *
      * @param deployment The Mya deployment
      */
-    public DataNexus(String deployment) {
+    protected DataNexus(String deployment) {
         if (DataNexus.getDeploymentNames().contains(deployment)) {
             this.deployment = deployment;
         } else {
