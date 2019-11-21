@@ -31,9 +31,9 @@ public class StandaloneConnectionPools implements Channel {
     /**
      * Creates DataSources for the deployment and publishes them to JNDI.
      *
-     * @param deployment
-     * @throws javax.naming.NamingException
-     * @throws java.sql.SQLException
+     * @param deployment The MYA deployment
+     * @throws NamingException If unable to lookup the connection pool
+     * @throws SQLException If unable to query the database
      */
     public StandaloneConnectionPools(String deployment) throws NamingException, SQLException {
         initCtx = new InitialContext();
