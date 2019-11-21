@@ -169,6 +169,28 @@ public abstract class DataNexus {
     public PreparedStatement getEventIntervalStatement(Connection con, IntervalQueryParams params, int fetchSize) throws
             SQLException {
 
+        String where = getIntervalWhereClause(params);
+
+
+        String query = "select * from table_" + params.getMetadata().getId();
+
+        query = query + where;
+
+        query = query + " order by time asc";
+
+        PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY);
+        stmt.setFetchSize(fetchSize); // MySQL Driver specific hint that should be used wisely
+        return stmt;
+    }
+
+    /**
+     * Get shared where clause for interval and count queries.
+     *
+     * @param params The parameters
+     * @return The SQL where clause
+     */
+    private String getIntervalWhereClause(IntervalQueryParams params) {
         List<String> filterList = new ArrayList<>();
 
         filterList.add("time >= ?");
@@ -188,16 +210,7 @@ public abstract class DataNexus {
             }
         }
 
-        String query = "select * from table_" + params.getMetadata().getId();
-
-        query = query + where;
-
-        query = query + " order by time asc";
-
-        PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY,
-                ResultSet.CONCUR_READ_ONLY);
-        stmt.setFetchSize(fetchSize); // MySQL Driver specific hint that should be used wisely
-        return stmt;
+        return where;
     }
 
     /**
@@ -213,24 +226,7 @@ public abstract class DataNexus {
     public PreparedStatement getCountStatement(Connection con, IntervalQueryParams params) throws
             SQLException {
 
-        List<String> filterList = new ArrayList<>();
-
-        filterList.add("time >= ?");
-        filterList.add("time < ?");
-
-        if (params.isUpdatesOnly()) {
-            filterList.add("code = " + EventCode.UPDATE.getCodeNumber());
-        }
-
-        String where = "";
-
-        if (!filterList.isEmpty()) {
-            where = " where " + filterList.get(0);
-
-            for (int i = 1; i < filterList.size(); i++) {
-                where = where + " and " + filterList.get(i);
-            }
-        }
+        String where = getIntervalWhereClause(params);
 
         String query = "select count(*) from table_" + params.getMetadata().getId();
 
