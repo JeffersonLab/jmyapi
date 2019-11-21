@@ -31,6 +31,11 @@ import org.jlab.mya.stream.MySamplerFloatEventStream;
  */
 public class SourceSamplingService extends QueryService {
 
+    /**
+     * Create a new SourceSamplingService.
+     *
+     * @param nexus The DataNexus
+     */
     public SourceSamplingService(DataNexus nexus) {
         super(nexus);
     }
@@ -55,7 +60,7 @@ public class SourceSamplingService extends QueryService {
      * Note: Implemented using a database stored procedure.
      *
      * @param params The IntervalQueryParams
-     * @return a stream
+     * @return A new FloatEventStream
      * @throws SQLException If unable to query the database
      */
     public FloatEventStream openMyGetSampleFloatStream(MyGetSampleParams params) throws
@@ -102,7 +107,7 @@ public class SourceSamplingService extends QueryService {
      * method to ensure you close the stream properly.
      *
      * @param params The IntervalQueryParams
-     * @return a stream
+     * @return A new FloatEventStream
      * @throws SQLException If unable to query the database
      */
     public FloatEventStream openMySamplerFloatStream(MySamplerParams params) throws
