@@ -34,7 +34,7 @@ public abstract class EventStream<T extends Event> implements Channel {
     /**
      * The database connection.
      */
-    protected final Connection con;
+    private final Connection con;
 
     /**
      * The database prepared statement.
@@ -49,7 +49,7 @@ public abstract class EventStream<T extends Event> implements Channel {
     /**
      * The type of stream.
      */
-    protected final Class<T> type;
+    private final Class<T> type;
 
     /**
      * Create a new event stream.
@@ -60,7 +60,7 @@ public abstract class EventStream<T extends Event> implements Channel {
      * @param rs The database result set
      * @param type The type
      */
-    public EventStream(QueryParams params, Connection con, PreparedStatement stmt, ResultSet rs, Class<T> type) {
+    protected EventStream(QueryParams params, Connection con, PreparedStatement stmt, ResultSet rs, Class<T> type) {
         this.params = params;
         this.con = con;
         this.stmt = stmt;
