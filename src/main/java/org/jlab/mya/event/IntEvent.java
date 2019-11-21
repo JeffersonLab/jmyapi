@@ -19,7 +19,7 @@ public class IntEvent extends Event {
     /**
      *MYA channel value
      */
-    protected final int value;
+    final int value;
 
     /**
      * Create new IntEvent.
