@@ -29,7 +29,7 @@ import java.util.Queue;
  * oversimplified description of this approach is to segment the raw data into
  * buckets (i.e., bins), then keep a point from each bin with the goal of
  * creating the largest triangular area. Other points are also kept to maintain
- * graphical fidelty. See documentation on FloatEventBucket for more details on
+ * graphical fidelity. See documentation on FloatEventBucket for more details on
  * the downsampling algorithm.
  * </p>
  * <p>
@@ -71,7 +71,7 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
      * Create a new FloatGraphicalEventBinSampleStream by wrapping a FloatEventStream.
      *
      * @param stream The FloatEventStream to wrap
-     * @param params The GraphiaclEventBinSampleParams
+     * @param params The GraphicalEventBinSampleParams
      * @param type The type
      */
     public FloatGraphicalEventBinSampleStream(EventStream<T> stream, GraphicalEventBinSamplerParams params, Class<T> type) {
@@ -81,7 +81,7 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
 
         // 10 years of nanos starts to approach the range of overflow concerns.  Millis will be good enough to split on.
         //
-        // The user request numBins.  The first and last point/bin get consumned by the first and last point so the -2s.
+        // The user request numBins.  The first and last point/bin get consumed by the first and last point so the -2s.
         // Then, we may not have enough points to fill all bins exactly, so use ceiling to ensure that bins are the proper size
         // for numBins - 2 to hold count - 2 without adding extra bins.
         binSize = (long) (Math.ceil(((double) params.getCount() - 2) / (params.getNumBins() - 2)));
@@ -100,7 +100,7 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
         if (queue.peek() == null) {
             processStream();
         }
-        // Returns either the next FloatEvent, or null.  If null, then there is no more data and the requestor should call close.
+        // Returns either the next FloatEvent, or null.  If null, then there is no more data and the requester should call close.
         return queue.poll();
     }
 
@@ -108,7 +108,7 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
      * This method processes the "raw" FloatEventStream and supplies write
      * events according to a modified LTTB approach out to an internal queue.
      *
-     * @throws IOException
+     * @throws IOException If something goes wrong!
      */
     private void processStream() throws IOException {
 
@@ -157,7 +157,7 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
         if (prev != null) {
             // We're here, so no more points to be read from the resultSet.  Create a bucket with the event list, downsample and
             // write it to the queue, then add the last point to the queue (prev should not have been added to event list yet).  Clear
-            // the listand when a subsequent read/procesStream happens, processStream will not queue anything else up and the
+            // the list and when a subsequent read/process stream happens, processStream will not queue anything else up and the
             // queue will return null.
             if (!events.isEmpty()) {
                 FloatEventBucket<T> feb = new FloatEventBucket<>(events);
