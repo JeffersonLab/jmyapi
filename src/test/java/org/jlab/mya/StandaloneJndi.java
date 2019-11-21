@@ -9,7 +9,6 @@ import javax.naming.Name;
 import javax.naming.NameClassPair;
 import javax.naming.NameParser;
 import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
 import javax.naming.spi.InitialContextFactory;
 
 /**
@@ -24,7 +23,7 @@ public class StandaloneJndi implements InitialContextFactory {
     static {
         try {
             INIT_CTX.rebind("java:comp/env", new MemoryContext());
-        } catch (NamingException ex) {
+        } catch (Exception ex) {
             throw new ExceptionInInitializerError(ex);
         }
     }
@@ -36,7 +35,7 @@ public class StandaloneJndi implements InitialContextFactory {
 
     @Override
     public Context getInitialContext(
-            Hashtable<?, ?> environment) throws NamingException {
+            Hashtable<?, ?> environment) {
         return INIT_CTX;
     }
     
@@ -45,147 +44,147 @@ public class StandaloneJndi implements InitialContextFactory {
         private static final Map<String, Object> DB = new HashMap<>();
         
         @Override
-        public Object lookup(Name name) throws NamingException {
+        public Object lookup(Name name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Object lookup(String name) throws NamingException {
+        public Object lookup(String name) {
             return DB.get(name);
         }
 
         @Override
-        public void bind(Name name, Object obj) throws NamingException {
+        public void bind(Name name, Object obj) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void bind(String name, Object obj) throws NamingException {
+        public void bind(String name, Object obj) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void rebind(Name name, Object obj) throws NamingException {
+        public void rebind(Name name, Object obj) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void rebind(String name, Object obj) throws NamingException {
+        public void rebind(String name, Object obj) {
             DB.put(name, obj);
         }
 
         @Override
-        public void unbind(Name name) throws NamingException {
+        public void unbind(Name name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void unbind(String name) throws NamingException {
+        public void unbind(String name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void rename(Name oldName, Name newName) throws NamingException {
+        public void rename(Name oldName, Name newName) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void rename(String oldName, String newName) throws NamingException {
+        public void rename(String oldName, String newName) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public NamingEnumeration<NameClassPair> list(Name name) throws NamingException {
+        public NamingEnumeration<NameClassPair> list(Name name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public NamingEnumeration<NameClassPair> list(String name) throws NamingException {
+        public NamingEnumeration<NameClassPair> list(String name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public NamingEnumeration<Binding> listBindings(Name name) throws NamingException {
+        public NamingEnumeration<Binding> listBindings(Name name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public NamingEnumeration<Binding> listBindings(String name) throws NamingException {
+        public NamingEnumeration<Binding> listBindings(String name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void destroySubcontext(Name name) throws NamingException {
+        public void destroySubcontext(Name name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void destroySubcontext(String name) throws NamingException {
+        public void destroySubcontext(String name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Context createSubcontext(Name name) throws NamingException {
+        public Context createSubcontext(Name name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Context createSubcontext(String name) throws NamingException {
+        public Context createSubcontext(String name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Object lookupLink(Name name) throws NamingException {
+        public Object lookupLink(Name name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Object lookupLink(String name) throws NamingException {
+        public Object lookupLink(String name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public NameParser getNameParser(Name name) throws NamingException {
+        public NameParser getNameParser(Name name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public NameParser getNameParser(String name) throws NamingException {
+        public NameParser getNameParser(String name) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Name composeName(Name name, Name prefix) throws NamingException {
+        public Name composeName(Name name, Name prefix) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public String composeName(String name, String prefix) throws NamingException {
+        public String composeName(String name, String prefix) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Object addToEnvironment(String propName, Object propVal) throws NamingException {
+        public Object addToEnvironment(String propName, Object propVal) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Object removeFromEnvironment(String propName) throws NamingException {
+        public Object removeFromEnvironment(String propName) {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public Hashtable<?, ?> getEnvironment() throws NamingException {
+        public Hashtable<?, ?> getEnvironment() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public void close() throws NamingException {
+        public void close() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
 
         @Override
-        public String getNameInNamespace() throws NamingException {
+        public String getNameInNamespace() {
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     
