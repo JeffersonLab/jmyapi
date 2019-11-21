@@ -304,7 +304,7 @@ public class RunningStatistics {
      * <p>
      * stats and their index (order) are specified in the constructor.
      * </p>
-     * @return
+     * @return The stats
      */
     public double[] getEventStats() {
         double[] stats = new double[eventStatsMap.length];

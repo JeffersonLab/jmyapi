@@ -1,11 +1,13 @@
 package org.jlab.mya.event;
 
-import org.jlab.mya.Event;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.TimeUtil;
 
 import java.time.Instant;
 
+/**
+ * Represents a Mya history event for a PV of data type float, and includes extra analysis statistics.
+ */
 public class AnalyzedFloatEvent extends FloatEvent {
 
     private final double[] stats;
@@ -26,7 +28,7 @@ public class AnalyzedFloatEvent extends FloatEvent {
     /**
      * Return the event stats.
      * <p>Stats are returns in a primitive double array for performance reasons.  The stats and their order is specified
-     * in the constructor to the FloatAnalysisStream.</p>
+     * in the constructor to the FloatAnalysisStream responsible for generating them.</p>
      *
      * @return The stats
      */

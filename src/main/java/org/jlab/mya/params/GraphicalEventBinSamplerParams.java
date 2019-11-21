@@ -4,7 +4,7 @@ import java.time.Instant;
 import org.jlab.mya.Metadata;
 
 /**
- * Parameters for the advanced sampler; uses the largest triangle three bucket
+ * Parameters for the graphical application-level event-based sampler; uses the largest triangle three bucket
  * (LTTB) algorithm described in "Downsampling Time Series for Visual
  * Representation" (Steinarsson, 2013).
  *

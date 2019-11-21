@@ -49,6 +49,7 @@ public abstract class Event implements Comparable<Event> {
     /**
      * Deep Copy Event, but at a new instant in time.
      *
+     * @param timeAsInstant The Instant
      * @return A new Event
      */
     public abstract Event copyTo(Instant timeAsInstant);

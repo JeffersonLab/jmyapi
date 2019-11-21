@@ -4,7 +4,7 @@ import java.time.Instant;
 import org.jlab.mya.Metadata;
 
 /**
- * Parameters for the myget sampler algorithm (myget -l).
+ * Parameters for the MYA myget sampler algorithm (myget -l).
  *
  * @author slominskir
  */

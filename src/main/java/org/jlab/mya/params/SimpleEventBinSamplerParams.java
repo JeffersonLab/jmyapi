@@ -1,11 +1,8 @@
 package org.jlab.mya.params;
 
-import java.time.Instant;
-import org.jlab.mya.Metadata;
-
 /**
- * Parameters for the simple event bin sampler; performs
- * application layer filtering.
+ * Parameters for the simple application-level event-based sampler.  The FloatSimpleEventBinSampleStream is generally
+ * superseded by the FloatGraphicalEventBinSampleStream.
  *
  * @author slominskir
  */

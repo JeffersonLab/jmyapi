@@ -19,7 +19,7 @@ import java.time.Instant;
  * the stream contains only non-update events.
  * </p>
  *
- * @param <T>
+ * @param <T> The type
  */
 public class BoundaryAwareStream<T extends Event> extends WrappedEventStreamAdaptor<T, T>{
 

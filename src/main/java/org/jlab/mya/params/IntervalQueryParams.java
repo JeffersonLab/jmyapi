@@ -65,7 +65,7 @@ public class IntervalQueryParams extends QueryParams {
     /**
      * Return the fetch strategy.
      *
-     * @return
+     * @return The strategy
      */
     public IntervalQueryFetchStrategy getFetchStrategy() {
         return fetch;
