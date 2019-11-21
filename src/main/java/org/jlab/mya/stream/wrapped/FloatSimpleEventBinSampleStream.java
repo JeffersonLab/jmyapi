@@ -39,7 +39,6 @@ import java.math.RoundingMode;
  */
 public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends WrappedEventStreamAdaptor<T, T> {
 
-    private final SimpleEventBinSamplerParams samplerParams;
     private final long binSize;
     private final BigDecimal fractional;
     private BigDecimal fractionalCounter = BigDecimal.ZERO;
@@ -53,8 +52,6 @@ public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends Wrapp
      */
     public FloatSimpleEventBinSampleStream(EventStream<T> stream, SimpleEventBinSamplerParams params, Class<T> type) {
         super(stream, type);
-
-        this.samplerParams = params;
 
         if (params.getCount() > params.getLimit() && params.getLimit() > 0) {
             this.binSize = params.getCount() / params.getLimit();

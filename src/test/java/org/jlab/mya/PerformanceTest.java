@@ -38,14 +38,12 @@ public class PerformanceTest {
                 = TimeUtil.toLocalDT("2017-07-01T00:00:00");
 
         Runtime rt = Runtime.getRuntime();
-        long startBytes;
         long stopBytes;
         long startMillis;
         long stopMillis;
 
         System.out.println("---- Metadata Query ----");
         rt.gc();
-        startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
 
         Metadata metadata = service.findMetadata(pv);
@@ -59,7 +57,6 @@ public class PerformanceTest {
 
         System.out.println("---- Event Count Query ----");
         rt.gc();
-        startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
         long count = service.count(params);
         stopMillis = System.currentTimeMillis();
@@ -70,7 +67,6 @@ public class PerformanceTest {
 
         System.out.println("---- Event Interval Query ----");
         rt.gc();
-        startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
         try (FloatEventStream stream = service.openFloatStream(params)) {
 
@@ -87,7 +83,6 @@ public class PerformanceTest {
 
         System.out.println("---- Prior Point Lookup ----");
         rt.gc();
-        startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
         PointQueryParams pointParams = new PointQueryParams(metadata, begin);
         FloatEvent priorPoint = pointService.findFloatEvent(pointParams);
@@ -98,7 +93,6 @@ public class PerformanceTest {
 
         System.out.println("---- BoundaryAwareStream ----");
         rt.gc();
-        startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
 
         try (
@@ -123,7 +117,6 @@ public class PerformanceTest {
 
         System.out.println("---- FloatAnalysisStream ----");
         rt.gc();
-        startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
 
         try (
@@ -146,7 +139,6 @@ public class PerformanceTest {
 
         System.out.println("---- GraphicalSamplerStream ----");
         rt.gc();
-        startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
 
         try (

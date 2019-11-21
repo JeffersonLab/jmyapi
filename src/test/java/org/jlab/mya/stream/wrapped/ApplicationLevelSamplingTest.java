@@ -52,7 +52,6 @@ public class ApplicationLevelSamplingTest {
 //        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00").atZone(
 //                ZoneId.systemDefault()).toInstant();
         long limit = 10;
-        int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
 
         Metadata metadata = intervalService.findMetadata(pv);
 
@@ -96,7 +95,6 @@ public class ApplicationLevelSamplingTest {
 //        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00").atZone(
 //                ZoneId.systemDefault()).toInstant();
         long limit = 10;
-        int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
 
         long start = System.currentTimeMillis();
 

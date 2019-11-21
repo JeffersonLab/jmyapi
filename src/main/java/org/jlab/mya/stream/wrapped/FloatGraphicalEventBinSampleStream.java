@@ -54,7 +54,6 @@ import java.util.Queue;
  */
 public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends WrappedEventStreamAdaptor<T, T> {
 
-    private final GraphicalEventBinSamplerParams samplerParams;
     private final long binSize;
     private final Queue<T> queue = new PriorityQueue<>();
     private boolean hasFirst = false;
@@ -76,8 +75,6 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
      */
     public FloatGraphicalEventBinSampleStream(EventStream<T> stream, GraphicalEventBinSamplerParams params, Class<T> type) {
         super(stream, type);
-
-        this.samplerParams = params;
 
         // 10 years of nanos starts to approach the range of overflow concerns.  Millis will be good enough to split on.
         //

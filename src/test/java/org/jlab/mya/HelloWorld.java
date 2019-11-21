@@ -17,9 +17,11 @@ import java.time.Instant;
 public class HelloWorld {
 
     /**
+     * Entry point of the application.
+     *
      * @param args the command line arguments
-     * @throws java.sql.SQLException
-     * @throws java.io.IOException
+     * @throws SQLException If unable to query the SQL database
+     * @throws IOException If unable to stream data
      */
     public static void main(String[] args) throws SQLException, IOException {
 

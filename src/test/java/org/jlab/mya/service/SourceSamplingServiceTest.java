@@ -12,13 +12,10 @@ import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.MyGetSampleParams;
 import org.jlab.mya.params.MySamplerParams;
 import org.jlab.mya.stream.FloatEventStream;
-import org.junit.After;
-import org.junit.AfterClass;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.fail;
@@ -32,23 +29,10 @@ public class SourceSamplingServiceTest {
 
     private SourceSamplingService sampleService;
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
         DataNexus nexus = new OnDemandNexus("history");
         sampleService = new SourceSamplingService(nexus);
-    }
-
-    @After
-    public void tearDown() {
-
     }
 
     /**

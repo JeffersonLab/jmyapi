@@ -15,10 +15,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
@@ -40,18 +37,6 @@ public class IntervalServiceTest {
     private IntervalQueryParams TEST_PARAMS;
     private IntervalQueryParams TEST_PARAMS_MULTI;
 
-    public IntervalServiceTest() {
-
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() throws SQLException {
         DataNexus nexus = new OnDemandNexus(HISTORY_DEPLOYMENT);
@@ -60,11 +45,6 @@ public class IntervalServiceTest {
         TEST_METADATA_MULTI = service.findMetadata(TEST_PV_MULTI);
         TEST_PARAMS = new IntervalQueryParams(TEST_METADATA, TEST_BEGIN, TEST_END);
         TEST_PARAMS_MULTI = new IntervalQueryParams(TEST_METADATA_MULTI, TEST_BEGIN, TEST_END);
-    }
-
-    @After
-    public void tearDown() {
-
     }
 
     /**

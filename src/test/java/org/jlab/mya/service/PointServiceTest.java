@@ -26,25 +26,10 @@ public class PointServiceTest {
 
     private PointService service;
 
-    public PointServiceTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
         DataNexus nexus = new OnDemandNexus("history");
         service = new PointService(nexus);
-    }
-
-    @After
-    public void tearDown() {
     }
 
     /**

@@ -63,7 +63,7 @@ public class MySamplerFloatEventStream extends FloatEventStream {
         }
     }
 
-    protected FloatEvent rowToEventSingleResultSet(Instant sampleTime, ResultSet result) throws SQLException {
+    private FloatEvent rowToEventSingleResultSet(Instant sampleTime, ResultSet result) throws SQLException {
         int codeOrdinal = result.getInt(2);
         EventCode code = EventCode.fromInt(codeOrdinal);
         float value = result.getFloat(3);

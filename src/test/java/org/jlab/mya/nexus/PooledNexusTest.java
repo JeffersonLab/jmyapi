@@ -9,10 +9,6 @@ import org.jlab.mya.StandaloneConnectionPools;
 import org.jlab.mya.StandaloneJndi;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.service.PointService;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -23,25 +19,6 @@ import static org.junit.Assert.assertEquals;
  * @author slominskir
  */
 public class PooledNexusTest {
-
-    public PooledNexusTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of getConnection method, of class PooledNexus.
