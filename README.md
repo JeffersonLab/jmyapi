@@ -19,7 +19,7 @@ __Note__: A copy of the deployments.properties file is stored in our internal AC
 [javadocs](https://jeffersonlab.github.io/jmyapi/)   
 
 ## Publishing Releases
-To publish changes to our internal ACE artifactory repo ensure you have a gradle.properties file in your ~/gradle directory with the following values:
+To publish changes to our internal ACE Artifactory repo ensure you have a gradle.properties file in your ~/gradle directory with the following values:
 
 ```
 artifactory_user=<user>
