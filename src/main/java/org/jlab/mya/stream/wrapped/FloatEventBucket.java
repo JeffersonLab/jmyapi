@@ -15,7 +15,7 @@ import org.jlab.mya.event.FloatEvent;
  * 
  * @author apcarp
  */
-public class FloatEventBucket<T extends FloatEvent> {
+class FloatEventBucket<T extends FloatEvent> {
     private List<T> events;
     private final List<T> output = new ArrayList<>(); // Non-update events will be added here
     private T min = null;
@@ -124,7 +124,7 @@ public class FloatEventBucket<T extends FloatEvent> {
      * @param e3 event 3 of the triangle
      * @return The triangle area
      */
-    protected static double calculateTriangleArea(FloatEvent e1, FloatEvent e2, FloatEvent e3) {
+    static double calculateTriangleArea(FloatEvent e1, FloatEvent e2, FloatEvent e3) {
 
         // define the first point as the time origin, then normalize the other points
         double x1 = 0.0;
@@ -146,7 +146,7 @@ public class FloatEventBucket<T extends FloatEvent> {
 
         // The values are floats that get cast to doubles, so I'm not too worried about adding extra rounding errors due to difference
         // in scale.
-        // Formula for trianlge in 2d space is x1*(y2-y3) - x2*(y3-y1) - x3*(y1-y2).  But we may have to be tricky with y3 here.
+        // Formula for triangle in 2d space is x1*(y2-y3) - x2*(y3-y1) - x3*(y1-y2).  But we may have to be tricky with y3 here.
         return 0.5 * Math.abs(x1 * (e2.getValue() - y3) + x2 * (y3 - e1.getValue()) + x3 * (e1.getValue() - e2.getValue()) );
     }
 }
