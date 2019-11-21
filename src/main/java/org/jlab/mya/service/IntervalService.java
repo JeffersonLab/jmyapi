@@ -113,25 +113,9 @@ public class IntervalService extends QueryService {
      * @throws SQLException If unable to query the database
      */
     public FloatEventStream openFloatStream(IntervalQueryParams params) throws SQLException {
-        String host = params.getMetadata().getHost();
-        Connection con = nexus.getConnection(host);
-        int fetchSize = 0;
-        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.STREAM) {
-            fetchSize = Integer.MIN_VALUE;
-        } else if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
-            fetchSize = 4098;
-            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(true);
-        }
-        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params, fetchSize);
-        stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
-        stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
-        ResultSet rs = stmt.executeQuery();
+        InternalIntervalParams iip = openStream(params);
 
-        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
-            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(false);
-        }
-
-        return new FloatEventStream(params, con, stmt, rs);
+        return new FloatEventStream(params, iip.con, iip.stmt, iip.rs);
     }
 
     /**
@@ -146,25 +130,9 @@ public class IntervalService extends QueryService {
      * @throws SQLException If unable to query the database
      */
     public IntEventStream openIntStream(IntervalQueryParams params) throws SQLException {
-        String host = params.getMetadata().getHost();
-        Connection con = nexus.getConnection(host);
-        int fetchSize = 0;
-        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.STREAM) {
-            fetchSize = Integer.MIN_VALUE;
-        } else if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
-            fetchSize = 4098;
-            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(true);
-        }
-        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params, fetchSize);
-        stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
-        stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
-        ResultSet rs = stmt.executeQuery();
+        InternalIntervalParams iip = openStream(params);
 
-        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
-            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(false);
-        }
-
-        return new IntEventStream(params, con, stmt, rs);
+        return new IntEventStream(params, iip.con, iip.stmt, iip.rs);
     }
 
     /**
@@ -180,6 +148,21 @@ public class IntervalService extends QueryService {
      */
     public MultiStringEventStream openMultiStringStream(IntervalQueryParams params) throws
             SQLException {
+        InternalIntervalParams iip = openStream(params);
+
+        return new MultiStringEventStream(params, iip.con, iip.stmt, iip.rs);
+    }
+
+    /**
+     * Internal shared method for opening a stream (regardless of type) and bundling parameters.
+     *
+     * @param params The user specified interval query parameters
+     * @return The internal bundled stream parameters
+     * @throws SQLException If unable to open a stream
+     */
+    private InternalIntervalParams openStream(IntervalQueryParams params) throws SQLException {
+        InternalIntervalParams iip = new InternalIntervalParams();
+
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         int fetchSize = 0;
@@ -198,6 +181,19 @@ public class IntervalService extends QueryService {
             ((com.mysql.jdbc.Connection)con).setUseCursorFetch(false);
         }
 
-        return new MultiStringEventStream(params, con, stmt, rs);
+        iip.con = con;
+        iip.stmt = stmt;
+        iip.rs = rs;
+
+        return iip;
+    }
+
+    /**
+     * A common bundle of parameters used internally to avoid duplicating code.
+     */
+    private class InternalIntervalParams {
+        public Connection con;
+        public PreparedStatement stmt;
+        public ResultSet rs;
     }
 }
