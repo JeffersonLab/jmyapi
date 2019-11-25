@@ -66,7 +66,7 @@ class PointService extends QueryService {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        return FloatEvent.fromRow(rs);
+                        return floatFromRow(rs);
                     } else {
                         return null;
                     }
@@ -89,7 +89,7 @@ class PointService extends QueryService {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        return IntEvent.fromRow(rs);
+                        return intFromRow(rs);
                     } else {
                         return null;
                     }
@@ -113,7 +113,7 @@ class PointService extends QueryService {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        return MultiStringEvent.fromRow(rs, params.getMetadata().getSize());
+                        return fromRow(rs, params.getMetadata().getSize());
                     } else {
                         return null;
                     }

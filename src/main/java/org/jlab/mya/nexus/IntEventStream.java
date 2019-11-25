@@ -28,6 +28,6 @@ class IntEventStream extends DatabaseSourceStream<IntEvent> {
 
     @Override
     protected IntEvent rowToEvent() throws SQLException {
-        return IntEvent.fromRow(rs);
+        return QueryService.intFromRow(rs);
     }
 }

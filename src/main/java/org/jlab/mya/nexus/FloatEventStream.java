@@ -28,6 +28,6 @@ class FloatEventStream extends DatabaseSourceStream<FloatEvent> {
 
     @Override
     protected FloatEvent rowToEvent() throws SQLException {
-        return FloatEvent.fromRow(rs);
+        return QueryService.floatFromRow(rs);
     }
 }

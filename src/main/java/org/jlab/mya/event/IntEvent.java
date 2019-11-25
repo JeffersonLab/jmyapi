@@ -46,21 +46,6 @@ public class IntEvent extends Event {
     }
 
     /**
-     * Factory method for constructing an IntEvent from a row in a database
-     * ResultSet.
-     *
-     * @param rs The ResultSet
-     * @return A new IntEvent
-     * @throws SQLException If unable to create an Event from the ResultSet
-     */
-    public static IntEvent fromRow(ResultSet rs) throws SQLException {
-        int codeOrdinal = rs.getInt(2);
-        EventCode code = EventCode.fromInt(codeOrdinal);
-        int value = rs.getInt(3);
-        return new IntEvent(rs.getLong(1), code, value);
-    }
-
-    /**
      * Return the value.
      *
      * @return The value

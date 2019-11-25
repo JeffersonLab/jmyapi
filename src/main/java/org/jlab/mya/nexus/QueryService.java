@@ -1,9 +1,6 @@
 package org.jlab.mya.nexus;
 
-import org.jlab.mya.Event;
-import org.jlab.mya.ExtraInfo;
-import org.jlab.mya.Metadata;
-import org.jlab.mya.MyaDataType;
+import org.jlab.mya.*;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;
@@ -13,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -168,5 +166,56 @@ abstract class QueryService {
         }
 
         return infoList;
+    }
+
+    /**
+     * Factory method for constructing an IntEvent from a row in a database
+     * ResultSet.
+     *
+     * @param rs The ResultSet
+     * @return A new IntEvent
+     * @throws SQLException If unable to create an Event from the ResultSet
+     */
+    public static IntEvent intFromRow(ResultSet rs) throws SQLException {
+        int codeOrdinal = rs.getInt(2);
+        EventCode code = EventCode.fromInt(codeOrdinal);
+        int value = rs.getInt(3);
+        return new IntEvent(rs.getLong(1), code, value);
+    }
+
+    /**
+     * Factory method for constructing a FloatEvent from a row in a database ResultSet.
+     *
+     * @param rs The ResultSet
+     * @return A new FloatEvent
+     * @throws SQLException If unable to create an Event from the ResultSet
+     */
+    public static FloatEvent floatFromRow(ResultSet rs) throws SQLException {
+        int codeOrdinal = rs.getInt(2);
+        EventCode code = EventCode.fromInt(codeOrdinal);
+        float value = rs.getFloat(3);
+        return new FloatEvent(rs.getLong(1), code, value);
+    }
+
+    /**
+     * Factory method for constructing a MultiStringEvent from a row in a
+     * database ResultSet.
+     *
+     * @param rs The ResultSet
+     * @param size The size of the value vector (size 1 is acceptable)
+     * @return A new MultiStringEvent
+     * @throws SQLException If unable to create an Event from the ResultSet
+     */
+    public static MultiStringEvent fromRow(ResultSet rs, int size) throws SQLException {
+        Instant timestamp = TimeUtil.fromMyaTimestamp(rs.getLong(1));
+        int codeOrdinal = rs.getInt(2);
+        EventCode code = EventCode.fromInt(codeOrdinal);
+        String[] value = new String[size];
+        int offset = 3;
+
+        for (int i = 0; i < size; i++) {
+            value[i] = rs.getString(i + offset);
+        }
+        return new MultiStringEvent(timestamp, code, value);
     }
 }

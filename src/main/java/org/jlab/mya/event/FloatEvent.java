@@ -43,20 +43,6 @@ public class FloatEvent extends Event {
     }
 
     /**
-     * Factory method for constructing a FloatEvent from a row in a database ResultSet.
-     *
-     * @param rs The ResultSet
-     * @return A new FloatEvent
-     * @throws SQLException If unable to create an Event from the ResultSet
-     */
-    public static FloatEvent fromRow(ResultSet rs) throws SQLException {
-        int codeOrdinal = rs.getInt(2);
-        EventCode code = EventCode.fromInt(codeOrdinal);
-        float value = rs.getFloat(3);
-        return new FloatEvent(rs.getLong(1), code, value);
-    }
-
-    /**
      * Return the value of the event.
      *
      * @return The value

@@ -29,6 +29,6 @@ class MultiStringEventStream extends DatabaseSourceStream<MultiStringEvent> {
 
     @Override
     protected MultiStringEvent rowToEvent() throws SQLException {
-        return MultiStringEvent.fromRow(rs, params.getMetadata().getSize());
+        return QueryService.fromRow(rs, params.getMetadata().getSize());
     }
 }

@@ -92,10 +92,10 @@ public abstract class Event implements Comparable<Event> {
     }
 
     /**
-     * Compares Event objects according to their Instant timestamps.
+     * Compares Event objects according to their timestamps.
      *
      * @param e An Event object that is being compared
-     * @return Negative if earlier, Positive if later.
+     * @return Negative if earlier, positive if later, zero if equal
      */
     @Override
     public int compareTo(Event e) {
