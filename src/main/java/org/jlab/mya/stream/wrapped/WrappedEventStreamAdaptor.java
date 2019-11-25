@@ -24,25 +24,8 @@ public abstract class WrappedEventStreamAdaptor<T extends Event, E extends Event
      * @param type The type
      */
     WrappedEventStreamAdaptor(EventStream<E> wrapped, Class<T> type) {
-        super(null, null, null, null, type);
+        super(type);
         this.wrapped = wrapped;
-    }
-
-    @Override
-    protected T rowToEvent() {
-        return null;
-    }
-
-    /**
-     * Read the next event from the stream. Generally you'll want to iterate
-     * over the stream using a while loop.
-     *
-     * @return The next event or null if End-Of-Stream reached
-     * @throws IOException If unable to read the next event
-     */
-    @Override
-    public T read() throws IOException {
-        return null;
     }
 
     /**

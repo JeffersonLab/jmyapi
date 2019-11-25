@@ -3,6 +3,7 @@ package org.jlab.mya.stream;
 import org.jlab.mya.Event;
 import org.jlab.mya.EventStream;
 
+import java.nio.channels.ClosedChannelException;
 import java.util.List;
 
 /**
@@ -13,6 +14,7 @@ import java.util.List;
 public class ListStream<T extends Event> extends EventStream<T> {
     private int i = 0;
     private final List<T> events;
+    private boolean open = true;
 
     /**
      * Create a new ListStream.
@@ -21,17 +23,16 @@ public class ListStream<T extends Event> extends EventStream<T> {
      * @param type The type
      */
     public ListStream(List<T> events, Class<T> type) {
-        super(null, null, null, null, type);
+        super(type);
         this.events = events;
     }
 
     @Override
-    protected T rowToEvent() {
-        return null;
-    }
+    public T read() throws ClosedChannelException {
+        if(!open) {
+            throw new ClosedChannelException(); // java.nio.channels.Channel contract says we must
+        }
 
-    @Override
-    public T read() {
         if(i < events.size()) {
             return events.get(i++);
         } else {
@@ -40,7 +41,12 @@ public class ListStream<T extends Event> extends EventStream<T> {
     }
 
     @Override
+    public boolean isOpen() {
+        return open;
+    }
+
+    @Override
     public void close() {
-        // No op
+        open = false;
     }
 }

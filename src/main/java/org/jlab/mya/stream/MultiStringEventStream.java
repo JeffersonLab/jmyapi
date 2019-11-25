@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.jlab.mya.EventStream;
+
+import org.jlab.mya.DatabaseSourceStream;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.event.MultiStringEvent;
 
@@ -13,7 +14,7 @@ import org.jlab.mya.event.MultiStringEvent;
  * 
  * @author slominskir
  */
-public class MultiStringEventStream extends EventStream<MultiStringEvent> {
+public class MultiStringEventStream extends DatabaseSourceStream<MultiStringEvent> {
 
     /**
      * Create a new MultiStringEventStream.

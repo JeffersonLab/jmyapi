@@ -4,7 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.jlab.mya.EventStream;
+
+import org.jlab.mya.DatabaseSourceStream;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.event.IntEvent;
 
@@ -13,7 +14,7 @@ import org.jlab.mya.event.IntEvent;
  * 
  * @author slominskir
  */
-public class IntEventStream extends EventStream<IntEvent> {
+public class IntEventStream extends DatabaseSourceStream<IntEvent> {
 
     /**
      * Create a new IntEventStream.
