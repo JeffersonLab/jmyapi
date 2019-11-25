@@ -9,7 +9,7 @@ import org.jlab.mya.event.FloatEvent;
 import java.io.IOException;
 
 /**
- * Wraps a FloatEventStream and provides FloatEvents that are analyzed as they stream by.
+ * Wraps an EventStream of FloatEvents and provides AnalyzedFloatEvents.
  *
  * @author slominskir
  */
@@ -18,14 +18,14 @@ public class FloatAnalysisStream extends WrappedStream<AnalyzedFloatEvent, Float
     private final RunningStatistics seriesStats;
 
     /**
-     * Create a new FloatIntegrationStream by wrapping a FloatEventStream.
+     * Create a new FloatAnalysisStream by wrapping an EventStream of FloatEvents.
      * <p>
      * Desired stats are specified via a statsMap which instructs the analysis service which stats to track
      * and the order (index) in which to return them.  Valid values are defined as constants in the RunningStatistics
      * class and include INTEGRATION.
      * </p>
      *
-     * @param stream The FloatEventStream to wrap
+     * @param stream The FloatEvent EventStream to wrap
      * @param statsMap The stat name and index of requested statistics
      */
     public FloatAnalysisStream(EventStream<FloatEvent> stream, short[] statsMap) {
@@ -64,7 +64,7 @@ public class FloatAnalysisStream extends WrappedStream<AnalyzedFloatEvent, Float
     }
 
     /**
-     * Get latest running statistics on this FloatIntegrationStream.
+     * Get latest running statistics on this FloatAnalysisStream.
      *
      * @return The RunningStatistics
      */
