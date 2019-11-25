@@ -6,7 +6,6 @@ import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.params.MyGetSampleParams;
 import org.jlab.mya.params.MySamplerParams;
 import org.jlab.mya.params.PointQueryParams;
-import org.jlab.mya.stream.FloatEventStream;
 
 import java.io.IOException;
 import java.io.InputStream;

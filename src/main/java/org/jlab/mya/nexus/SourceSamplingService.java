@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jlab.mya.nexus.DataNexus;
-import org.jlab.mya.nexus.QueryService;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.params.MyGetSampleParams;
 import org.jlab.mya.params.MySamplerParams;

@@ -9,9 +9,7 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;
 import org.jlab.mya.params.PointQueryParams;
-import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.Event;
-import org.jlab.mya.nexus.QueryService;
 import org.jlab.mya.TimeUtil;
 
 /**
