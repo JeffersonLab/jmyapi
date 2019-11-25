@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jlab.mya.DatabaseSourceStream;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.event.FloatEvent;
 

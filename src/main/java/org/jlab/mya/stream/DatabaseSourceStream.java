@@ -1,4 +1,8 @@
-package org.jlab.mya;
+package org.jlab.mya.stream;
+
+import org.jlab.mya.Event;
+import org.jlab.mya.EventStream;
+import org.jlab.mya.QueryParams;
 
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;
@@ -15,7 +19,7 @@ import java.sql.SQLException;
  * @author slominskir
  * @param <T> The Event type
  */
-public abstract class DatabaseSourceStream<T extends Event> extends EventStream<T> {
+abstract class DatabaseSourceStream<T extends Event> extends EventStream<T> {
     /**
      * The query parameters.
      */
