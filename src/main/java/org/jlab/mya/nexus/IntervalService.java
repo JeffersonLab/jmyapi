@@ -1,4 +1,4 @@
-package org.jlab.mya.service;
+package org.jlab.mya.nexus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import org.jlab.mya.*;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
+import org.jlab.mya.nexus.DataNexus;
+import org.jlab.mya.nexus.QueryService;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.stream.IntEventStream;
@@ -19,7 +21,7 @@ import org.jlab.mya.stream.MultiStringEventStream;
  *
  * @author slominskir
  */
-public class IntervalService extends QueryService {
+class IntervalService extends QueryService {
 
     /**
      * Create a new QueryService with the provided DataNexus.
@@ -42,7 +44,7 @@ public class IntervalService extends QueryService {
         long count;
         String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
-            try (PreparedStatement stmt = nexus.getCountStatement(con, params)) {
+            try (PreparedStatement stmt = generator.getCountStatement(con, params)) {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
                 stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
 
@@ -155,18 +157,18 @@ public class IntervalService extends QueryService {
         String host = params.getMetadata().getHost();
         Connection con = nexus.getConnection(host);
         int fetchSize = 0;
-        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.STREAM) {
+        if(params.getFetchStrategy() == DataNexus.IntervalQueryFetchStrategy.STREAM) {
             fetchSize = Integer.MIN_VALUE;
-        } else if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
+        } else if(params.getFetchStrategy() == DataNexus.IntervalQueryFetchStrategy.CHUNK) {
             fetchSize = 4098;
             ((com.mysql.jdbc.Connection)con).setUseCursorFetch(true);
         }
-        PreparedStatement stmt = nexus.getEventIntervalStatement(con, params, fetchSize);
+        PreparedStatement stmt = generator.getEventIntervalStatement(con, params, fetchSize);
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();
 
-        if(params.getFetchStrategy() == IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK) {
+        if(params.getFetchStrategy() == DataNexus.IntervalQueryFetchStrategy.CHUNK) {
             ((com.mysql.jdbc.Connection)con).setUseCursorFetch(false);
         }
 

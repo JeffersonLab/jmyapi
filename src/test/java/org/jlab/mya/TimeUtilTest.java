@@ -3,10 +3,9 @@ package org.jlab.mya;
 import java.time.Instant;
 
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.service.IntervalService;
-import org.jlab.mya.stream.FloatEventStream;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -57,12 +56,10 @@ public class TimeUtilTest {
     public void testABunchOData() throws Exception {
         float delta = 100; // nanoseconds of fudge
         DataNexus nexus = new OnDemandNexus("history");
-        IntervalService service = new IntervalService(nexus);
-        Metadata<FloatEvent> metadata = service.findMetadata("R123PMES", FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata("R123PMES", FloatEvent.class);
         Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
         Instant end = TimeUtil.toLocalDT("2017-02-01T00:00:00");
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
-        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 long t = TimeUtil.toMyaTimestamp(event.getTimestampAsInstant());

@@ -7,12 +7,17 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 
-import org.jlab.mya.DataNexus;
+import org.jlab.mya.EventStream;
+import org.jlab.mya.event.AnalyzedFloatEvent;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.IntervalQueryParams;
+import org.jlab.mya.params.PointQueryParams;
+import org.jlab.mya.stream.wrapped.BoundaryAwareStream;
+import org.jlab.mya.stream.wrapped.FloatAnalysisStream;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -91,11 +96,26 @@ public class AnalysisServiceTest {
     private void compareStats(DataNexus nexus, Instant begin, Instant end, String pv, double min, double max, double mean, double sigma,
             double integration) throws SQLException, IOException {
 
-        AnalysisService service = new AnalysisService(nexus);
-        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
 
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
-        RunningStatistics result = service.calculateRunningStatistics(params);
+        FloatEvent priorPoint = nexus.findEvent(metadata, begin);
+
+        RunningStatistics result = null;
+
+        try(
+                final EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end);
+                final EventStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class);
+                final FloatAnalysisStream analysisStream = new FloatAnalysisStream(boundaryStream);
+            ) {
+
+                AnalyzedFloatEvent event;
+                while ((event = analysisStream.read()) != null) {
+                    // No-op - we just want to allow analysis stream to collect stats on entire series
+                    // If we wanted we could inspect running stats incrementally in here...
+                }
+
+                result = analysisStream.getLatestStats();
+        }
 
         double rms = Math.sqrt(sigma * sigma + mean * mean);
 

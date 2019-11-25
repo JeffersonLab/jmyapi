@@ -15,15 +15,13 @@
             <h3>Example</h3>
             <pre>
         DataNexus nexus = new OnDemandNexus("ops");
-        IntervalService service = new IntervalService(nexus);
 
         String pv = "R123PMES";
-        Instant begin = LocalDateTime.parse("2017-01-01T00:00:00.123456").atZone(ZoneId.systemDefault()).toInstant();
-        Instant end = LocalDateTime.parse("2017-01-01T00:01:00.123456").atZone(ZoneId.systemDefault()).toInstant();
+        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00.123456");
+        Instant end = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
 
-        Metadata metadata = service.findMetadata(pv);
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
-        try (FloatEventStream stream = service.openFloatStream(params)) {
+        Metadata&lt;FloatEvent&gt; metadata = nexus.findMetadata(pv, FloatEvent.class);
+        try (EventStream&lt;FloatEvent&gt; stream = nexus.openEventStream(metadata, begin, end)) {
 
             FloatEvent event;
 

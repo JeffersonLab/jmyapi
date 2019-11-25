@@ -1,12 +1,10 @@
 package org.jlab.mya;
 
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.params.PointQueryParams;
-import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.service.IntervalService;
-import org.jlab.mya.service.PointService;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,22 +24,16 @@ class ConcurrencyTest {
     public static void main(String[] args) throws SQLException, IOException {
 
         DataNexus nexus = new OnDemandNexus("history");
-        IntervalService intervalService = new IntervalService(nexus);
-        PointService pointService = new PointService(nexus);
 
         String pv = "R123PMES";
-        Instant begin
-                = TimeUtil.toLocalDT("2016-01-01T00:00:00.123456");
-        Instant end
-                = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
+        Instant begin = TimeUtil.toLocalDT("2016-01-01T00:00:00.123456");
+        Instant end = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
 
-        Metadata<FloatEvent> metadata = intervalService.findMetadata(pv, FloatEvent.class);
-        IntervalQueryParams<FloatEvent> intervalParams = new IntervalQueryParams<>(metadata, begin, end);
-        PointQueryParams<FloatEvent> pointParams = new PointQueryParams<>(metadata, begin);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
 
-        try (EventStream<FloatEvent> stream = intervalService.openEventStream(intervalParams)) {
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
 
-            FloatEvent point = pointService.findFloatEvent(pointParams);
+            FloatEvent point = nexus.findEvent(metadata, begin);
             System.out.println("Point value: " + point.toString(6));
 
             FloatEvent event;

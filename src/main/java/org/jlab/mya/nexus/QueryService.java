@@ -1,5 +1,9 @@
-package org.jlab.mya;
+package org.jlab.mya.nexus;
 
+import org.jlab.mya.Event;
+import org.jlab.mya.ExtraInfo;
+import org.jlab.mya.Metadata;
+import org.jlab.mya.MyaDataType;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;
@@ -24,12 +28,13 @@ import java.util.TimeZone;
  *
  * @author slominskir
  */
-public abstract class QueryService {
+abstract class QueryService {
 
     /**
      * The DataNexus, which is the gateway to querying a Mya cluster.
      */
     protected final DataNexus nexus;
+    protected final StatementGenerator generator = new StatementGenerator();
 
     /**
      * Create a new QueryService with the provided DataNexus.
@@ -77,7 +82,7 @@ public abstract class QueryService {
 
         String master = nexus.getMasterHostName();
         try (Connection con = nexus.getConnection(master)) {
-            try (PreparedStatement stmt = nexus.getMetadataStatement(con)) {
+            try (PreparedStatement stmt = generator.getMetadataStatement(con)) {
 
                 stmt.setString(1, name);
 
@@ -141,7 +146,7 @@ public abstract class QueryService {
 
         String master = nexus.getMasterHostName();
         try (Connection con = nexus.getConnection(master)) {
-            try (PreparedStatement stmt = nexus.getExtraInfoStatement(con, type)) {
+            try (PreparedStatement stmt = generator.getExtraInfoStatement(con, type)) {
 
                 stmt.setInt(1, metadata.getId());
 

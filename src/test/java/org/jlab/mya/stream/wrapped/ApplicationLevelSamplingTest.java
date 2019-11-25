@@ -4,14 +4,12 @@ import org.jlab.mya.*;
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.AnalyzedFloatEvent;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.GraphicalEventBinSamplerParams;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.params.PointQueryParams;
 import org.jlab.mya.params.SimpleEventBinSamplerParams;
-import org.jlab.mya.service.IntervalService;
-import org.jlab.mya.service.PointService;
-import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.stream.ListStream;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,14 +23,11 @@ import static org.junit.Assert.fail;
 
 public class ApplicationLevelSamplingTest {
 
-    private IntervalService intervalService;
-    private PointService pointService;
+    private DataNexus nexus;
 
     @Before
     public void setUp() {
-        DataNexus nexus = new OnDemandNexus("history");
-        intervalService = new IntervalService(nexus);
-        pointService = new PointService(nexus);
+        nexus = new OnDemandNexus("history");
     }
 
     /**
@@ -53,11 +48,9 @@ public class ApplicationLevelSamplingTest {
 //                ZoneId.systemDefault()).toInstant();
         long limit = 10;
 
-        Metadata<FloatEvent> metadata = intervalService.findMetadata(pv, FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
 
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
-
-        long count = intervalService.count(params);
+        long count = nexus.count(metadata, begin, end);
 
         //System.out.println("count: " + count);
 
@@ -65,7 +58,7 @@ public class ApplicationLevelSamplingTest {
 
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = intervalService.openEventStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
             FloatSimpleEventBinSampleStream<FloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(stream, samplerParams, FloatEvent.class);
             FloatEvent event;
             while ((event = sampleStream.read()) != null) {
@@ -98,17 +91,15 @@ public class ApplicationLevelSamplingTest {
 
         long start = System.currentTimeMillis();
 
-        Metadata<FloatEvent> metadata = intervalService.findMetadata(pv, FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
 
         long stop = System.currentTimeMillis();
 
         System.out.println("Metadata lookup Took: " + (stop - start) / 1000.0 + " seconds");
 
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
-
         start = System.currentTimeMillis();
 
-        long count = intervalService.count(params);
+        long count = nexus.count(metadata, begin, end);
 
         stop = System.currentTimeMillis();
 
@@ -116,8 +107,7 @@ public class ApplicationLevelSamplingTest {
 
         start = System.currentTimeMillis();
 
-        PointQueryParams<FloatEvent> pointParams = new PointQueryParams<>(metadata, begin);
-        FloatEvent priorPoint = pointService.findFloatEvent(pointParams);
+        FloatEvent priorPoint = nexus.findEvent(metadata, begin);
 
         stop = System.currentTimeMillis();
 
@@ -134,7 +124,7 @@ public class ApplicationLevelSamplingTest {
 
         start = System.currentTimeMillis();
         try (
-                final EventStream<FloatEvent> stream = intervalService.openEventStream(params);
+                final EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end);
                 final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class);
                 final FloatAnalysisStream analysisStream = new FloatAnalysisStream(boundaryStream, eventStatsMap);
                 final FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams, AnalyzedFloatEvent.class);
@@ -181,9 +171,8 @@ public class ApplicationLevelSamplingTest {
         long numBins = 10;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
 
-        Metadata<FloatEvent> metadata = intervalService.findMetadata(pv, FloatEvent.class);
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
-        long count = intervalService.count(params);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
+        long count = nexus.count(metadata, begin, end);
 
         System.out.println("count: " + count);
 
@@ -197,7 +186,7 @@ public class ApplicationLevelSamplingTest {
         long expSize = 15; // 2 + 1*8 = 10, 2 + 3*8 = 26, so it's a broad range
 
         List<FloatEvent> eventList = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = intervalService.openEventStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
             try (FloatGraphicalEventBinSampleStream<FloatEvent> sampleStream = new FloatGraphicalEventBinSampleStream<>(stream, samplerParams, FloatEvent.class)) {
                 FloatEvent event;
                 while ((event = sampleStream.read()) != null) {

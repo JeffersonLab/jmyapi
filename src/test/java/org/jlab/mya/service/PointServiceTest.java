@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import org.jlab.mya.DataNexus;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
@@ -24,12 +24,11 @@ import static org.junit.Assert.*;
  */
 public class PointServiceTest {
 
-    private PointService service;
+    private DataNexus nexus;
 
     @Before
     public void setUp() {
-        DataNexus nexus = new OnDemandNexus("history");
-        service = new PointService(nexus);
+        nexus = new OnDemandNexus("history");
     }
 
     /**
@@ -57,7 +56,7 @@ public class PointServiceTest {
 
         long start = System.currentTimeMillis();
 
-        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
 
         long stop = System.currentTimeMillis();
 
@@ -65,12 +64,11 @@ public class PointServiceTest {
 
         System.out.println(metadata);
 
-        PointQueryParams<FloatEvent> params = new PointQueryParams<>(metadata, timestamp);
         float expResult = -7.2f;
 
         start = System.currentTimeMillis();
 
-        FloatEvent result = service.findFloatEvent(params);
+        FloatEvent result = nexus.findEvent(metadata, timestamp);
 
         stop = System.currentTimeMillis();
 
@@ -90,12 +88,11 @@ public class PointServiceTest {
 
         String pv = "MFELINJC";
         Instant timestamp = TimeUtil.toLocalDT("2017-09-08T14:50:38");
-        Metadata<IntEvent> metadata = service.findMetadata(pv, IntEvent.class);
-        PointQueryParams<IntEvent> params = new PointQueryParams<>(metadata, timestamp);
+        Metadata<IntEvent> metadata = nexus.findMetadata(pv, IntEvent.class);
         
         // Roughly 2017-09-08 14:50:37
         IntEvent expResult = new IntEvent(403967615077170415L, EventCode.UPDATE, 0);
-        IntEvent result =  service.findIntEvent(params);
+        IntEvent result =  nexus.findEvent(metadata, timestamp);
 
         Assert.assertEquals(expResult.getTimestamp(), result.getTimestamp());
         assertEquals(expResult.getValue(), result.getValue());
@@ -136,10 +133,9 @@ public class PointServiceTest {
         MultiStringEvent expResult = new MultiStringEvent(Instant.from(ZonedDateTime.of(2017,8, 20, 23, 0, 0, 0, ZoneId.of("America/New_York"))),
                 EventCode.UPDATE, value.split(","));
 
-        Metadata<MultiStringEvent> metadata = service.findMetadata(pv, MultiStringEvent.class);
-        PointQueryParams<MultiStringEvent> params = new PointQueryParams<>(metadata, time);
+        Metadata<MultiStringEvent> metadata = nexus.findMetadata(pv, MultiStringEvent.class);
 
-        MultiStringEvent result = service.findMultiStringEvent(params);
+        MultiStringEvent result = nexus.findEvent(metadata, time);
         System.out.println(result.getTimestampAsInstant().toString());
         for(String v : result.getValue()) {
             System.out.println(v);

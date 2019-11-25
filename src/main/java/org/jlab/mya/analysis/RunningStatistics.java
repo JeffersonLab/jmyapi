@@ -55,7 +55,11 @@ public class RunningStatistics {
      * @param eventStatsMap The event stats to track
      */
     public RunningStatistics(short[] eventStatsMap) {
-        this.eventStatsMap = eventStatsMap;
+        if(eventStatsMap == null) {
+            this.eventStatsMap = new short[0];
+        } else {
+            this.eventStatsMap = eventStatsMap;
+        }
     }
 
     // Useful as a shorthand  for "initializing" an assortment of statistics

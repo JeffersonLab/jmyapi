@@ -5,6 +5,7 @@ import java.time.Instant;
 import org.jlab.mya.Event;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.QueryParams;
+import org.jlab.mya.nexus.DataNexus;
 
 /**
  * The parameters required to query for events in an interval with an inclusive
@@ -16,7 +17,7 @@ public class IntervalQueryParams<T extends Event> extends QueryParams<T> {
 
     private final Instant begin;
     private final Instant end;
-    private final IntervalQueryFetchStrategy fetch;
+    private final DataNexus.IntervalQueryFetchStrategy fetch;
 
     /**
      * Create a new IntervalQueryParams for all event types and with streaming fetch strategy.
@@ -26,7 +27,7 @@ public class IntervalQueryParams<T extends Event> extends QueryParams<T> {
      * @param end The end instant
      */
     public IntervalQueryParams(Metadata<T> metadata, Instant begin, Instant end) {
-        this(metadata, false, IntervalQueryFetchStrategy.STREAM, begin, end);
+        this(metadata, false, DataNexus.IntervalQueryFetchStrategy.STREAM, begin, end);
     }
 
     /**
@@ -39,7 +40,7 @@ public class IntervalQueryParams<T extends Event> extends QueryParams<T> {
      * @param begin The begin instant
      * @param end The end instant
      */
-    public IntervalQueryParams(Metadata<T> metadata, boolean updatesOnly, IntervalQueryFetchStrategy fetch, Instant begin, Instant end) {
+    public IntervalQueryParams(Metadata<T> metadata, boolean updatesOnly, DataNexus.IntervalQueryFetchStrategy fetch, Instant begin, Instant end) {
         super(metadata, updatesOnly);
         this.fetch = fetch;
         this.begin = begin;
@@ -69,14 +70,7 @@ public class IntervalQueryParams<T extends Event> extends QueryParams<T> {
      *
      * @return The strategy
      */
-    public IntervalQueryFetchStrategy getFetchStrategy() {
+    public DataNexus.IntervalQueryFetchStrategy getFetchStrategy() {
         return fetch;
-    }
-
-    /**
-     * The fetch strategy.
-     */
-    public enum IntervalQueryFetchStrategy {
-        ALL, STREAM, CHUNK
     }
 }

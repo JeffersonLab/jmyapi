@@ -8,7 +8,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-import org.jlab.mya.DataNexus;
 
 /**
  * A Mya DataNexus which pools resources for later use.
@@ -54,7 +53,7 @@ public class PooledNexus extends DataNexus {
     }
 
     @Override
-    public Connection getConnection(String host) throws SQLException {
+    Connection getConnection(String host) throws SQLException {
         DataSource ds = dsMap.get(host);
 
         if (ds == null) {

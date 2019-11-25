@@ -4,7 +4,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jlab.mya.DataNexus;
+import org.jlab.mya.EventStream;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
@@ -27,12 +28,11 @@ import static org.junit.Assert.fail;
  */
 public class SourceSamplingServiceTest {
 
-    private SourceSamplingService sampleService;
+    private DataNexus nexus;
 
     @Before
     public void setUp() {
-        DataNexus nexus = new OnDemandNexus("history");
-        sampleService = new SourceSamplingService(nexus);
+        nexus = new OnDemandNexus("history");
     }
 
     /**
@@ -49,13 +49,13 @@ public class SourceSamplingServiceTest {
         long limit = 24;
         int fractionalDigits = 6; // microseconds; seems to be max precision of myget
 
-        Metadata<FloatEvent> metadata = sampleService.findMetadata(pv, FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
         MyGetSampleParams<FloatEvent> params = new MyGetSampleParams<>(metadata, begin,
                 end, limit);
 
         long expSize = 24; // We limit to 24, but we know historical data only has 21
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = sampleService.openMyGetSampleFloatStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openMyGetSampleStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -81,13 +81,13 @@ public class SourceSamplingServiceTest {
         long stepMilliseconds = 86400000;
         long sampleCount = 24;
 
-        Metadata<FloatEvent> metadata = sampleService.findMetadata(pv, FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
         MySamplerParams<FloatEvent> params = new MySamplerParams<>(metadata, begin,
                 stepMilliseconds, sampleCount);
 
         long expSize = 24;
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = sampleService.openMySamplerFloatStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openMySamplerStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);

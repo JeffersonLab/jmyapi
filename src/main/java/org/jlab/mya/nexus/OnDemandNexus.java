@@ -6,7 +6,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-import org.jlab.mya.DataNexus;
 
 /**
  * A Mya DataNexus which creates resources on-demand and closes them immediately after use.
@@ -50,7 +49,7 @@ public class OnDemandNexus extends DataNexus {
     }
 
     @Override
-    public Connection getConnection(String host) throws SQLException {
+    Connection getConnection(String host) throws SQLException {
         String user = CREDENTIALS_PROPERTIES.getProperty("username");
         String password = CREDENTIALS_PROPERTIES.getProperty("password");
 

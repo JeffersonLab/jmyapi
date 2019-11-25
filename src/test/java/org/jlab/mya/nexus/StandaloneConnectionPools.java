@@ -1,4 +1,4 @@
-package org.jlab.mya;
+package org.jlab.mya.nexus;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
 import java.io.IOException;
@@ -10,6 +10,7 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 

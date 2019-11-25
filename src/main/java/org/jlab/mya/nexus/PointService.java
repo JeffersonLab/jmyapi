@@ -1,4 +1,4 @@
-package org.jlab.mya.service;
+package org.jlab.mya.nexus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,9 +9,9 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;
 import org.jlab.mya.params.PointQueryParams;
-import org.jlab.mya.DataNexus;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.Event;
-import org.jlab.mya.QueryService;
+import org.jlab.mya.nexus.QueryService;
 import org.jlab.mya.TimeUtil;
 
 /**
@@ -20,7 +20,7 @@ import org.jlab.mya.TimeUtil;
  *
  * @author slominskir
  */
-public class PointService extends QueryService {
+class PointService extends QueryService {
 
     /**
      * Create a new PointService with the provided DataNexus.
@@ -31,6 +31,14 @@ public class PointService extends QueryService {
         super(nexus);
     }
 
+    /**
+     * Find an event associated with the specified PointQueryParams.
+     *
+     * @param params The PointQueryParams
+     * @param <T> The event type
+     * @return An Event or null if none found
+     * @throws SQLException If unable to query the database
+     */
     @SuppressWarnings("unchecked")
     public <T extends Event> T findEvent(PointQueryParams<T> params) throws SQLException {
 
@@ -57,7 +65,7 @@ public class PointService extends QueryService {
     public FloatEvent findFloatEvent(PointQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
-            try (PreparedStatement stmt = nexus.getEventPointStatement(con, params)) {
+            try (PreparedStatement stmt = generator.getEventPointStatement(con, params)) {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
@@ -80,7 +88,7 @@ public class PointService extends QueryService {
     public IntEvent findIntEvent(PointQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
-            try (PreparedStatement stmt = nexus.getEventPointStatement(con, params)) {
+            try (PreparedStatement stmt = generator.getEventPointStatement(con, params)) {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
@@ -104,7 +112,7 @@ public class PointService extends QueryService {
     public MultiStringEvent findMultiStringEvent(PointQueryParams params) throws SQLException {
         String host = params.getMetadata().getHost();
         try (Connection con = nexus.getConnection(host)) {
-            try (PreparedStatement stmt = nexus.getEventPointStatement(con, params)) {
+            try (PreparedStatement stmt = generator.getEventPointStatement(con, params)) {
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getTimestamp()));
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {

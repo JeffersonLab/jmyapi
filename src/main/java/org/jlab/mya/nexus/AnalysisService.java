@@ -1,22 +1,23 @@
-package org.jlab.mya.service;
+package org.jlab.mya.nexus;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
-import org.jlab.mya.DataNexus;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.EventStream;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.IntervalService;
+import org.jlab.mya.nexus.PointService;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.params.PointQueryParams;
-import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.analysis.RunningStatistics;
 
 /**
  * Provides access to summary statistics about a MYA channel data.
  * @author apcarp
  */
-public class AnalysisService extends IntervalService {
+class AnalysisService extends IntervalService {
     
     /**
      *  Create a new service with the provided DataNexus

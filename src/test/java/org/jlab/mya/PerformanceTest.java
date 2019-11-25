@@ -2,18 +2,15 @@ package org.jlab.mya;
 
 import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.GraphicalEventBinSamplerParams;
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.params.PointQueryParams;
-import org.jlab.mya.service.IntervalService;
-import org.jlab.mya.service.PointService;
-import org.jlab.mya.stream.FloatEventStream;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
 
+import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.stream.wrapped.BoundaryAwareStream;
 import org.jlab.mya.stream.wrapped.FloatAnalysisStream;
 import org.jlab.mya.stream.wrapped.FloatGraphicalEventBinSampleStream;
@@ -28,14 +25,10 @@ public class PerformanceTest {
     @Test
     public void doNestedStreamsTest() throws SQLException, IOException {
         DataNexus nexus = new OnDemandNexus("history");
-        IntervalService service = new IntervalService(nexus);
-        PointService pointService = new PointService(nexus);
 
         String pv = "IDC1G03sh_cur";
-        Instant begin
-                = TimeUtil.toLocalDT("2016-06-01T00:00:00");
-        Instant end
-                = TimeUtil.toLocalDT("2017-07-01T00:00:00");
+        Instant begin = TimeUtil.toLocalDT("2016-06-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2017-07-01T00:00:00");
 
         Runtime rt = Runtime.getRuntime();
         long stopBytes;
@@ -46,19 +39,17 @@ public class PerformanceTest {
         rt.gc();
         startMillis = System.currentTimeMillis();
 
-        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
 
         stopMillis = System.currentTimeMillis();
         stopBytes = rt.totalMemory() - rt.freeMemory();
         System.out.println("Elapsed (seconds): " + (stopMillis - startMillis) / 1000.0);
         System.out.println("Memory used at this instant (MB): " + String.format("%,.2f", (stopBytes) / 1024.0 / 1024.0));
 
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
-
         System.out.println("---- Event Count Query ----");
         rt.gc();
         startMillis = System.currentTimeMillis();
-        long count = service.count(params);
+        long count = nexus.count(metadata, begin, end);
         stopMillis = System.currentTimeMillis();
         stopBytes = rt.totalMemory() - rt.freeMemory();
         System.out.println("Elapsed (seconds): " + (stopMillis - startMillis) / 1000.0);
@@ -68,7 +59,7 @@ public class PerformanceTest {
         System.out.println("---- Event Interval Query ----");
         rt.gc();
         startMillis = System.currentTimeMillis();
-        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
 
             FloatEvent event;
 
@@ -84,8 +75,7 @@ public class PerformanceTest {
         System.out.println("---- Prior Point Lookup ----");
         rt.gc();
         startMillis = System.currentTimeMillis();
-        PointQueryParams<FloatEvent> pointParams = new PointQueryParams<>(metadata, begin);
-        FloatEvent priorPoint = pointService.findFloatEvent(pointParams);
+        FloatEvent priorPoint = nexus.findEvent(metadata, begin);
         stopMillis = System.currentTimeMillis();
         stopBytes = rt.totalMemory() - rt.freeMemory();
         System.out.println("Elapsed (seconds): " + (stopMillis - startMillis) / 1000.0);
@@ -96,7 +86,7 @@ public class PerformanceTest {
         startMillis = System.currentTimeMillis();
 
         try (
-                final EventStream<FloatEvent> stream = service.openEventStream(params);
+                final EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end);
                 final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class);
         ) {
 
@@ -120,7 +110,7 @@ public class PerformanceTest {
         startMillis = System.currentTimeMillis();
 
         try (
-                final EventStream<FloatEvent> stream = service.openEventStream(params);
+                final EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end);
                 final FloatAnalysisStream analysisStream = new FloatAnalysisStream(stream, new short[]{RunningStatistics.INTEGRATION});
         ) {
 
@@ -142,7 +132,7 @@ public class PerformanceTest {
         startMillis = System.currentTimeMillis();
 
         try (
-                final EventStream<FloatEvent> stream = service.openEventStream(params);
+                final EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end);
                 final FloatGraphicalEventBinSampleStream<FloatEvent> samplerStream = new FloatGraphicalEventBinSampleStream<>(stream, new GraphicalEventBinSamplerParams(3, count), FloatEvent.class);
         ) {
 
@@ -176,14 +166,10 @@ public class PerformanceTest {
     @Test
     public void doIntervalFetchStrategyTest() throws SQLException, IOException {
         DataNexus nexus = new OnDemandNexus("history");
-        IntervalService service = new IntervalService(nexus);
-        PointService pointService = new PointService(nexus);
 
         String pv = "IDC1G03sh_cur";
-        Instant begin
-                = TimeUtil.toLocalDT("2017-01-01T00:00:00");
-        Instant end
-                = TimeUtil.toLocalDT("2018-01-26T18:00:00");
+        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2018-01-26T18:00:00");
 
         Runtime rt = Runtime.getRuntime();
         long startBytes;
@@ -196,20 +182,18 @@ public class PerformanceTest {
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
 
-        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
 
         stopMillis = System.currentTimeMillis();
         stopBytes = rt.totalMemory() - rt.freeMemory();
         System.out.println("Elapsed (seconds): " + (stopMillis - startMillis) / 1000.0);
         System.out.println("Memory used at this instant (MB): " + String.format("%,.2f", (stopBytes) / 1024.0 / 1024.0));
 
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
-
         System.out.println("---- Event Count Query ----");
         rt.gc();
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
-        long count = service.count(params);
+        long count = nexus.count(metadata, begin, end);
         stopMillis = System.currentTimeMillis();
         stopBytes = rt.totalMemory() - rt.freeMemory();
         System.out.println("Elapsed (seconds): " + (stopMillis - startMillis) / 1000.0);
@@ -220,7 +204,7 @@ public class PerformanceTest {
         rt.gc();
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
-        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
 
             FloatEvent event;
 
@@ -235,12 +219,11 @@ public class PerformanceTest {
 
 
         System.out.println("---- Interval Query: Chunk Strategy ----");
-        params = new IntervalQueryParams<>(metadata, false, IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK, begin, end);
 
         rt.gc();
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
-        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end, DataNexus.IntervalQueryFetchStrategy.CHUNK, false)) {
 
             FloatEvent event;
 
@@ -255,12 +238,11 @@ public class PerformanceTest {
 
 
         System.out.println("---- Interval Query: ALL Strategy ----");
-        params = new IntervalQueryParams<>(metadata, false, IntervalQueryParams.IntervalQueryFetchStrategy.ALL, begin, end);
 
         rt.gc();
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
-        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end, DataNexus.IntervalQueryFetchStrategy.ALL, false)) {
 
             FloatEvent event;
 

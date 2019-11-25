@@ -1,10 +1,9 @@
 package org.jlab.mya;
 
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.service.IntervalService;
-import org.jlab.mya.stream.FloatEventStream;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -26,7 +25,6 @@ public class HelloWorld {
     public static void main(String[] args) throws SQLException, IOException {
 
         DataNexus nexus = new OnDemandNexus("history");
-        IntervalService service = new IntervalService(nexus);
 
         for (String name : DataNexus.getDeploymentNames()) {
             System.out.println(name);
@@ -37,9 +35,8 @@ public class HelloWorld {
         Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00.123456");
         Instant end = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
 
-        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
-        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
+        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
 
             FloatEvent event;
 

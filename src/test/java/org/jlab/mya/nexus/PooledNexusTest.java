@@ -5,10 +5,8 @@ import java.time.Instant;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.params.PointQueryParams;
 import org.jlab.mya.Metadata;
-import org.jlab.mya.StandaloneConnectionPools;
 import org.jlab.mya.StandaloneJndi;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.service.PointService;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

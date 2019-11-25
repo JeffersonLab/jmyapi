@@ -1,4 +1,4 @@
-package org.jlab.mya.service;
+package org.jlab.mya.nexus;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -6,8 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jlab.mya.DataNexus;
-import org.jlab.mya.QueryService;
+import org.jlab.mya.nexus.DataNexus;
+import org.jlab.mya.nexus.QueryService;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.params.MyGetSampleParams;
 import org.jlab.mya.params.MySamplerParams;
@@ -29,7 +29,7 @@ import org.jlab.mya.stream.MySamplerFloatEventStream;
  *
  * @author slominskir
  */
-public class SourceSamplingService extends QueryService {
+class SourceSamplingService extends QueryService {
 
     /**
      * Create a new SourceSamplingService.

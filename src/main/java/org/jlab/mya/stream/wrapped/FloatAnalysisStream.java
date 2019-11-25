@@ -18,7 +18,18 @@ public class FloatAnalysisStream extends WrappedStream<AnalyzedFloatEvent, Float
     private final RunningStatistics seriesStats;
 
     /**
-     * Create a new FloatAnalysisStream by wrapping an EventStream of FloatEvents.
+     * Create a new FloatAnalysisStream that wraps an EventStream of FloatEvents and accumulates no event stats
+     * (only final series stats).
+     *
+     * @param stream The FloatEvent EventStream to wrap
+     */
+    public FloatAnalysisStream(EventStream<FloatEvent> stream) {
+        this(stream, new short[0]);
+    }
+
+    /**
+     * Create a new FloatAnalysisStream that wraps an EventStream of FloatEvents and accumulates event stats as
+     * specified in the statsMap parameter.
      * <p>
      * Desired stats are specified via a statsMap which instructs the analysis service which stats to track
      * and the order (index) in which to return them.  Valid values are defined as constants in the RunningStatistics
