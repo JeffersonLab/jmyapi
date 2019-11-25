@@ -1,6 +1,8 @@
 package org.jlab.mya.params;
 
 import java.time.Instant;
+
+import org.jlab.mya.Event;
 import org.jlab.mya.Metadata;
 
 /**
@@ -8,7 +10,7 @@ import org.jlab.mya.Metadata;
  *
  * @author slominskir
  */
-public class MyGetSampleParams extends IntervalQueryParams {
+public class MyGetSampleParams<T extends Event> extends IntervalQueryParams<T> {
 
     private final long limit;
 
@@ -20,7 +22,7 @@ public class MyGetSampleParams extends IntervalQueryParams {
      * @param end The end instant
      * @param limit The limit
      */
-    public MyGetSampleParams(Metadata metadata, Instant begin, Instant end, long limit) {
+    public MyGetSampleParams(Metadata<T> metadata, Instant begin, Instant end, long limit) {
         super(metadata, begin, end);
 
         this.limit = limit;

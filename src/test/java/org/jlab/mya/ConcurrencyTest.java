@@ -35,11 +35,11 @@ class ConcurrencyTest {
         Instant end
                 = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
 
-        Metadata metadata = intervalService.findMetadata(pv);
-        IntervalQueryParams intervalParams = new IntervalQueryParams(metadata, begin, end);
-        PointQueryParams pointParams = new PointQueryParams(metadata, begin);
+        Metadata<FloatEvent> metadata = intervalService.findMetadata(pv, FloatEvent.class);
+        IntervalQueryParams<FloatEvent> intervalParams = new IntervalQueryParams<>(metadata, begin, end);
+        PointQueryParams<FloatEvent> pointParams = new PointQueryParams<>(metadata, begin);
 
-        try (FloatEventStream stream = intervalService.openFloatStream(intervalParams)) {
+        try (EventStream<FloatEvent> stream = intervalService.openEventStream(intervalParams)) {
 
             FloatEvent point = pointService.findFloatEvent(pointParams);
             System.out.println("Point value: " + point.toString(6));

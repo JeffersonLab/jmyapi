@@ -46,14 +46,14 @@ public class PerformanceTest {
         rt.gc();
         startMillis = System.currentTimeMillis();
 
-        Metadata metadata = service.findMetadata(pv);
+        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
 
         stopMillis = System.currentTimeMillis();
         stopBytes = rt.totalMemory() - rt.freeMemory();
         System.out.println("Elapsed (seconds): " + (stopMillis - startMillis) / 1000.0);
         System.out.println("Memory used at this instant (MB): " + String.format("%,.2f", (stopBytes) / 1024.0 / 1024.0));
 
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
+        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
 
         System.out.println("---- Event Count Query ----");
         rt.gc();
@@ -68,7 +68,7 @@ public class PerformanceTest {
         System.out.println("---- Event Interval Query ----");
         rt.gc();
         startMillis = System.currentTimeMillis();
-        try (FloatEventStream stream = service.openFloatStream(params)) {
+        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
 
             FloatEvent event;
 
@@ -84,7 +84,7 @@ public class PerformanceTest {
         System.out.println("---- Prior Point Lookup ----");
         rt.gc();
         startMillis = System.currentTimeMillis();
-        PointQueryParams pointParams = new PointQueryParams(metadata, begin);
+        PointQueryParams<FloatEvent> pointParams = new PointQueryParams<>(metadata, begin);
         FloatEvent priorPoint = pointService.findFloatEvent(pointParams);
         stopMillis = System.currentTimeMillis();
         stopBytes = rt.totalMemory() - rt.freeMemory();
@@ -96,7 +96,7 @@ public class PerformanceTest {
         startMillis = System.currentTimeMillis();
 
         try (
-                final FloatEventStream stream = service.openFloatStream(params);
+                final EventStream<FloatEvent> stream = service.openEventStream(params);
                 final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class);
         ) {
 
@@ -120,7 +120,7 @@ public class PerformanceTest {
         startMillis = System.currentTimeMillis();
 
         try (
-                final FloatEventStream stream = service.openFloatStream(params);
+                final EventStream<FloatEvent> stream = service.openEventStream(params);
                 final FloatAnalysisStream analysisStream = new FloatAnalysisStream(stream, new short[]{RunningStatistics.INTEGRATION});
         ) {
 
@@ -142,7 +142,7 @@ public class PerformanceTest {
         startMillis = System.currentTimeMillis();
 
         try (
-                final FloatEventStream stream = service.openFloatStream(params);
+                final EventStream<FloatEvent> stream = service.openEventStream(params);
                 final FloatGraphicalEventBinSampleStream<FloatEvent> samplerStream = new FloatGraphicalEventBinSampleStream<>(stream, new GraphicalEventBinSamplerParams(3, count), FloatEvent.class);
         ) {
 
@@ -196,14 +196,14 @@ public class PerformanceTest {
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
 
-        Metadata metadata = service.findMetadata(pv);
+        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
 
         stopMillis = System.currentTimeMillis();
         stopBytes = rt.totalMemory() - rt.freeMemory();
         System.out.println("Elapsed (seconds): " + (stopMillis - startMillis) / 1000.0);
         System.out.println("Memory used at this instant (MB): " + String.format("%,.2f", (stopBytes) / 1024.0 / 1024.0));
 
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
+        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
 
         System.out.println("---- Event Count Query ----");
         rt.gc();
@@ -220,7 +220,7 @@ public class PerformanceTest {
         rt.gc();
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
-        try (FloatEventStream stream = service.openFloatStream(params)) {
+        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
 
             FloatEvent event;
 
@@ -235,12 +235,12 @@ public class PerformanceTest {
 
 
         System.out.println("---- Interval Query: Chunk Strategy ----");
-        params = new IntervalQueryParams(metadata, false, IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK, begin, end);
+        params = new IntervalQueryParams<>(metadata, false, IntervalQueryParams.IntervalQueryFetchStrategy.CHUNK, begin, end);
 
         rt.gc();
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
-        try (FloatEventStream stream = service.openFloatStream(params)) {
+        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
 
             FloatEvent event;
 
@@ -255,12 +255,12 @@ public class PerformanceTest {
 
 
         System.out.println("---- Interval Query: ALL Strategy ----");
-        params = new IntervalQueryParams(metadata, false, IntervalQueryParams.IntervalQueryFetchStrategy.ALL, begin, end);
+        params = new IntervalQueryParams<>(metadata, false, IntervalQueryParams.IntervalQueryFetchStrategy.ALL, begin, end);
 
         rt.gc();
         startBytes = rt.totalMemory() - rt.freeMemory();
         startMillis = System.currentTimeMillis();
-        try (FloatEventStream stream = service.openFloatStream(params)) {
+        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
 
             FloatEvent event;
 

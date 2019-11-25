@@ -57,7 +57,7 @@ public class PointServiceTest {
 
         long start = System.currentTimeMillis();
 
-        Metadata metadata = service.findMetadata(pv);
+        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
 
         long stop = System.currentTimeMillis();
 
@@ -65,7 +65,7 @@ public class PointServiceTest {
 
         System.out.println(metadata);
 
-        PointQueryParams params = new PointQueryParams(metadata, timestamp);
+        PointQueryParams<FloatEvent> params = new PointQueryParams<>(metadata, timestamp);
         float expResult = -7.2f;
 
         start = System.currentTimeMillis();
@@ -90,8 +90,8 @@ public class PointServiceTest {
 
         String pv = "MFELINJC";
         Instant timestamp = TimeUtil.toLocalDT("2017-09-08T14:50:38");
-        Metadata metadata = service.findMetadata(pv);        
-        PointQueryParams params = new PointQueryParams(metadata, timestamp);
+        Metadata<IntEvent> metadata = service.findMetadata(pv, IntEvent.class);
+        PointQueryParams<IntEvent> params = new PointQueryParams<>(metadata, timestamp);
         
         // Roughly 2017-09-08 14:50:37
         IntEvent expResult = new IntEvent(403967615077170415L, EventCode.UPDATE, 0);
@@ -136,8 +136,8 @@ public class PointServiceTest {
         MultiStringEvent expResult = new MultiStringEvent(Instant.from(ZonedDateTime.of(2017,8, 20, 23, 0, 0, 0, ZoneId.of("America/New_York"))),
                 EventCode.UPDATE, value.split(","));
 
-        Metadata metadata = service.findMetadata(pv);
-        PointQueryParams params = new PointQueryParams(metadata, time);
+        Metadata<MultiStringEvent> metadata = service.findMetadata(pv, MultiStringEvent.class);
+        PointQueryParams<MultiStringEvent> params = new PointQueryParams<>(metadata, time);
 
         MultiStringEvent result = service.findMultiStringEvent(params);
         System.out.println(result.getTimestampAsInstant().toString());

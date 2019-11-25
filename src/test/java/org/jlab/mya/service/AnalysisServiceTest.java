@@ -10,6 +10,7 @@ import java.time.ZoneId;
 import org.jlab.mya.DataNexus;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.analysis.RunningStatistics;
+import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.junit.Assert;
@@ -91,9 +92,9 @@ public class AnalysisServiceTest {
             double integration) throws SQLException, IOException {
 
         AnalysisService service = new AnalysisService(nexus);
-        Metadata metadata = service.findMetadata(pv);
+        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
 
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
+        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
         RunningStatistics result = service.calculateRunningStatistics(params);
 
         double rms = Math.sqrt(sigma * sigma + mean * mean);

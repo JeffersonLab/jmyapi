@@ -1,6 +1,8 @@
 package org.jlab.mya.params;
 
 import java.time.Instant;
+
+import org.jlab.mya.Event;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.QueryParams;
 
@@ -9,7 +11,7 @@ import org.jlab.mya.QueryParams;
  *
  * @author slominskir
  */
-public class PointQueryParams extends QueryParams {
+public class PointQueryParams<T extends Event> extends QueryParams<T> {
 
     private final Instant timestamp;
     private final boolean lessThan;
@@ -23,7 +25,7 @@ public class PointQueryParams extends QueryParams {
      * @param metadata The PV metadata
      * @param timestamp The point in time
      */
-    public PointQueryParams(Metadata metadata, Instant timestamp) {
+    public PointQueryParams(Metadata<T> metadata, Instant timestamp) {
         this(metadata, false, timestamp, true, true);
     }
 
@@ -39,7 +41,7 @@ public class PointQueryParams extends QueryParams {
      * @param orEqual true if the point exactly at the given timestamp is
      * returned, false if the timestamp is exclusive
      */
-    public PointQueryParams(Metadata metadata, boolean updatesOnly, Instant timestamp, boolean lessThan, boolean orEqual) {
+    public PointQueryParams(Metadata<T> metadata, boolean updatesOnly, Instant timestamp, boolean lessThan, boolean orEqual) {
         super(metadata, updatesOnly);
         this.timestamp = timestamp;
         this.lessThan = lessThan;

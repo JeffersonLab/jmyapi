@@ -7,9 +7,9 @@ package org.jlab.mya;
  *
  * @author slominskir
  */
-public abstract class QueryParams {
+public abstract class QueryParams<T extends Event> {
 
-    private final Metadata metadata;
+    private final Metadata<T> metadata;
     private final boolean updatesOnly;
 
     /**
@@ -17,7 +17,7 @@ public abstract class QueryParams {
      *
      * @param metadata The PV metadata
      */
-    public QueryParams(Metadata metadata) {
+    public QueryParams(Metadata<T> metadata) {
         this(metadata, false);
     }
 
@@ -27,7 +27,7 @@ public abstract class QueryParams {
      * @param metadata The PV metadata
      * @param updatesOnly true for updates events only, false otherwise
      */
-    protected QueryParams(Metadata metadata, boolean updatesOnly) {
+    protected QueryParams(Metadata<T> metadata, boolean updatesOnly) {
         this.metadata = metadata;
         this.updatesOnly = updatesOnly;
     }
@@ -37,7 +37,7 @@ public abstract class QueryParams {
      *
      * @return The Metadata
      */
-    public Metadata getMetadata() {
+    public Metadata<T> getMetadata() {
         return metadata;
     }
 

@@ -5,14 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.jlab.mya.*;
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.stream.FloatEventStream;
 import org.jlab.mya.stream.IntEventStream;
 import org.jlab.mya.stream.MultiStringEventStream;
-import org.jlab.mya.DataNexus;
-import org.jlab.mya.EventStream;
-import org.jlab.mya.QueryService;
-import org.jlab.mya.TimeUtil;
 
 /**
  * Provides query access to the Mya database for a set of events in a given time
@@ -72,29 +71,20 @@ public class IntervalService extends QueryService {
      * method to ensure you close the stream properly.
      *
      * @param params The IntervalQueryParams
+     * @param <T> The Event type
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public EventStream openEventStream(IntervalQueryParams params) throws SQLException {
-        EventStream stream;
+    @SuppressWarnings("unchecked")
+    public <T extends Event> EventStream<T> openEventStream(IntervalQueryParams<T> params) throws SQLException {
+        EventStream<T> stream;
 
-        if (params.getMetadata().getSize() > 1) {
-            stream = openMultiStringStream(params);
+        if(params.getMetadata().getType() == FloatEvent.class) {
+            stream = (EventStream<T>)openFloatStream(params);
+        } else if(params.getMetadata().getType() == IntEvent.class) {
+            stream = (EventStream<T>)openIntStream(params);
         } else {
-            switch (params.getMetadata().getType()) {
-                case DBR_SHORT:
-                case DBR_LONG:
-                case DBR_ENUM:
-                    stream = openIntStream(params);
-                    break;
-                case DBR_FLOAT:
-                case DBR_DOUBLE:
-                    stream = openFloatStream(params);
-                    break;
-                default:
-                    stream = openMultiStringStream(params);
-                    break;
-            }
+            stream = (EventStream<T>)openMultiStringStream(params);
         }
 
         return stream;
@@ -111,7 +101,7 @@ public class IntervalService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openFloatStream(IntervalQueryParams params) throws SQLException {
+    private FloatEventStream openFloatStream(IntervalQueryParams params) throws SQLException {
         InternalIntervalParams iip = openStream(params);
 
         return new FloatEventStream(params, iip.con, iip.stmt, iip.rs);
@@ -128,7 +118,7 @@ public class IntervalService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public IntEventStream openIntStream(IntervalQueryParams params) throws SQLException {
+    private IntEventStream openIntStream(IntervalQueryParams params) throws SQLException {
         InternalIntervalParams iip = openStream(params);
 
         return new IntEventStream(params, iip.con, iip.stmt, iip.rs);
@@ -145,7 +135,7 @@ public class IntervalService extends QueryService {
      * @return a stream
      * @throws SQLException If unable to query the database
      */
-    public MultiStringEventStream openMultiStringStream(IntervalQueryParams params) throws
+    private MultiStringEventStream openMultiStringStream(IntervalQueryParams params) throws
             SQLException {
         InternalIntervalParams iip = openStream(params);
 

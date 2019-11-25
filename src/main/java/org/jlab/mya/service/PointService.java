@@ -31,27 +31,17 @@ public class PointService extends QueryService {
         super(nexus);
     }
 
-    public Event findEvent(PointQueryParams params) throws SQLException {
+    @SuppressWarnings("unchecked")
+    public <T extends Event> T findEvent(PointQueryParams<T> params) throws SQLException {
 
-        Event event;
+        T event;
 
-        if (params.getMetadata().getSize() > 1) {
-            event = findMultiStringEvent(params);
+        if(params.getMetadata().getType() == FloatEvent.class) {
+            event = (T)findFloatEvent(params);
+        } else if(params.getMetadata().getType() == IntEvent.class) {
+            event = (T)findIntEvent(params);
         } else {
-            switch (params.getMetadata().getType()) {
-                case DBR_SHORT:
-                case DBR_LONG:
-                case DBR_ENUM:
-                    event = findIntEvent(params);
-                    break;
-                case DBR_FLOAT:
-                case DBR_DOUBLE:
-                    event = findFloatEvent(params);
-                    break;
-                default:
-                    event = findMultiStringEvent(params);
-                    break;
-            }
+            event = (T)findMultiStringEvent(params);
         }
 
         return event;

@@ -5,7 +5,7 @@ package org.jlab.mya;
  * 
  * @author slominskir
  */
-public enum DataType {
+public enum MyaDataType {
     DBR_STRING, // 0
     DBR_SHORT, // 1
     DBR_FLOAT, // 2

@@ -49,8 +49,8 @@ public class SourceSamplingServiceTest {
         long limit = 24;
         int fractionalDigits = 6; // microseconds; seems to be max precision of myget
 
-        Metadata metadata = sampleService.findMetadata(pv);
-        MyGetSampleParams params = new MyGetSampleParams(metadata, begin,
+        Metadata<FloatEvent> metadata = sampleService.findMetadata(pv, FloatEvent.class);
+        MyGetSampleParams<FloatEvent> params = new MyGetSampleParams<>(metadata, begin,
                 end, limit);
 
         long expSize = 24; // We limit to 24, but we know historical data only has 21
@@ -81,8 +81,8 @@ public class SourceSamplingServiceTest {
         long stepMilliseconds = 86400000;
         long sampleCount = 24;
 
-        Metadata metadata = sampleService.findMetadata(pv);
-        MySamplerParams params = new MySamplerParams(metadata, begin,
+        Metadata<FloatEvent> metadata = sampleService.findMetadata(pv, FloatEvent.class);
+        MySamplerParams<FloatEvent> params = new MySamplerParams<>(metadata, begin,
                 stepMilliseconds, sampleCount);
 
         long expSize = 24;

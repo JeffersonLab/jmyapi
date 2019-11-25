@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 import org.jlab.mya.DataNexus;
+import org.jlab.mya.EventStream;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.params.IntervalQueryParams;
@@ -33,10 +34,10 @@ public class AnalysisService extends IntervalService {
      * @throws SQLException If unable to query the database
      * @throws IOException If unable to read from the stream
      */
-    public RunningStatistics calculateRunningStatistics(IntervalQueryParams params) throws SQLException, IOException {
+    public RunningStatistics calculateRunningStatistics(IntervalQueryParams<FloatEvent> params) throws SQLException, IOException {
         
         RunningStatistics rs = new RunningStatistics();
-        PointQueryParams pqParams = new PointQueryParams(params.getMetadata(), params.getBegin());
+        PointQueryParams<FloatEvent> pqParams = new PointQueryParams<>(params.getMetadata(), params.getBegin());
         PointService pqService = new PointService(this.nexus);
 
         // Get the first event from before the interval, then map it to an event that matches the start of the query.  This will
@@ -47,7 +48,7 @@ public class AnalysisService extends IntervalService {
             rs.push(new FloatEvent(TimeUtil.toMyaTimestamp(params.getBegin()), event.getCode(), event.getValue()));
         }
 
-        try ( FloatEventStream stream = this.openFloatStream(params) ) {
+        try ( EventStream<FloatEvent> stream = this.openEventStream(params) ) {
             FloatEvent last = event;
             while ( (event  = stream.read()) != null ) {
                 last = event;

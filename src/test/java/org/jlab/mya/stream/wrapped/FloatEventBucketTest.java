@@ -23,6 +23,7 @@ public class FloatEventBucketTest {
      * Test of downSample and getDownSample method, of class FloatEventBucket.
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void testDownSampleAndGetDownSample() {
         System.out.println("downSample");
         Instant begin = TimeUtil.toLocalDT("2017-03-01T00:00:00");

@@ -1,6 +1,8 @@
 package org.jlab.mya.params;
 
 import java.time.Instant;
+
+import org.jlab.mya.Event;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.QueryParams;
 
@@ -10,7 +12,7 @@ import org.jlab.mya.QueryParams;
  *
  * @author slominskir
  */
-public class IntervalQueryParams extends QueryParams {
+public class IntervalQueryParams<T extends Event> extends QueryParams<T> {
 
     private final Instant begin;
     private final Instant end;
@@ -23,7 +25,7 @@ public class IntervalQueryParams extends QueryParams {
      * @param begin The begin instant
      * @param end The end instant
      */
-    public IntervalQueryParams(Metadata metadata, Instant begin, Instant end) {
+    public IntervalQueryParams(Metadata<T> metadata, Instant begin, Instant end) {
         this(metadata, false, IntervalQueryFetchStrategy.STREAM, begin, end);
     }
 
@@ -37,7 +39,7 @@ public class IntervalQueryParams extends QueryParams {
      * @param begin The begin instant
      * @param end The end instant
      */
-    public IntervalQueryParams(Metadata metadata, boolean updatesOnly, IntervalQueryFetchStrategy fetch, Instant begin, Instant end) {
+    public IntervalQueryParams(Metadata<T> metadata, boolean updatesOnly, IntervalQueryFetchStrategy fetch, Instant begin, Instant end) {
         super(metadata, updatesOnly);
         this.fetch = fetch;
         this.begin = begin;

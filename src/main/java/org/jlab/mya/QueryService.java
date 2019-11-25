@@ -1,5 +1,9 @@
 package org.jlab.mya;
 
+import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.event.IntEvent;
+import org.jlab.mya.event.MultiStringEvent;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -46,12 +50,28 @@ public abstract class QueryService {
     }
 
     /**
+     * Query for PV metadata given PV name and specified type.
+     *
+     * @param name The PV name
+     * @param type The type
+     * @param <T> The Event type
+     * @return PV metadata
+     * @throws SQLException If unable to query the database
+     * @throws ClassCastException If the PV has an incompatible type
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends Event> Metadata<T> findMetadata(String name, Class<T> type) throws SQLException, ClassCastException {
+        return (Metadata<T>)findMetadata(name);
+    }
+
+    /**
      * Query for PV metadata given PV name.
      *
      * @param name The PV name
      * @return PV metadata
      * @throws SQLException If unable to query the database
      */
+    @SuppressWarnings("unchecked")
     public Metadata findMetadata(String name) throws SQLException {
         Metadata metadata;
 
@@ -68,9 +88,11 @@ public abstract class QueryService {
                         int typeOrdinal = rs.getInt("type");
                         int size = rs.getInt("size");
 
-                        DataType type = DataType.values()[typeOrdinal];
+                        MyaDataType myaType = MyaDataType.values()[typeOrdinal];
 
-                        metadata = new Metadata(id, name, host, type, size);
+                        Class javaType = getJavaType(size, myaType);
+
+                        metadata = new Metadata(id, name, host, size, myaType, javaType);
                     } else {
                         metadata = null;
                     }
@@ -79,6 +101,31 @@ public abstract class QueryService {
         }
 
         return metadata;
+    }
+
+    private Class getJavaType(int size, MyaDataType myaType) {
+        Class type = null;
+
+        if (size > 1) {
+            type = MultiStringEvent.class;
+        } else {
+            switch (myaType) {
+                case DBR_SHORT:
+                case DBR_LONG:
+                case DBR_ENUM:
+                    type = IntEvent.class;
+                    break;
+                case DBR_FLOAT:
+                case DBR_DOUBLE:
+                    type = FloatEvent.class;
+                    break;
+                default:
+                    type =  MultiStringEvent.class;
+                    break;
+            }
+        }
+
+        return type;
     }
 
     /**

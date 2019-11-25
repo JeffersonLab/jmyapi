@@ -34,14 +34,12 @@ public class HelloWorld {
         
         
         String pv = "R123PMES";
-        Instant begin
-                = TimeUtil.toLocalDT("2017-01-01T00:00:00.123456");
-        Instant end
-                = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
+        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00.123456");
+        Instant end = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
 
-        Metadata metadata = service.findMetadata(pv);
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
-        try (FloatEventStream stream = service.openFloatStream(params)) {
+        Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
+        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
+        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
 
             FloatEvent event;
 

@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.List;
 
+import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.LabeledEnumEvent;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.params.IntervalQueryParams;
@@ -31,7 +32,7 @@ public class ExtraInfoTest {
         Instant end
                 = TimeUtil.toLocalDT("2017-01-01T00:00:00");
 
-        Metadata metadata = service.findMetadata(pv);
+        Metadata<IntEvent> metadata = service.findMetadata(pv, IntEvent.class);
         List<ExtraInfo> infoList = service.findExtraInfo(metadata, "enum_strings");
 
         for(ExtraInfo info: infoList) {
@@ -43,9 +44,9 @@ public class ExtraInfoTest {
             }
         }
         
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
+        IntervalQueryParams<IntEvent> params = new IntervalQueryParams<>(metadata, begin, end);
         
-        try (IntEventStream stream = service.openIntStream(params)) {
+        try (EventStream<IntEvent> stream = service.openEventStream(params)) {
 
             /*IntEvent event;
 

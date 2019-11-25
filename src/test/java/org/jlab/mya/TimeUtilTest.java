@@ -58,11 +58,11 @@ public class TimeUtilTest {
         float delta = 100; // nanoseconds of fudge
         DataNexus nexus = new OnDemandNexus("history");
         IntervalService service = new IntervalService(nexus);
-        Metadata metadata = service.findMetadata("R123PMES");
+        Metadata<FloatEvent> metadata = service.findMetadata("R123PMES", FloatEvent.class);
         Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
         Instant end = TimeUtil.toLocalDT("2017-02-01T00:00:00");
-        IntervalQueryParams params = new IntervalQueryParams(metadata, begin, end);
-        try (FloatEventStream stream = service.openFloatStream(params)) {
+        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
+        try (EventStream<FloatEvent> stream = service.openEventStream(params)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 long t = TimeUtil.toMyaTimestamp(event.getTimestampAsInstant());

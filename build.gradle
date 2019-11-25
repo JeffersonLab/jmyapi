@@ -24,6 +24,10 @@ compileJava   {
     targetCompatibility = '1.8'
 }
 
+compileTestJava {
+    options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
+}
+
 task hello (type: JavaExec) {
     group 'Application'
     description 'Hello World Test'

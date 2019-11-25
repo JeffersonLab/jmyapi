@@ -6,13 +6,14 @@ package org.jlab.mya;
  *
  * @author slominskir
  */
-public final class Metadata {
+public final class Metadata<T extends Event> {
 
     private final int id;
     private final String name;
     private final String host;
-    private final DataType type;
     private final int size;
+    private final MyaDataType myaType;
+    private final Class<T> javaType;
 
     /**
      * Create a new Metadata.
@@ -20,15 +21,17 @@ public final class Metadata {
      * @param id The unique database ID assigned to the PV
      * @param name The PV name
      * @param host The host on which events are stored for this PV
-     * @param type The data type
      * @param size The size of an update (scalar = 1, vector &gt; 1)
+     * @param myaType The MYA data type
+     * @param javaType The Java data type
      */
-    public Metadata(int id, String name, String host, DataType type, int size) {
+    public Metadata(int id, String name, String host, int size, MyaDataType myaType, Class<T> javaType) {
         this.id = id;
         this.name = name;
         this.host = host;
-        this.type = type;
         this.size = size;
+        this.myaType = myaType;
+        this.javaType = javaType;
     }
 
     /**
@@ -59,12 +62,21 @@ public final class Metadata {
     }
 
     /**
-     * Return the data type of the PV.
+     * Return the MYA data type of the PV.
      *
      * @return The data type
      */
-    public DataType getType() {
-        return type;
+    public MyaDataType getMyaType() {
+        return myaType;
+    }
+
+    /**
+     * Return the Java data type of the PV.
+     *
+     * @return The data type
+     */
+    public Class<T> getType() {
+        return javaType;
     }
 
     /**
@@ -83,7 +95,7 @@ public final class Metadata {
      */
     @Override
     public String toString() {
-        return "Metadata{" + "id=" + id + ", name=" + name + ", host=" + host + ", type=" + type
+        return "Metadata{" + "id=" + id + ", name=" + name + ", host=" + host + ", myaType=" + myaType
                 + ", size=" + size + '}';
     }
 

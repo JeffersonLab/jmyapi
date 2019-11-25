@@ -1,6 +1,8 @@
 package org.jlab.mya.params;
 
 import java.time.Instant;
+
+import org.jlab.mya.Event;
 import org.jlab.mya.Metadata;
 
 /**
@@ -8,7 +10,7 @@ import org.jlab.mya.Metadata;
  * 
  * @author slominskir
  */
-public class MySamplerParams extends IntervalQueryParams {
+public class MySamplerParams<T extends Event> extends IntervalQueryParams<T> {
     private final long stepMilliseconds;
     private final long sampleCount;
 
@@ -20,7 +22,7 @@ public class MySamplerParams extends IntervalQueryParams {
      * @param stepMilliseconds The step size in milliseconds
      * @param sampleCount The number of samples
      */   
-    public MySamplerParams(Metadata metadata, Instant begin, long stepMilliseconds, long sampleCount) {
+    public MySamplerParams(Metadata<T> metadata, Instant begin, long stepMilliseconds, long sampleCount) {
         super(metadata, begin, begin.plusMillis(stepMilliseconds * sampleCount));
         this.stepMilliseconds = stepMilliseconds;
         this.sampleCount = sampleCount;

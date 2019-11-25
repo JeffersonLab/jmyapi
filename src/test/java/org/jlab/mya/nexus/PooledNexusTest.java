@@ -34,8 +34,8 @@ public class PooledNexusTest {
             String pv = "R123PMES";
             Instant timestamp = TimeUtil.toLocalDT("2017-01-01T00:00:05");
 
-            Metadata metadata = service.findMetadata(pv);
-            PointQueryParams params = new PointQueryParams(metadata, timestamp);
+            Metadata<FloatEvent> metadata = service.findMetadata(pv, FloatEvent.class);
+            PointQueryParams<FloatEvent> params = new PointQueryParams<>(metadata, timestamp);
             float expResult = -7.2f;
             FloatEvent result = service.findFloatEvent(params);
             assertEquals(expResult, result.getValue(), 0.01);

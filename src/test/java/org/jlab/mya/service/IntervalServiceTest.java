@@ -1,6 +1,7 @@
 package org.jlab.mya.service;
 
 import org.jlab.mya.DataNexus;
+import org.jlab.mya.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
@@ -32,19 +33,19 @@ public class IntervalServiceTest {
     private static final Instant TEST_END = TimeUtil.toLocalDT("2017-09-22T08:43:00");
 
     private IntervalService service;
-    private Metadata TEST_METADATA;
-    private Metadata TEST_METADATA_MULTI;
-    private IntervalQueryParams TEST_PARAMS;
-    private IntervalQueryParams TEST_PARAMS_MULTI;
+    private Metadata<FloatEvent> TEST_METADATA;
+    private Metadata<MultiStringEvent> TEST_METADATA_MULTI;
+    private IntervalQueryParams<FloatEvent> TEST_PARAMS;
+    private IntervalQueryParams<MultiStringEvent> TEST_PARAMS_MULTI;
 
     @Before
     public void setUp() throws SQLException {
         DataNexus nexus = new OnDemandNexus(HISTORY_DEPLOYMENT);
         service = new IntervalService(nexus);
-        TEST_METADATA = service.findMetadata(TEST_PV);
-        TEST_METADATA_MULTI = service.findMetadata(TEST_PV_MULTI);
-        TEST_PARAMS = new IntervalQueryParams(TEST_METADATA, TEST_BEGIN, TEST_END);
-        TEST_PARAMS_MULTI = new IntervalQueryParams(TEST_METADATA_MULTI, TEST_BEGIN, TEST_END);
+        TEST_METADATA = service.findMetadata(TEST_PV, FloatEvent.class);
+        TEST_METADATA_MULTI = service.findMetadata(TEST_PV_MULTI, MultiStringEvent.class);
+        TEST_PARAMS = new IntervalQueryParams<>(TEST_METADATA, TEST_BEGIN, TEST_END);
+        TEST_PARAMS_MULTI = new IntervalQueryParams<>(TEST_METADATA_MULTI, TEST_BEGIN, TEST_END);
     }
 
     /**
@@ -52,8 +53,8 @@ public class IntervalServiceTest {
      */
     @Test
     public void testFindMetadata() throws Exception {
-        Metadata expResult = TEST_METADATA;
-        Metadata result = service.findMetadata(TEST_PV);
+        Metadata<FloatEvent> expResult = TEST_METADATA;
+        Metadata<FloatEvent> result = service.findMetadata(TEST_PV, FloatEvent.class);
         assertEquals(expResult, result);
     }
 
@@ -76,7 +77,7 @@ public class IntervalServiceTest {
     public void testOpenStream() throws Exception {
         long expSize = 12615L;
         List<FloatEvent> eventList = new ArrayList<>();
-        try (FloatEventStream stream = service.openFloatStream(TEST_PARAMS)) {
+        try (EventStream<FloatEvent> stream = service.openEventStream(TEST_PARAMS)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -91,7 +92,7 @@ public class IntervalServiceTest {
         List<MultiStringEvent> eventList = new ArrayList<>();
         long count = service.count(TEST_PARAMS_MULTI);
         System.out.println("count: " + count);
-        try (MultiStringEventStream stream = service.openMultiStringStream(TEST_PARAMS_MULTI)) {
+        try (EventStream<MultiStringEvent> stream = service.openEventStream(TEST_PARAMS_MULTI)) {
             MultiStringEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
