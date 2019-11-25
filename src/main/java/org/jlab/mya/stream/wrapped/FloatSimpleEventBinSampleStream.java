@@ -37,7 +37,7 @@ import java.math.RoundingMode;
  * </p>
  * @author slominskir
  */
-public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends WrappedEventStreamAdaptor<T, T> {
+public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends WrappedStream<T, T> {
 
     private final long binSize;
     private final BigDecimal fractional;

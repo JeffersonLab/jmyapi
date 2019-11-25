@@ -13,7 +13,7 @@ import org.jlab.mya.EventStream;
  * @param <T> The Outer Event Type
  * @param <E> The Inner (Wrapped) Event Type
  */
-public abstract class WrappedEventStreamAdaptor<T extends Event, E extends Event> extends EventStream<T> {
+public abstract class WrappedStream<T extends Event, E extends Event> extends EventStream<T> {
 
     final EventStream<E> wrapped;
 
@@ -23,7 +23,7 @@ public abstract class WrappedEventStreamAdaptor<T extends Event, E extends Event
      * @param wrapped The wrapped EventStream
      * @param type The type
      */
-    WrappedEventStreamAdaptor(EventStream<E> wrapped, Class<T> type) {
+    WrappedStream(EventStream<E> wrapped, Class<T> type) {
         super(type);
         this.wrapped = wrapped;
     }

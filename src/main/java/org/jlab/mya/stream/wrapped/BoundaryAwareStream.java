@@ -20,7 +20,7 @@ import java.time.Instant;
  *
  * @param <T> The type
  */
-public class BoundaryAwareStream<T extends Event> extends WrappedEventStreamAdaptor<T, T>{
+public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
 
     private T lastEvent = null;
     private boolean started = false;

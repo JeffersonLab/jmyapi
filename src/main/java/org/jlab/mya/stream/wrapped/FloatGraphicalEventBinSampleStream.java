@@ -52,7 +52,7 @@ import java.util.Queue;
  * @author apcarp
  * @author slominskir
  */
-public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends WrappedEventStreamAdaptor<T, T> {
+public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends WrappedStream<T, T> {
 
     private final long binSize;
     private final Queue<T> queue = new PriorityQueue<>();

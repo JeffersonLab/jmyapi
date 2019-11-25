@@ -15,7 +15,7 @@ import org.jlab.mya.event.LabeledEnumEvent;
  *
  * @author slominskir
  */
-public class LabeledEnumStream extends WrappedEventStreamAdaptor<LabeledEnumEvent, IntEvent> {
+public class LabeledEnumStream extends WrappedStream<LabeledEnumEvent, IntEvent> {
 
     private final List<ExtraInfo> enumLabelList;
 

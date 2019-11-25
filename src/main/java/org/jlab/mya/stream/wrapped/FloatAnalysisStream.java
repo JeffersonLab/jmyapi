@@ -13,7 +13,7 @@ import java.io.IOException;
  *
  * @author slominskir
  */
-public class FloatAnalysisStream extends WrappedEventStreamAdaptor<AnalyzedFloatEvent, FloatEvent> {
+public class FloatAnalysisStream extends WrappedStream<AnalyzedFloatEvent, FloatEvent> {
 
     private final RunningStatistics seriesStats;
 
