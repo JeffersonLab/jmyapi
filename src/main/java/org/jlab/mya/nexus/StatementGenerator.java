@@ -1,8 +1,6 @@
 package org.jlab.mya.nexus;
 
 import org.jlab.mya.EventCode;
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.params.PointQueryParams;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

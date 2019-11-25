@@ -2,10 +2,6 @@ package org.jlab.mya.nexus;
 
 import org.jlab.mya.*;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.params.MyGetSampleParams;
-import org.jlab.mya.params.MySamplerParams;
-import org.jlab.mya.params.PointQueryParams;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -282,13 +278,16 @@ public abstract class DataNexus {
      *
      * Note: Implemented using a database stored procedure.
      *
-     * @param params The IntervalQueryParams
+     * @param metadata The metadata
+     * @param begin The begin timestamp (inclusive)
+     * @param end The end timestamp (exclusive)
+     * @param limit The max number of bins
      * @return A new EventStream
      * @throws SQLException If unable to query the database
      */
-    public EventStream<FloatEvent> openMyGetSampleStream(MyGetSampleParams params) throws
+    public EventStream<FloatEvent> openMyGetSampleStream(Metadata<FloatEvent> metadata, Instant begin, Instant end, long limit) throws
             SQLException {
-        return sourceSampleService.openMyGetSampleFloatStream(params);
+        return sourceSampleService.openMyGetSampleFloatStream(metadata, begin, end, limit);
     }
 
     /**
@@ -301,13 +300,16 @@ public abstract class DataNexus {
      * Generally you'll want to use try-with-resources around a call to this
      * method to ensure you close the stream properly.
      *
-     * @param params The IntervalQueryParams
+     * @param metadata The metadata
+     * @param begin The begin timestamp (inclusive)
+     * @param stepMilliseconds The milliseconds between bins
+     * @param sampleCount The number of samples
      * @return A new EventStream
      * @throws SQLException If unable to query the database
      */
-    public EventStream<FloatEvent> openMySamplerStream(MySamplerParams params) throws
+    public EventStream<FloatEvent> openMySamplerStream(Metadata<FloatEvent> metadata, Instant begin, long stepMilliseconds, long sampleCount) throws
             SQLException {
-        return sourceSampleService.openMySamplerFloatStream(params);
+        return sourceSampleService.openMySamplerFloatStream(metadata, begin, stepMilliseconds, sampleCount);
     }
 
     /**

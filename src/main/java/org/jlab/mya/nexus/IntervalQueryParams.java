@@ -1,11 +1,9 @@
-package org.jlab.mya.params;
+package org.jlab.mya.nexus;
 
 import java.time.Instant;
 
 import org.jlab.mya.Event;
 import org.jlab.mya.Metadata;
-import org.jlab.mya.QueryParams;
-import org.jlab.mya.nexus.DataNexus;
 
 /**
  * The parameters required to query for events in an interval with an inclusive
@@ -13,7 +11,7 @@ import org.jlab.mya.nexus.DataNexus;
  *
  * @author slominskir
  */
-public class IntervalQueryParams<T extends Event> extends QueryParams<T> {
+class IntervalQueryParams<T extends Event> extends QueryParams<T> {
 
     private final Instant begin;
     private final Instant end;

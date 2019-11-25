@@ -1,18 +1,13 @@
-package org.jlab.mya.service;
+package org.jlab.mya.nexus;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jlab.mya.EventStream;
-import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.params.MyGetSampleParams;
-import org.jlab.mya.params.MySamplerParams;
-import org.jlab.mya.stream.FloatEventStream;
 
 import static org.junit.Assert.assertEquals;
 
@@ -50,12 +45,10 @@ public class SourceSamplingServiceTest {
         int fractionalDigits = 6; // microseconds; seems to be max precision of myget
 
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
-        MyGetSampleParams<FloatEvent> params = new MyGetSampleParams<>(metadata, begin,
-                end, limit);
 
         long expSize = 24; // We limit to 24, but we know historical data only has 21
         List<FloatEvent> eventList = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = nexus.openMyGetSampleStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openMyGetSampleStream(metadata, begin, end, limit)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
@@ -82,12 +75,10 @@ public class SourceSamplingServiceTest {
         long sampleCount = 24;
 
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
-        MySamplerParams<FloatEvent> params = new MySamplerParams<>(metadata, begin,
-                stepMilliseconds, sampleCount);
 
         long expSize = 24;
         List<FloatEvent> eventList = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = nexus.openMySamplerStream(params)) {
+        try (EventStream<FloatEvent> stream = nexus.openMySamplerStream(metadata, begin, stepMilliseconds, sampleCount)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);

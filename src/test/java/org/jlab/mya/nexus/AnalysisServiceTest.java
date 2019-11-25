@@ -1,4 +1,4 @@
-package org.jlab.mya.service;
+package org.jlab.mya.nexus;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -9,15 +9,11 @@ import java.time.ZoneId;
 
 import org.jlab.mya.EventStream;
 import org.jlab.mya.event.AnalyzedFloatEvent;
-import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.Metadata;
-import org.jlab.mya.analysis.RunningStatistics;
+import org.jlab.mya.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.params.PointQueryParams;
-import org.jlab.mya.stream.wrapped.BoundaryAwareStream;
-import org.jlab.mya.stream.wrapped.FloatAnalysisStream;
+import org.jlab.mya.stream.BoundaryAwareStream;
+import org.jlab.mya.stream.FloatAnalysisStream;
 import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;

@@ -1,9 +1,8 @@
-package org.jlab.mya.stream.wrapped;
+package org.jlab.mya.stream;
 
 import org.jlab.mya.EventCode;
 import org.jlab.mya.EventStream;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.params.GraphicalEventBinSamplerParams;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +11,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
- * Wraps a FloatEventStream and provides FloatEvents that are down-sampled as they stream by using an algorithm
+ * Wraps a EventStream and provides FloatEvents that are down-sampled as they stream by using an algorithm
  * which attempts to maintain graphical fidelity of the data.
  * <p>
  * This stream reads the full dataset from the database and returns a subset (performs application layer filtering).
@@ -52,7 +51,7 @@ import java.util.Queue;
  * @author apcarp
  * @author slominskir
  */
-public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends WrappedStream<T, T> {
+public class FloatGraphicalSampleStream<T extends FloatEvent> extends WrappedStream<T, T> {
 
     private final long binSize;
     private final Queue<T> queue = new PriorityQueue<>();
@@ -70,10 +69,11 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
      * Create a new FloatGraphicalEventBinSampleStream by wrapping a FloatEventStream.
      *
      * @param stream The FloatEventStream to wrap
-     * @param params The GraphicalEventBinSampleParams
+     * @param numBins The number of bins
+     * @param count The total number of events
      * @param type The type
      */
-    public FloatGraphicalEventBinSampleStream(EventStream<T> stream, GraphicalEventBinSamplerParams params, Class<T> type) {
+    public FloatGraphicalSampleStream(EventStream<T> stream, long numBins, long count, Class<T> type) {
         super(stream, type);
 
         // 10 years of nanos starts to approach the range of overflow concerns.  Millis will be good enough to split on.
@@ -81,7 +81,7 @@ public class FloatGraphicalEventBinSampleStream<T extends FloatEvent> extends Wr
         // The user request numBins.  The first and last point/bin get consumed by the first and last point so the -2s.
         // Then, we may not have enough points to fill all bins exactly, so use ceiling to ensure that bins are the proper size
         // for numBins - 2 to hold count - 2 without adding extra bins.
-        binSize = (long) (Math.ceil(((double) params.getCount() - 2) / (params.getNumBins() - 2)));
+        binSize = (long) (Math.ceil(((double) count - 2) / (numBins - 2)));
     }
 
     /**

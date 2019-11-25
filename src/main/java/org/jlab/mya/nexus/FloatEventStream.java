@@ -1,11 +1,10 @@
-package org.jlab.mya.stream;
+package org.jlab.mya.nexus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.event.FloatEvent;
 
 /**
@@ -13,7 +12,7 @@ import org.jlab.mya.event.FloatEvent;
  * 
  * @author slominskir
  */
-public class FloatEventStream extends DatabaseSourceStream<FloatEvent> {
+class FloatEventStream extends DatabaseSourceStream<FloatEvent> {
 
     /**
      * Create a new FloatEventStream.

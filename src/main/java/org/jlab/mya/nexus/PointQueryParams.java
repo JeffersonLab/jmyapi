@@ -1,17 +1,16 @@
-package org.jlab.mya.params;
+package org.jlab.mya.nexus;
 
 import java.time.Instant;
 
 import org.jlab.mya.Event;
 import org.jlab.mya.Metadata;
-import org.jlab.mya.QueryParams;
 
 /**
  * The parameters required to query for a single event near a point in time.
  *
  * @author slominskir
  */
-public class PointQueryParams<T extends Event> extends QueryParams<T> {
+class PointQueryParams<T extends Event> extends QueryParams<T> {
 
     private final Instant timestamp;
     private final boolean lessThan;

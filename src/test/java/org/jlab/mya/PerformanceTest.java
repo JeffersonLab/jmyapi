@@ -1,19 +1,16 @@
 package org.jlab.mya;
 
-import org.jlab.mya.analysis.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.params.GraphicalEventBinSamplerParams;
 
 import java.io.IOException;
 import java.sql.SQLException;
 import java.time.Instant;
 
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.stream.wrapped.BoundaryAwareStream;
-import org.jlab.mya.stream.wrapped.FloatAnalysisStream;
-import org.jlab.mya.stream.wrapped.FloatGraphicalEventBinSampleStream;
+import org.jlab.mya.stream.BoundaryAwareStream;
+import org.jlab.mya.stream.FloatAnalysisStream;
+import org.jlab.mya.stream.FloatGraphicalSampleStream;
 import org.junit.Test;
 
 /**
@@ -133,7 +130,7 @@ public class PerformanceTest {
 
         try (
                 final EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end);
-                final FloatGraphicalEventBinSampleStream<FloatEvent> samplerStream = new FloatGraphicalEventBinSampleStream<>(stream, new GraphicalEventBinSamplerParams(3, count), FloatEvent.class);
+                final FloatGraphicalSampleStream<FloatEvent> samplerStream = new FloatGraphicalSampleStream<>(stream, 3, count, FloatEvent.class);
         ) {
 
             FloatEvent event;

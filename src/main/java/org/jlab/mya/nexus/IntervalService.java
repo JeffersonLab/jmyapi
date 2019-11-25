@@ -8,10 +8,6 @@ import java.sql.SQLException;
 import org.jlab.mya.*;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.stream.FloatEventStream;
-import org.jlab.mya.stream.IntEventStream;
-import org.jlab.mya.stream.MultiStringEventStream;
 
 /**
  * Provides query access to the Mya database for a set of events in a given time

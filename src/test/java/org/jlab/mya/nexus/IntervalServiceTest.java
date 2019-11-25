@@ -1,13 +1,10 @@
-package org.jlab.mya.service;
+package org.jlab.mya.nexus;
 
-import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.MultiStringEvent;
-import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.params.IntervalQueryParams;
 
 import java.sql.SQLException;
 import java.time.Instant;

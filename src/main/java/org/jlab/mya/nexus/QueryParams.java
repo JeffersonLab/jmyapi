@@ -1,4 +1,7 @@
-package org.jlab.mya;
+package org.jlab.mya.nexus;
+
+import org.jlab.mya.Event;
+import org.jlab.mya.Metadata;
 
 /**
  * The parameters required to query for events. The PV Metadata is an essential
@@ -7,7 +10,7 @@ package org.jlab.mya;
  *
  * @author slominskir
  */
-public abstract class QueryParams<T extends Event> {
+abstract class QueryParams<T extends Event> {
 
     private final Metadata<T> metadata;
     private final boolean updatesOnly;

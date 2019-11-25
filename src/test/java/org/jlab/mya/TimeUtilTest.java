@@ -5,7 +5,6 @@ import java.time.Instant;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.params.IntervalQueryParams;
 import org.junit.*;
 
 import static org.junit.Assert.*;

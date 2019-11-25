@@ -1,4 +1,4 @@
-package org.jlab.mya.analysis;
+package org.jlab.mya;
 
 import org.jlab.mya.EventCode;
 import org.jlab.mya.event.FloatEvent;

@@ -1,16 +1,11 @@
-package org.jlab.mya.stream.wrapped;
+package org.jlab.mya.stream;
 
 import org.jlab.mya.*;
-import org.jlab.mya.analysis.RunningStatistics;
+import org.jlab.mya.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.params.GraphicalEventBinSamplerParams;
-import org.jlab.mya.params.IntervalQueryParams;
-import org.jlab.mya.params.PointQueryParams;
-import org.jlab.mya.params.SimpleEventBinSamplerParams;
-import org.jlab.mya.stream.ListStream;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,12 +49,10 @@ public class ApplicationLevelSamplingTest {
 
         //System.out.println("count: " + count);
 
-        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(limit, count);
-
         long expSize = 10; // Not sure it will always be exact, might be +/- 1 in some combinations of count and limit
         List<FloatEvent> eventList = new ArrayList<>();
         try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
-            FloatSimpleEventBinSampleStream<FloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(stream, samplerParams, FloatEvent.class);
+            FloatSimpleSampleStream<FloatEvent> sampleStream = new FloatSimpleSampleStream<>(stream, limit, count, FloatEvent.class);
             FloatEvent event;
             while ((event = sampleStream.read()) != null) {
                 eventList.add(event);
@@ -115,8 +108,6 @@ public class ApplicationLevelSamplingTest {
 
         System.out.println("count (excluding boundaries): " + count);
 
-        SimpleEventBinSamplerParams samplerParams = new SimpleEventBinSamplerParams(limit, count);
-
         short[] eventStatsMap = new short[]{RunningStatistics.INTEGRATION};
 
         long expSize = 12;
@@ -127,7 +118,7 @@ public class ApplicationLevelSamplingTest {
                 final EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end);
                 final BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class);
                 final FloatAnalysisStream analysisStream = new FloatAnalysisStream(boundaryStream, eventStatsMap);
-                final FloatSimpleEventBinSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleEventBinSampleStream<>(analysisStream, samplerParams, AnalyzedFloatEvent.class);
+                final FloatSimpleSampleStream<AnalyzedFloatEvent> sampleStream = new FloatSimpleSampleStream<>(analysisStream, limit, count, AnalyzedFloatEvent.class);
         ) {
             AnalyzedFloatEvent event;
 
@@ -176,8 +167,6 @@ public class ApplicationLevelSamplingTest {
 
         System.out.println("count: " + count);
 
-        GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(numBins, count);
-
         // Impossible to know how many data points will be generated a priori since every disconnect will be represented.
         // The expected size gets complicated to predict.  Number of actual bins is a complicated calculation based on determining
         // the smallest bin size that produces no more than numBins-2.  Then each bin can produce min, max, and largest triangle three bucket (lttb) point
@@ -187,7 +176,7 @@ public class ApplicationLevelSamplingTest {
 
         List<FloatEvent> eventList = new ArrayList<>();
         try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
-            try (FloatGraphicalEventBinSampleStream<FloatEvent> sampleStream = new FloatGraphicalEventBinSampleStream<>(stream, samplerParams, FloatEvent.class)) {
+            try (FloatGraphicalSampleStream<FloatEvent> sampleStream = new FloatGraphicalSampleStream<>(stream, numBins, count, FloatEvent.class)) {
                 FloatEvent event;
                 while ((event = sampleStream.read()) != null) {
                     eventList.add(event);
@@ -228,13 +217,11 @@ public class ApplicationLevelSamplingTest {
 
         System.out.println("count: " + count);
 
-        GraphicalEventBinSamplerParams samplerParams = new GraphicalEventBinSamplerParams(numBins, count);
-
         long expSize = 10;
 
         List<FloatEvent> eventList = new ArrayList<>();
         try (EventStream<FloatEvent> stream = new ListStream<>(events, FloatEvent.class)) {
-            try (FloatGraphicalEventBinSampleStream<FloatEvent> sampleStream = new FloatGraphicalEventBinSampleStream<>(stream, samplerParams, FloatEvent.class)) {
+            try (FloatGraphicalSampleStream<FloatEvent> sampleStream = new FloatGraphicalSampleStream<>(stream, numBins, count, FloatEvent.class)) {
                 FloatEvent event;
                 while ((event = sampleStream.read()) != null) {
                     eventList.add(event);

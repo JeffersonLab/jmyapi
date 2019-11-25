@@ -1,4 +1,4 @@
-package org.jlab.mya.stream;
+package org.jlab.mya.nexus;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -9,7 +9,6 @@ import java.time.Instant;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.params.MySamplerParams;
 
 /**
  * EventStream for the MySampler algorithm.
@@ -18,9 +17,11 @@ import org.jlab.mya.params.MySamplerParams;
  * 
  * @author slominskir
  */
-public class MySamplerFloatEventStream extends FloatEventStream {
-
-    private final MySamplerParams basicParams;
+class MySamplerFloatEventStream extends FloatEventStream {
+    
+    private Instant begin;
+    private long stepMilliseconds;
+    private long sampleCount;
 
     private long sampleCursor = 0;
 
@@ -31,17 +32,20 @@ public class MySamplerFloatEventStream extends FloatEventStream {
      * @param con The database connection
      * @param stmt The database statement
      */
-    public MySamplerFloatEventStream(MySamplerParams params, Connection con,
+    public MySamplerFloatEventStream(IntervalQueryParams params, long stepMilliseconds, long sampleCount,
+                                     Connection con,
                                      PreparedStatement stmt) {
         super(params, con, stmt, null);
-        this.basicParams = params;
+        this.stepMilliseconds = stepMilliseconds;
+        this.sampleCount = sampleCount;
+        begin = params.getBegin();
     }
 
     @Override
     public FloatEvent read() throws IOException {
         try {
             if (isOpen()) {
-                Instant start = basicParams.getBegin().plusMillis(basicParams.getStepMilliseconds()
+                Instant start = begin.plusMillis(stepMilliseconds
                         * sampleCursor);
                 //Instant stop = start.plusMillis(basicParams.getStepMilliseconds());
                 stmt.setLong(1, TimeUtil.toMyaTimestamp(start));
@@ -78,6 +82,6 @@ public class MySamplerFloatEventStream extends FloatEventStream {
 
     @Override
     public boolean isOpen() {
-        return sampleCursor < basicParams.getSampleCount();
+        return sampleCursor < sampleCount;
     }
 }

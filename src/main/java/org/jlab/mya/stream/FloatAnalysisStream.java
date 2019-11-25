@@ -1,8 +1,8 @@
-package org.jlab.mya.stream.wrapped;
+package org.jlab.mya.stream;
 
 import org.jlab.mya.EventCode;
 import org.jlab.mya.EventStream;
-import org.jlab.mya.analysis.RunningStatistics;
+import org.jlab.mya.RunningStatistics;
 import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.event.FloatEvent;
 

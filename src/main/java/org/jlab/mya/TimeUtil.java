@@ -5,21 +5,25 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 /**
- * Utility methods for conversion between Mya's database time format and Java's
+ * Utility methods for time including conversion between Mya's database time format and Java's
  * native Instant.
  *
+ * <p>
  * Mya stores each timestamp in the database as a 64-bit field where the top
  * half of the field is UNIX time and the bottom half is fractional seconds.
- *
+ * </p>
+ * <p>
  * The fractional seconds are not something straight forward like the number of
  * nano-seconds. Instead they are treated similar to how NTP handles fractional
  * seconds: 1 second = 1 / 2^32 fractional seconds.
- *
+ * </p>
+ * <p>
  * Fractional seconds (floating point) stored in 32 bits cannot always be
  * converted to nanoseconds (integer) and back again to fractional seconds such
  * that the number you start with is the same as the one you end with. The C++
  * API uses a max precision of microseconds, but even then may not guarantee
  * invertability.
+ * </p>
  *
  * @author slominskir, adamc
  */

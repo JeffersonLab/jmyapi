@@ -1,4 +1,4 @@
-package org.jlab.mya.stream.wrapped;
+package org.jlab.mya.stream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ class FloatEventBucket<T extends FloatEvent> {
      * Instantiate a FloatEventBucket object
      * @param events A list of FloatEvents to be represented in this bucket
      */
-    public FloatEventBucket (List<T> events) {
+    FloatEventBucket (List<T> events) {
         if (events == null || events.isEmpty()) {
             throw new IllegalArgumentException("FloatEventBucket requires non-null, non-empty list of events.");
         }

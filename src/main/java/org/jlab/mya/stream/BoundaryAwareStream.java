@@ -1,4 +1,4 @@
-package org.jlab.mya.stream.wrapped;
+package org.jlab.mya.stream;
 
 import org.jlab.mya.Event;
 import org.jlab.mya.EventCode;

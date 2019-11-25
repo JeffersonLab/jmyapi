@@ -1,15 +1,14 @@
-package org.jlab.mya.stream.wrapped;
+package org.jlab.mya.stream;
 
 import org.jlab.mya.EventStream;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.params.SimpleEventBinSamplerParams;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * Wraps a FloatEventStream and provides FloatEvents that are down-sampled as they stream by using a simple
+ * Wraps a EventStream and provides FloatEvents that are down-sampled as they stream by using a simple
  * algorithm.
  * <p>
  * This stream reads the full dataset from the database and returns a subset (performs application layer filtering).
@@ -37,7 +36,7 @@ import java.math.RoundingMode;
  * </p>
  * @author slominskir
  */
-public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends WrappedStream<T, T> {
+public class FloatSimpleSampleStream<T extends FloatEvent> extends WrappedStream<T, T> {
 
     private final long binSize;
     private final BigDecimal fractional;
@@ -47,16 +46,17 @@ public class FloatSimpleEventBinSampleStream<T extends FloatEvent> extends Wrapp
      * Create a new FloatSimpleEventBinStream by wrapping a FloatEventStream.
      *
      * @param stream The FloatEventStream to wrap
-     * @param params The SimpleEventBinSamplerParams
+     * @param limit The number of bins
+     * @param count The total number of events
      * @param type The type
      */
-    public FloatSimpleEventBinSampleStream(EventStream<T> stream, SimpleEventBinSamplerParams params, Class<T> type) {
+    public FloatSimpleSampleStream(EventStream<T> stream, long limit, long count, Class<T> type) {
         super(stream, type);
 
-        if (params.getCount() > params.getLimit() && params.getLimit() > 0) {
-            this.binSize = params.getCount() / params.getLimit();
-            this.fractional = BigDecimal.valueOf((params.getCount() % params.getLimit())
-                    / (double) params.getLimit());
+        if (count > limit && limit > 0) {
+            this.binSize = count / limit;
+            this.fractional = BigDecimal.valueOf((count % limit)
+                    / (double) limit);
         } else {
             this.binSize = 1;
             this.fractional = BigDecimal.ZERO;

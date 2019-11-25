@@ -1,4 +1,4 @@
-package org.jlab.mya.stream.wrapped;
+package org.jlab.mya.stream;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -9,6 +9,7 @@ import java.util.TreeSet;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.stream.FloatEventBucket;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

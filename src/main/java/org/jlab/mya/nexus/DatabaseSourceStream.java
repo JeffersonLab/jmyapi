@@ -1,8 +1,7 @@
-package org.jlab.mya.stream;
+package org.jlab.mya.nexus;
 
 import org.jlab.mya.Event;
 import org.jlab.mya.EventStream;
-import org.jlab.mya.QueryParams;
 
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;

@@ -1,11 +1,10 @@
-package org.jlab.mya.stream;
+package org.jlab.mya.nexus;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.jlab.mya.params.IntervalQueryParams;
 import org.jlab.mya.event.IntEvent;
 
 /**
@@ -13,7 +12,7 @@ import org.jlab.mya.event.IntEvent;
  * 
  * @author slominskir
  */
-public class IntEventStream extends DatabaseSourceStream<IntEvent> {
+class IntEventStream extends DatabaseSourceStream<IntEvent> {
 
     /**
      * Create a new IntEventStream.

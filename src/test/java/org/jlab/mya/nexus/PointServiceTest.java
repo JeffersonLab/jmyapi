@@ -1,18 +1,15 @@
-package org.jlab.mya.service;
+package org.jlab.mya.nexus;
 
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.EventCode;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;
-import org.jlab.mya.nexus.OnDemandNexus;
-import org.jlab.mya.params.PointQueryParams;
 import org.junit.*;
 
 import static org.junit.Assert.*;

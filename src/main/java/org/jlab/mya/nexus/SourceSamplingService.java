@@ -5,12 +5,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 
+import org.jlab.mya.EventStream;
+import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
-import org.jlab.mya.params.MyGetSampleParams;
-import org.jlab.mya.params.MySamplerParams;
-import org.jlab.mya.stream.FloatEventStream;
-import org.jlab.mya.stream.MySamplerFloatEventStream;
+import org.jlab.mya.event.FloatEvent;
 
 /**
  * Provides query access to the Mya database for a set of source (in-database) sampled events in a
@@ -57,15 +57,17 @@ class SourceSamplingService extends QueryService {
      *
      * Note: Implemented using a database stored procedure.
      *
-     * @param params The IntervalQueryParams
+     * @param metadata The metadata
+     * @param begin The begin timestamp (inclusive)
+     * @param end The end timestamp (exclusive)
+     * @param limit The max number of bins
      * @return A new FloatEventStream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openMyGetSampleFloatStream(MyGetSampleParams params) throws
+    public EventStream<FloatEvent> openMyGetSampleFloatStream(Metadata<FloatEvent> metadata, Instant begin, Instant end, long limit) throws
             SQLException {
-        long maxPoints = params.getLimit();
 
-        String host = params.getMetadata().getHost();
+        String host = metadata.getHost();
         Connection con = nexus.getConnection(host);
 
         // Note: If we wanted the statement to be reused we would need to move it to DataNexus to allow implementations the opportunity to cache.
@@ -76,10 +78,10 @@ class SourceSamplingService extends QueryService {
         String query = "{call Sample(?, ?, ?, ?, ?)}";
         CallableStatement stmtA = con.prepareCall(query);
 
-        stmtA.setString(1, "table_" + params.getMetadata().getId());
-        stmtA.setLong(2, maxPoints);
-        stmtA.setLong(3, TimeUtil.toMyaTimestamp(params.getBegin()));
-        stmtA.setLong(4, TimeUtil.toMyaTimestamp(params.getEnd()));
+        stmtA.setString(1, "table_" + metadata.getId());
+        stmtA.setLong(2, limit);
+        stmtA.setLong(3, TimeUtil.toMyaTimestamp(begin));
+        stmtA.setLong(4, TimeUtil.toMyaTimestamp(end));
         stmtA.setInt(5, 0); // if zero then don't return anything.   If non-zero then return result set and clean up temporary table.  We're currently do this the hard way by not returning result set...
         stmtA.execute();
         stmtA.close();
@@ -90,7 +92,8 @@ class SourceSamplingService extends QueryService {
 
         // Note: We do not do anything with stmtC ... can't delete tmp table until results are consumed.... however closing connection will delete automatically for now....
         //query = "drop temporary table if exists table_x";
-        //PreparedStatement stmtC = con.prepareStatement(query);        
+        //PreparedStatement stmtC = con.prepareStatement(query);
+        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
         return new FloatEventStream(params, con, stmtB, rs);
     }
 
@@ -104,19 +107,23 @@ class SourceSamplingService extends QueryService {
      * Generally you'll want to use try-with-resources around a call to this
      * method to ensure you close the stream properly.
      *
-     * @param params The IntervalQueryParams
+     * @param metadata The metadata
+     * @param begin The begin timestamp (inclusive)
+     * @param stepMilliseconds The milliseconds between bins
+     * @param sampleCount The number of samples
      * @return A new FloatEventStream
      * @throws SQLException If unable to query the database
      */
-    public FloatEventStream openMySamplerFloatStream(MySamplerParams params) throws
+    public EventStream<FloatEvent> openMySamplerFloatStream(Metadata<FloatEvent> metadata, Instant begin, long stepMilliseconds, long sampleCount) throws
             SQLException {
-        String host = params.getMetadata().getHost();
+        String host = metadata.getHost();
         Connection con = nexus.getConnection(host);
-        String query = "select * from table_" + params.getMetadata().getId()
+        String query = "select * from table_" + metadata.getId()
                 + " force index for order by (primary) where time <= ? order by time desc limit 1";
         PreparedStatement stmt = con.prepareStatement(query);
 
-        return new MySamplerFloatEventStream(params, con, stmt);
+        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, begin.plusMillis(stepMilliseconds * sampleCount));
+        return new MySamplerFloatEventStream(params, stepMilliseconds, sampleCount, con, stmt);
 
     }
 }
