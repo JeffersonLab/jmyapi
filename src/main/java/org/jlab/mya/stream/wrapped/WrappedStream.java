@@ -6,7 +6,7 @@ import org.jlab.mya.Event;
 import org.jlab.mya.EventStream;
 
 /**
- * Adaptor for classes wishing to wrap an EventStream. The Event Type may be
+ * An EventStream that wraps another EventStream. The Event Type may be
  * different between the outer and inner streams.
  *
  * @author slominskir
