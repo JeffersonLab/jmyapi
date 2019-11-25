@@ -1,6 +1,6 @@
 package org.jlab.mya.nexus;
 
-import org.jlab.mya.EventStream;
+import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;

@@ -2,8 +2,7 @@ package org.jlab.mya.stream;
 
 import java.io.IOException;
 
-import org.jlab.mya.Event;
-import org.jlab.mya.EventStream;
+import org.jlab.mya.event.Event;
 
 /**
  * An EventStream that wraps another EventStream. The Event Type may be

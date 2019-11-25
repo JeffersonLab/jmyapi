@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 
-import org.jlab.mya.EventStream;
+import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.RunningStatistics;

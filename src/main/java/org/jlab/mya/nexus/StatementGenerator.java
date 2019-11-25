@@ -1,6 +1,6 @@
 package org.jlab.mya.nexus;
 
-import org.jlab.mya.EventCode;
+import org.jlab.mya.event.EventCode;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

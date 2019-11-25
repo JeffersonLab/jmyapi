@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 
-import org.jlab.mya.EventStream;
+import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;

@@ -2,6 +2,7 @@ package org.jlab.mya.stream;
 
 import org.jlab.mya.*;
 import org.jlab.mya.RunningStatistics;
+import org.jlab.mya.event.EventCode;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.nexus.DataNexus;

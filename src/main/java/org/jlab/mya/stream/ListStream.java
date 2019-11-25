@@ -1,7 +1,6 @@
 package org.jlab.mya.stream;
 
-import org.jlab.mya.Event;
-import org.jlab.mya.EventStream;
+import org.jlab.mya.event.Event;
 
 import java.nio.channels.ClosedChannelException;
 import java.util.List;

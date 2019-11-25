@@ -9,6 +9,7 @@ import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.LabeledEnumEvent;
 import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.stream.LabeledEnumStream;
 import org.junit.Test;
 

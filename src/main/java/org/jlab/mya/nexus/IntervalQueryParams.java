@@ -2,7 +2,7 @@ package org.jlab.mya.nexus;
 
 import java.time.Instant;
 
-import org.jlab.mya.Event;
+import org.jlab.mya.event.Event;
 import org.jlab.mya.Metadata;
 
 /**

@@ -1,4 +1,6 @@
-package org.jlab.mya;
+package org.jlab.mya.event;
+
+import org.jlab.mya.TimeUtil;
 
 import java.time.Instant;
 

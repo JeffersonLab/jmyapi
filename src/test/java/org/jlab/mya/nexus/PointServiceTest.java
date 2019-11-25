@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
-import org.jlab.mya.EventCode;
+import org.jlab.mya.event.EventCode;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;

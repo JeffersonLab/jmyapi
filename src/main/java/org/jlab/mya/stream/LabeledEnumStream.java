@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jlab.mya.EventStream;
 import org.jlab.mya.ExtraInfo;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.LabeledEnumEvent;

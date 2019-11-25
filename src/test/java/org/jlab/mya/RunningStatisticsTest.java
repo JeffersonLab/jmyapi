@@ -5,8 +5,7 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneOffset;
 
-import org.jlab.mya.EventCode;
-import org.jlab.mya.RunningStatistics;
+import org.jlab.mya.event.EventCode;
 import org.jlab.mya.event.FloatEvent;
 import org.junit.Test;
 import static org.junit.Assert.*;

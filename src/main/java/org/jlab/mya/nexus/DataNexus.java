@@ -1,7 +1,9 @@
 package org.jlab.mya.nexus;
 
 import org.jlab.mya.*;
+import org.jlab.mya.event.Event;
 import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.stream.EventStream;
 
 import java.io.IOException;
 import java.io.InputStream;

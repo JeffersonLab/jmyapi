@@ -1,11 +1,8 @@
 package org.jlab.mya.stream;
 
-import org.jlab.mya.EventCode;
-import org.jlab.mya.EventStream;
+import org.jlab.mya.event.EventCode;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.stream.BoundaryAwareStream;
-import org.jlab.mya.stream.ListStream;
 import org.junit.Test;
 
 import java.time.Instant;

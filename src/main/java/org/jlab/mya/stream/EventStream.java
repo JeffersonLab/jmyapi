@@ -1,4 +1,6 @@
-package org.jlab.mya;
+package org.jlab.mya.stream;
+
+import org.jlab.mya.event.Event;
 
 import java.io.IOException;
 import java.nio.channels.Channel;

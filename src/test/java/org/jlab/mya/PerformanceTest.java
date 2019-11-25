@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 
 import org.jlab.mya.stream.BoundaryAwareStream;
+import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.stream.FloatAnalysisStream;
 import org.jlab.mya.stream.FloatGraphicalSampleStream;
 import org.junit.Test;

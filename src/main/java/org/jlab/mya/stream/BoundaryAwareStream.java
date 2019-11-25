@@ -1,8 +1,7 @@
 package org.jlab.mya.stream;
 
-import org.jlab.mya.Event;
-import org.jlab.mya.EventCode;
-import org.jlab.mya.EventStream;
+import org.jlab.mya.event.Event;
+import org.jlab.mya.event.EventCode;
 
 import java.io.IOException;
 import java.time.Instant;

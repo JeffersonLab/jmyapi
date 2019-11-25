@@ -1,9 +1,7 @@
 package org.jlab.mya.nexus;
 
 import org.jlab.mya.*;
-import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.event.IntEvent;
-import org.jlab.mya.event.MultiStringEvent;
+import org.jlab.mya.event.*;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

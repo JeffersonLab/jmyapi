@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
-import org.jlab.mya.EventCode;
+import org.jlab.mya.event.EventCode;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 
@@ -18,7 +18,7 @@ import org.jlab.mya.event.FloatEvent;
  * @author slominskir
  */
 class MySamplerFloatEventStream extends FloatEventStream {
-    
+
     private Instant begin;
     private long stepMilliseconds;
     private long sampleCount;

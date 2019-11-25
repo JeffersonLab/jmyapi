@@ -6,10 +6,9 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.jlab.mya.EventCode;
+import org.jlab.mya.event.EventCode;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
-import org.jlab.mya.stream.FloatEventBucket;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

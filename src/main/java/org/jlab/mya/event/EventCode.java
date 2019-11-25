@@ -1,4 +1,4 @@
-package org.jlab.mya;
+package org.jlab.mya.event;
 
 /**
  * Mya event codes. There are two types of events: updates and informational.

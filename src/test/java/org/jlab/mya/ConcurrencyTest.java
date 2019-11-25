@@ -3,6 +3,7 @@ package org.jlab.mya;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.stream.EventStream;
 
 import java.io.IOException;
 import java.sql.SQLException;

@@ -1,12 +1,9 @@
 package org.jlab.mya.event;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import org.jlab.mya.Event;
-import org.jlab.mya.EventCode;
+
 import org.jlab.mya.TimeUtil;
 
 /**

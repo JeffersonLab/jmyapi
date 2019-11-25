@@ -1,11 +1,6 @@
 package org.jlab.mya.event;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Instant;
-import org.jlab.mya.Event;
-import org.jlab.mya.EventCode;
-import org.jlab.mya.TimeUtil;
 
 /**
  * Represents a Mya history event for a PV that is vector in nature (regardless

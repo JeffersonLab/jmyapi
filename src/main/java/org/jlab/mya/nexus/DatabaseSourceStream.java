@@ -1,7 +1,7 @@
 package org.jlab.mya.nexus;
 
-import org.jlab.mya.Event;
-import org.jlab.mya.EventStream;
+import org.jlab.mya.event.Event;
+import org.jlab.mya.stream.EventStream;
 
 import java.io.IOException;
 import java.nio.channels.ClosedChannelException;

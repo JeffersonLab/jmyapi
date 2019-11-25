@@ -1,5 +1,7 @@
 package org.jlab.mya;
 
+import org.jlab.mya.event.Event;
+
 /**
  * The metadata associated with an EPICS PV. The metadata is the "key" required to query for events
  * since it reveals what host to query and what underlying ID to query.

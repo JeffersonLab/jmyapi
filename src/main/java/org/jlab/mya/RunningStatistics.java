@@ -1,6 +1,6 @@
 package org.jlab.mya;
 
-import org.jlab.mya.EventCode;
+import org.jlab.mya.event.EventCode;
 import org.jlab.mya.event.FloatEvent;
 
 /**

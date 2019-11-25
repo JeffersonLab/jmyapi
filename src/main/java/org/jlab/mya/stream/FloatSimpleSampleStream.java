@@ -1,6 +1,5 @@
 package org.jlab.mya.stream;
 
-import org.jlab.mya.EventStream;
 import org.jlab.mya.event.FloatEvent;
 
 import java.io.IOException;

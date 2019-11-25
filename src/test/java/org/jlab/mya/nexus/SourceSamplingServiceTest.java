@@ -4,7 +4,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jlab.mya.EventStream;
+import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
