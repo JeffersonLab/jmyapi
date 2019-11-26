@@ -1,7 +1,7 @@
 # jmyapi
 A Java client query API library for MYA (JLab's EPICS Archiver).  
 
-If you are looking for a quick and easy way to obtain Archiver data see: [myquery](https://github.com/JeffersonLab/myquery), which is built using this API.
+If you are looking for a quick and easy way to obtain Archiver data see: [Public MYA Web Service](https://epicsweb.jlab.org/myquery/), which is built using this API plus [myquery](https://github.com/JeffersonLab/myquery).
 
 ## Automated Install
 Use Gradle to download dependencies:
