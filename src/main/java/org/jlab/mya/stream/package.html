@@ -19,7 +19,7 @@
         short[] eventStatsMap = new short[]{RunningStatistics.INTEGRATION};
 
         try (
-                // Get Interval of FloatEvents
+                // Get stream of FloatEvents
                 final EventStream&lt;FloatEvent&gt; stream = nexus.openEventStream(metadata, begin, end);
 
                 // Ensure points exist on the interval boundaries
