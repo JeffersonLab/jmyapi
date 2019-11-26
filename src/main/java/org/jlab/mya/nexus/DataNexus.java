@@ -315,9 +315,33 @@ public abstract class DataNexus {
     }
 
     /**
-     * The fetch strategy.
+     * The fetch strategy for obtaining records from the database.  See the JUnit tests which show STREAM is generally
+     * the correct choice and conditionally choosing between them based on record count likely isn't worth your time.
      */
     public enum IntervalQueryFetchStrategy {
-        ALL, STREAM, CHUNK
+        /**
+         * Fetch all records into memory at once.  Not recommended for large data sets as you may encounter an
+         * OutOfMemoryException.   May have slightly faster throughput for small datasets.  High latency for large
+         * datasets (must wait for all records to transferred before ResultSet can be iterated).
+         */
+        ALL,
+        /**
+         * Fetch records in chunks (batches).  This is implemented via a MySQL server-side database cache.  The database
+         * creates a temporary table and then provides a database cursor for
+         * the client to request batches of records (currently 4096 at a time).  This turns out to be generally the
+         * least desirable strategy inheriting the worst of the other approaches: you are penalized with the latency
+         * penalty of waiting for a database server-side temporary table to be filled entirely, plus memory pressure is
+         * simply transferred from the client to the database server, which generally is a worse place to shift it
+         * scalability-wise.  Also the database must hold the cursor resource open for an unspecified amount of time
+         * while the client does the processing.
+         */
+        CHUNK,
+        /**
+         * Default jmyapi fetch strategy in which records are streamed one at a time to use the least amount of memory.
+         * This approach has the best performance with large datasets as record processing can begin as soon as the
+         * first record arrives (low latency) and the risk of an OutOfMemoryException is low.  In practice some
+         * buffering may occur via the MySQL database driver to minimize round-trip overhead.
+         */
+        STREAM
     }
 }
