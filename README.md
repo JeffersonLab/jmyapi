@@ -15,7 +15,7 @@ __Note__: [JLab Proxy Settings](https://github.com/JeffersonLab/jmyapi/wiki/JLab
 
 __Note__: A copy of the deployments.properties file is stored in our internal ACE git repo under project __javacfg__.  Ideally we use a better strategy in the future such as Puppet to orchestrate deployments, or store it in a repository like Artifactory.
 
-## API
+## API (with Examples)
 [javadocs](https://jeffersonlab.github.io/jmyapi/)   
 
 ## Publishing Releases
