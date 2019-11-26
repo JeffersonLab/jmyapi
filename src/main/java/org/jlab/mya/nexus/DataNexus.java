@@ -321,7 +321,7 @@ public abstract class DataNexus {
     public enum IntervalQueryFetchStrategy {
         /**
          * Fetch all records into memory at once.  Not recommended for large data sets as you may encounter an
-         * OutOfMemoryException.   May have slightly faster throughput for small datasets.  High latency for large
+         * OutOfMemoryError.   May have slightly faster throughput for small datasets.  High latency for large
          * datasets (must wait for all records to transferred before ResultSet can be iterated).
          */
         ALL,
@@ -339,7 +339,7 @@ public abstract class DataNexus {
         /**
          * Default jmyapi fetch strategy in which records are streamed one at a time to use the least amount of memory.
          * This approach has the best performance with large datasets as record processing can begin as soon as the
-         * first record arrives (low latency) and the risk of an OutOfMemoryException is low.  In practice some
+         * first record arrives (low latency) and the risk of an OutOfMemoryError is low.  In practice some
          * buffering may occur via the MySQL database driver to minimize round-trip overhead.
          */
         STREAM
