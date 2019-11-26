@@ -30,6 +30,7 @@ Then execute:
 gradlew artifactoryPublish
 ```
 ## See Also
+   - [myquery](https://github.com/JeffersonLab/myquery)
    - [Download](https://github.com/JeffersonLab/jmyapi/releases)    
    - [MYAPI DOCS (Internal)](http://devweb.acc.jlab.org/controls_web/certified/myapi/)
    - [trippy](https://github.com/JeffersonLab/trippy)
