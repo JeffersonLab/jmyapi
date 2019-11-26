@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 /**
- * Wraps a EventStream and provides FloatEvents that are down-sampled as they stream by using a simple
+ * Wraps an EventStream and provides FloatEvents that are down-sampled as they stream by using a simple
  * algorithm.
  * <p>
  * This stream reads the full dataset from the database and returns a subset (performs application layer filtering).

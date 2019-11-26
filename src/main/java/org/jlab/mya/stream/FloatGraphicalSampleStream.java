@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 
 /**
- * Wraps a EventStream and provides FloatEvents that are down-sampled as they stream by using an algorithm
+ * Wraps an EventStream and provides FloatEvents that are down-sampled as they stream by using an algorithm
  * which attempts to maintain graphical fidelity of the data.
  * <p>
  * This stream reads the full dataset from the database and returns a subset (performs application layer filtering).
