@@ -7,14 +7,15 @@ import java.io.IOException;
 import java.time.Instant;
 
 /**
- * A BoundaryAwareStream will ensure an event (point) exists exactly on the beginning and end of an interval.
+ * A BoundaryAwareStream will attempt to provide an event (point) exactly on the beginning and end of an interval.
  * <p>
- * New points are added as needed (only if boundaries don't already contain points).   If needed, the prior point before
- * the interval is consulted to obtain the prior value and a new point is created with that value, but with the
- * beginning timestamp.  If needed a new point is created on the end boundary with the value of the last point
- * found in the interval.   Optionally the BoundaryAwareStream can attempt to set the end point to the last known
- * UPDATE event (thus avoiding non-update events), but this can result in no additional boundary point being added if
- * the stream contains only non-update events.
+ * New points are added only if boundaries don't already contain points and only if values can be determined.
+ * The prior point before the interval is consulted, if available, to obtain the prior value and a new point can be
+ * created with the prior point value, but with the beginning boundary timestamp.  A new point is created on the end
+ * boundary with the value of the last point found in the interval, but only if a point does not already exist on the
+ * boundary and only if the boundary is not in the future.   Optionally the BoundaryAwareStream can attempt to set the
+ * end point to the last known UPDATE event (thus avoiding non-update events), but this can result in no
+ * boundary point being added if the stream contains only non-update events.
  * </p>
  *
  * @param <T> The type
@@ -29,6 +30,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
     private final Instant begin;
     private final Instant end;
     private final boolean updatesOnly;
+    private final Instant now;
 
     /**
      * Create a new BoundaryAwareStream.
@@ -36,7 +38,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
      * @param wrapped The wrapped EventStream
      * @param begin The begin time
      * @param end The end time
-     * @param priorPoint Prior point to copy to begin
+     * @param priorPoint Prior point to copy to begin or null if unavailable
      * @param updatesOnly Should end point be an update
      * @param type The type
      */
@@ -46,6 +48,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
         this.end = end;
         this.priorPoint = priorPoint;
         this.updatesOnly = updatesOnly;
+        this.now = Instant.now(); /* We consider "now" to be fixed in time from when stream created */
     }
 
     /**
@@ -80,7 +83,9 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
         }
 
         if(current == null) { // End-of-Stream
-            if(lastEvent != null && lastEvent.getTimestampAsInstant().isBefore(end)) {
+            if(lastEvent != null
+                    && lastEvent.getTimestampAsInstant().isBefore(end)
+                    && lastEvent.getTimestampAsInstant().isBefore(now)) {
                 current = (T)lastEvent.copyTo(end);
                 lastEvent = current;
             }
