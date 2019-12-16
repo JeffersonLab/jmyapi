@@ -61,6 +61,7 @@ abstract class QueryService {
      * @return The paginated list of channel metadata like name
      * @throws SQLException If unable to query the database
      */
+    @SuppressWarnings("unchecked")
     public List<Metadata> findChannel(String q, long limit, long offset) throws SQLException {
         List<Metadata> metadataList = new ArrayList<>();
 
@@ -74,17 +75,7 @@ abstract class QueryService {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     while (rs.next()) {
-                        int id = rs.getInt("chan_id");
-                        String name = rs.getString("name");
-                        String host = rs.getString("host");
-                        int typeOrdinal = rs.getInt("type");
-                        int size = rs.getInt("size");
-
-                        MyaDataType myaType = MyaDataType.values()[typeOrdinal];
-
-                        Class javaType = getJavaType(size, myaType);
-
-                        Metadata metadata = new Metadata(id, name, host, size, myaType, javaType);
+                        Metadata metadata = unmarshallMetadata(rs);
                         metadataList.add(metadata);
                     }
                 }
@@ -128,16 +119,7 @@ abstract class QueryService {
 
                 try (ResultSet rs = stmt.executeQuery()) {
                     if (rs.next()) {
-                        int id = rs.getInt("chan_id");
-                        String host = rs.getString("host");
-                        int typeOrdinal = rs.getInt("type");
-                        int size = rs.getInt("size");
-
-                        MyaDataType myaType = MyaDataType.values()[typeOrdinal];
-
-                        Class javaType = getJavaType(size, myaType);
-
-                        metadata = new Metadata(id, name, host, size, myaType, javaType);
+                        metadata = unmarshallMetadata(rs);
                     } else {
                         metadata = null;
                     }
@@ -146,6 +128,22 @@ abstract class QueryService {
         }
 
         return metadata;
+    }
+
+    private Metadata unmarshallMetadata(ResultSet rs) throws SQLException {
+        int id = rs.getInt("chan_id");
+        String name = rs.getString("name");
+        String host = rs.getString("host");
+        String ioc = rs.getString("ioc");
+        boolean active = rs.getShort("active") == 1;
+        int typeOrdinal = rs.getInt("type");
+        int size = rs.getInt("size");
+
+        MyaDataType myaType = MyaDataType.values()[typeOrdinal];
+
+        Class javaType = getJavaType(size, myaType);
+
+        return new Metadata(id, name, host, size, ioc, active, myaType, javaType);
     }
 
     private Class getJavaType(int size, MyaDataType myaType) {

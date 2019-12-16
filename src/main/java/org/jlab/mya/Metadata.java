@@ -14,6 +14,8 @@ public final class Metadata<T extends Event> {
     private final String name;
     private final String host;
     private final int size;
+    private final String ioc;
+    private final boolean active;
     private final MyaDataType myaType;
     private final Class<T> javaType;
 
@@ -24,14 +26,18 @@ public final class Metadata<T extends Event> {
      * @param name The PV name
      * @param host The host on which events are stored for this PV
      * @param size The size of an update (scalar = 1, vector &gt; 1)
+     * @param ioc The name of the IOC generating updates for this PV or null
+     * @param active True if the PV is active, false otherwise
      * @param myaType The MYA data type
      * @param javaType The Java data type
      */
-    public Metadata(int id, String name, String host, int size, MyaDataType myaType, Class<T> javaType) {
+    public Metadata(int id, String name, String host, int size, String ioc, boolean active, MyaDataType myaType, Class<T> javaType) {
         this.id = id;
         this.name = name;
         this.host = host;
         this.size = size;
+        this.ioc = ioc;
+        this.active = active;
         this.myaType = myaType;
         this.javaType = javaType;
     }
@@ -98,7 +104,7 @@ public final class Metadata<T extends Event> {
     @Override
     public String toString() {
         return "Metadata{" + "id=" + id + ", name=" + name + ", host=" + host + ", myaType=" + myaType
-                + ", size=" + size + '}';
+                + ", size=" + size + ", ioc=" + ioc + ", active=" + active + '}';
     }
 
     /**

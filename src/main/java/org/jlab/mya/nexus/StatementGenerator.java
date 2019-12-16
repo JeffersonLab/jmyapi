@@ -25,7 +25,7 @@ class StatementGenerator {
      * @throws SQLException If unable to prepare a statement
      */
     PreparedStatement getChannelStatement(Connection con) throws SQLException {
-        String query = "select * from channels where name like ? order by name desc limit ? offset ?";
+        String query = "select * from channels where name like ? order by name asc limit ? offset ?";
         return con.prepareStatement(query);
     }
 
