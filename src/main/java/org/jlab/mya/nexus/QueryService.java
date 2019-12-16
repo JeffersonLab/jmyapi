@@ -130,6 +130,7 @@ abstract class QueryService {
         return metadata;
     }
 
+    @SuppressWarnings("unchecked")
     private Metadata unmarshallMetadata(ResultSet rs) throws SQLException {
         int id = rs.getInt("chan_id");
         String name = rs.getString("name");
