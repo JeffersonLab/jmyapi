@@ -115,6 +115,21 @@ public abstract class DataNexus {
     abstract Connection getConnection(String host) throws SQLException;
 
     /**
+     * Paginated wildcard query for a list of PVs (Channels) like the specified name.  Standard SQL wildcards (% and _)
+     * are supported as an SQL like query is performed.   For example to query for a name containing "R123" you
+     * would use "%R123%".
+     *
+     * @param q The wildcard search query
+     * @param limit max results
+     * @param offset page though query starting index (start at zero)
+     * @return The paginated list of channel metadata like name
+     * @throws SQLException If unable to query the database
+     */
+    public List<Metadata> findChannel(String q, long limit, long offset) throws SQLException {
+        return intervalService.findChannel(q, limit, offset);
+    }
+
+    /**
      * Query for PV metadata given PV name.
      *
      * @param name The PV name

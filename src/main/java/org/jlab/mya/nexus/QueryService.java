@@ -51,6 +51,50 @@ abstract class QueryService {
     }
 
     /**
+     * Paginated wildcard query for a list of PVs (Channels) like the specified name.  Standard SQL wildcards (% and _)
+     * are supported as an SQL like query is performed.   For example to query for a name containing "R123" you
+     * would use "%R123%".
+     *
+     * @param q The wildcard search query
+     * @param limit max results
+     * @param offset page though query starting index (start at zero)
+     * @return The paginated list of channel metadata like name
+     * @throws SQLException If unable to query the database
+     */
+    public List<Metadata> findChannel(String q, long limit, long offset) throws SQLException {
+        List<Metadata> metadataList = new ArrayList<>();
+
+        String master = nexus.getMasterHostName();
+        try (Connection con = nexus.getConnection(master)) {
+            try (PreparedStatement stmt = generator.getChannelStatement(con)) {
+
+                stmt.setString(1, q);
+                stmt.setLong(2, limit);
+                stmt.setLong(3, offset);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("chan_id");
+                        String name = rs.getString("name");
+                        String host = rs.getString("host");
+                        int typeOrdinal = rs.getInt("type");
+                        int size = rs.getInt("size");
+
+                        MyaDataType myaType = MyaDataType.values()[typeOrdinal];
+
+                        Class javaType = getJavaType(size, myaType);
+
+                        Metadata metadata = new Metadata(id, name, host, size, myaType, javaType);
+                        metadataList.add(metadata);
+                    }
+                }
+            }
+        }
+
+        return metadataList;
+    }
+
+    /**
      * Query for PV metadata given PV name and specified type.
      *
      * @param name The PV name

@@ -16,6 +16,20 @@ import java.util.List;
  */
 class StatementGenerator {
     /**
+     * Return a prepared statement for the given connection to query for channel names.
+     *
+     * Note: clever implementations may be caching / pooling statements.
+     *
+     * @param con The connection the statement belongs to
+     * @return The PreparedStatement
+     * @throws SQLException If unable to prepare a statement
+     */
+    PreparedStatement getChannelStatement(Connection con) throws SQLException {
+        String query = "select * from channels where name like ? order by name desc limit ? offset ?";
+        return con.prepareStatement(query);
+    }
+
+    /**
      * Return a prepared statement for the given connection to query metadata.
      *
      * Note: clever implementations may be caching / pooling statements.
