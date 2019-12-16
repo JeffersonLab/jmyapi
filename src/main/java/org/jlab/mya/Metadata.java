@@ -70,6 +70,24 @@ public final class Metadata<T extends Event> {
     }
 
     /**
+     * Return the IOC generating PV updates.
+     *
+     * @return The name or null if unavailable
+     */
+    public String getIoc() {
+        return ioc;
+    }
+
+    /**
+     * Return whether the PV (channel) is active.
+     *
+     * @return True if active, false otherwise
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
      * Return the MYA data type of the PV.
      *
      * @return The data type
