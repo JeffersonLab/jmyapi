@@ -156,4 +156,70 @@ public class BoundaryAwareTest {
 
         assertEquals("List size does not match expected", expSize, eventList.size());
     }
+
+
+    /**
+     * Test boundary aware stream with prior point but otherwise an empty stream!
+     */
+    @Test
+    public void testPriorWithEmptyStream() throws Exception {
+        Instant begin = TimeUtil.toLocalDT("2019-01-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-06-01T00:00:00");
+
+        List<FloatEvent> events = new ArrayList<>();
+
+        FloatEvent priorPoint = new FloatEvent(TimeUtil.toLocalDT("2018-12-01T00:00:00"), EventCode.UPDATE, 0);
+
+        long count = events.size();
+
+        System.out.println("count: " + count);
+
+        long expSize = 2;
+
+        List<FloatEvent> eventList = new ArrayList<>();
+        try (EventStream<FloatEvent> stream = new ListStream<>(events, FloatEvent.class)) {
+            try (BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class)) {
+                FloatEvent event;
+                while ((event = boundaryStream.read()) != null) {
+                    eventList.add(event);
+                    System.out.println(event.toString());
+                }
+            }
+        }
+
+        assertEquals("List size does not match expected", expSize, eventList.size());
+    }
+
+    /**
+     * Test boundary aware stream with no prior point and an empty stream!  Since no "last point" we can't have end
+     * boundary either!
+     */
+    @Test
+    public void testEmptyStream() throws Exception {
+        Instant begin = TimeUtil.toLocalDT("2019-01-01T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-06-01T00:00:00");
+
+        List<FloatEvent> events = new ArrayList<>();
+
+        FloatEvent priorPoint = null;
+
+        long count = events.size();
+
+        System.out.println("count: " + count);
+
+        long expSize = 0;
+
+        List<FloatEvent> eventList = new ArrayList<>();
+        try (EventStream<FloatEvent> stream = new ListStream<>(events, FloatEvent.class)) {
+            try (BoundaryAwareStream<FloatEvent> boundaryStream = new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class)) {
+                FloatEvent event;
+                while ((event = boundaryStream.read()) != null) {
+                    eventList.add(event);
+                    System.out.println(event.toString());
+                }
+            }
+        }
+
+        assertEquals("List size does not match expected", expSize, eventList.size());
+    }
 }

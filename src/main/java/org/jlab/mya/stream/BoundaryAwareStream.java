@@ -79,15 +79,20 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
                 started = true;
             } else {
                 current = wrapped.read();
-                if (current != null // Not End-of-Stream
-                        && current.getTimestampAsInstant().isAfter(begin) // First event after start boundary
-                        && priorPoint != null) { // Prior point provided / exists
-                    secondPointBuffer = current;
-                    buffered = true;
-                    current = (T) priorPoint.copyTo(begin);
-                } else {
-                    // Don't insert prior point; just move on
+
+                if(current == null) { // Empty stream to begin with!
+                    if(priorPoint != null) {
+                        current = (T) priorPoint.copyTo(begin);
+                    }
+
                     started = true;
+                } else { // We have more data to come
+                    if(priorPoint != null && // We have prior point
+                            current.getTimestampAsInstant().isAfter(begin)) { // Existing first point isn't on boundary
+                        secondPointBuffer = current;
+                        buffered = true;
+                        current = (T) priorPoint.copyTo(begin);
+                    }
                 }
             }
         }
