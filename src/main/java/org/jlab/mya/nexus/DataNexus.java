@@ -155,15 +155,22 @@ public abstract class DataNexus {
     }
 
     /**
-     * Query for PV extra info given PV metadata.
+     * Query for PV extra info given PV metadata, and optionally type, begin bounds, and end bounds.  ExtraInfo types
+     * include "enum_labels" and "notes".
+     *
+     * <p>
+     * <b>Note:</b> Unlike Metadata, ExtraInfo is versioned and changes over time.
+     * </p>
      *
      * @param metadata The PV metadata
      * @param type The type of info to query, null for all
+     * @param begin limit results to just the first one before begin plus all afterwards or null for all
+     * @param end limit results to just those before end or null for all
      * @return The extra info
      * @throws SQLException If unable to query the database
      */
-    public List<ExtraInfo> findExtraInfo(Metadata metadata, String type) throws SQLException {
-        return intervalService.findExtraInfo(metadata, type);
+    public List<ExtraInfo> findExtraInfo(Metadata metadata, String type, Instant begin, Instant end) throws SQLException {
+        return intervalService.findExtraInfo(metadata, type, begin, end);
     }
 
     /**

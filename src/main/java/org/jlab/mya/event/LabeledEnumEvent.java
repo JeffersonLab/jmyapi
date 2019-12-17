@@ -146,7 +146,7 @@ public class LabeledEnumEvent extends IntEvent {
                 }
             }
             
-            System.out.println("Found label: " + label);
+            //System.out.println("Found label: " + label);
 
             lEvent = new LabeledEnumEvent(timestamp, iEvent.getCode(), value, label);
         }

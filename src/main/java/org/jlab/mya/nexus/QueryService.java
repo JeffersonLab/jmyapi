@@ -177,20 +177,26 @@ abstract class QueryService {
      *
      * @param metadata The PV metadata
      * @param type The type of info to query, null for all
+     * @param begin limit results to just the first one before begin plus all afterwards or null for all
+     * @param end limit results to just those before end or null for all
      * @return The extra info
      * @throws SQLException If unable to query the database
      */
-    public List<ExtraInfo> findExtraInfo(Metadata metadata, String type) throws SQLException {
+    public List<ExtraInfo> findExtraInfo(Metadata metadata, String type, Instant begin, Instant end) throws SQLException {
         List<ExtraInfo> infoList = new ArrayList<>();
 
         String master = nexus.getMasterHostName();
         try (Connection con = nexus.getConnection(master)) {
-            try (PreparedStatement stmt = generator.getExtraInfoStatement(con, type)) {
+            try (PreparedStatement stmt = generator.getExtraInfoStatement(con, type, end)) {
 
                 stmt.setInt(1, metadata.getId());
 
                 if (type != null) {
                     stmt.setString(2, type);
+                }
+
+                if(end != null) {
+                    stmt.setTimestamp(3, Timestamp.from(end));
                 }
 
                 try (ResultSet rs = stmt.executeQuery()) {
@@ -203,6 +209,27 @@ abstract class QueryService {
                         infoList.add(info);
                     }
                 }
+            }
+        }
+
+        // We filter out start bounds here instead of querying database twice (we need prior point!)
+        if(begin != null) {
+            int fromIndex = 0;
+
+            for(int i = 0; i < infoList.size(); i++) {
+                ExtraInfo info = infoList.get(i);
+                //System.out.println("info: " + info);
+                if(info.getTimestamp().isBefore(begin)) {
+                    //System.out.println("found new prior point: " + i);
+                    fromIndex = i;
+                } else {
+                    break;
+                }
+            }
+
+            if(fromIndex > 0) {
+                int toIndex = infoList.size(); // exclusive, apparently :)
+                infoList = infoList.subList(fromIndex, toIndex);
             }
         }
 

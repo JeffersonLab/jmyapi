@@ -29,14 +29,15 @@ public class ExtraInfoTest {
         Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00");
 
         Metadata<IntEvent> metadata = nexus.findMetadata(pv, IntEvent.class);
-        List<ExtraInfo> infoList = nexus.findExtraInfo(metadata, "enum_strings");
+        List<ExtraInfo> infoList = nexus.findExtraInfo(metadata, "enum_strings", null, null);
 
         for(ExtraInfo info: infoList) {
             System.out.println(info);
             String[] labels = info.getValueAsArray();
             
-            for(String label: labels) {
-                System.out.println(label);
+            for(int i = 0; i < labels.length; i++) {
+                String label = labels[i];
+                System.out.println(i + ": " + label);
             }
         }
         
@@ -56,5 +57,27 @@ public class ExtraInfoTest {
                 System.out.println(event);
             }
         }        
+    }
+
+    @Test
+    public void testEnumLabelsSubset() throws SQLException, IOException {
+        DataNexus nexus = new OnDemandNexus("history");
+
+        String pv = "IGL1I00BEAMODE";
+        Instant begin = TimeUtil.toLocalDT("2017-10-15T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2017-10-20T00:00:00");
+
+        Metadata<IntEvent> metadata = nexus.findMetadata(pv, IntEvent.class);
+        List<ExtraInfo> infoList = nexus.findExtraInfo(metadata, "enum_strings", begin, end);
+
+        for(ExtraInfo info: infoList) {
+            System.out.println(info);
+            String[] labels = info.getValueAsArray();
+
+            for(int i = 0; i < labels.length; i++) {
+                String label = labels[i];
+                System.out.println(i + ": " + label);
+            }
+        }
     }
 }

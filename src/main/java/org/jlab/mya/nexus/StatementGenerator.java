@@ -6,6 +6,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,14 +51,19 @@ class StatementGenerator {
      *
      * @param con The connection the statement belongs to
      * @param type The type of info to query, null for all
+     * @param end limit results to just those before end or null for all
      * @return The PreparedStatement
      * @throws SQLException If unable to prepare a statement
      */
-    PreparedStatement getExtraInfoStatement(Connection con, String type) throws SQLException {
+    PreparedStatement getExtraInfoStatement(Connection con, String type, Instant end) throws SQLException {
         String query = "select * from metadata where chan_id = ? ";
 
         if (type != null) {
             query = query + "and keyword = ? ";
+        }
+
+        if(end != null) {
+            query = query + "and stamp < ? ";
         }
 
         query = query + "order by stamp asc";

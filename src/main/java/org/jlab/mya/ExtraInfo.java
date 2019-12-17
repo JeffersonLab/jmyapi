@@ -1,6 +1,10 @@
 package org.jlab.mya;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * Provides additional information about an EPICS PV, which unlike standard
@@ -80,7 +84,14 @@ public final class ExtraInfo {
      * @return The value tokenized using the null-character ('\u0000')
      */
     public String[] getValueAsArray() {
-        return value.split("\u0000");
+        String[] tokens = value.split("\u0000");
+
+        // deal with empty tokens?
+        /*List<String> list = Arrays.asList(tokens);
+        list.removeIf(item -> (item == null || "".equals(item)));
+        return list.toArray(new String[0]);*/
+
+        return tokens;
     }
 
     @Override
