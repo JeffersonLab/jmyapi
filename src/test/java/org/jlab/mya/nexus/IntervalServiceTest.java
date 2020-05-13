@@ -1,5 +1,6 @@
 package org.jlab.mya.nexus;
 
+import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
@@ -92,5 +93,31 @@ public class IntervalServiceTest {
             }
         }
         assertEquals(expSize, eventList.size());
+    }
+
+    /**
+     * Test of large numbers with tiny changes.
+     */
+    @Test
+    public void testLargeNumbersWithTinyChangesStream() throws Exception {
+
+        DataNexus us = new OnDemandNexus("ops");
+        Metadata<FloatEvent> metadata = us.findMetadata("iocin1:heartbeat", FloatEvent.class);
+
+        Instant begin = TimeUtil.toLocalDT("2020-05-13T09:28:00");
+        Instant end = TimeUtil.toLocalDT("2020-05-13T09:29:00");
+
+        long expSize = 60L;
+        float expLastValue = 6479405.0f;
+        List<FloatEvent> eventList = new ArrayList<>();
+        try (EventStream<FloatEvent> stream = us.openEventStream(metadata, begin, end)) {
+            FloatEvent event;
+            while ((event = stream.read()) != null) {
+                eventList.add(event);
+                System.out.println(event);
+            }
+        }
+        assertEquals(expSize, eventList.size());
+        assertEquals(expLastValue, eventList.get(eventList.size() - 1).getValue(), 0.0000001);
     }
 }
