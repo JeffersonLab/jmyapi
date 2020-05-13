@@ -97,6 +97,8 @@ public class IntervalServiceTest {
 
     /**
      * Test of large numbers with tiny changes.
+     *
+     * myget -c iocin1:heartbeat -b '2020-05-13 09:28:00' -e '2020-05-13 09:29:00'
      */
     @Test
     public void testLargeNumbersWithTinyChangesStream() throws Exception {
