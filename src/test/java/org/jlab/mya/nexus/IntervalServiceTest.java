@@ -116,7 +116,7 @@ public class IntervalServiceTest {
             FloatEvent event;
             while ((event = stream.read()) != null) {
                 eventList.add(event);
-                System.out.println(event);
+                System.out.println("(" + event.getTimestamp() + ") " + event);
             }
         }
         assertEquals(expSize, eventList.size());
