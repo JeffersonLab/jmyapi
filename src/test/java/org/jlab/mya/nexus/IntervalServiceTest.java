@@ -122,4 +122,32 @@ public class IntervalServiceTest {
         assertEquals(expSize, eventList.size());
         assertEquals(expLastValue, eventList.get(eventList.size() - 1).getValue(), 0.0000001);
     }
+
+    /**
+     * Test of tiny numbers with tiny changes.
+     *
+     * myget -c VIP2L251 -b '2020-08-12 00:00:00' -e '2020-08-12 14:00:00'
+     */
+    @Test
+    public void testTinyNumbersWithTinyChangesStream() throws Exception {
+
+        DataNexus us = new OnDemandNexus("ops");
+        Metadata<FloatEvent> metadata = us.findMetadata("VIP2L251", FloatEvent.class);
+
+        Instant begin = TimeUtil.toLocalDT("2020-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2020-08-12T14:00:00");
+
+        long expSize = 58L;
+        float expLastValue = 1e-11f;
+        List<FloatEvent> eventList = new ArrayList<>();
+        try (EventStream<FloatEvent> stream = us.openEventStream(metadata, begin, end)) {
+            FloatEvent event;
+            while ((event = stream.read()) != null) {
+                eventList.add(event);
+                System.out.println("(" + event.getTimestamp() + ") " + event);
+            }
+        }
+        assertEquals(expSize, eventList.size());
+        assertEquals(expLastValue, eventList.get(eventList.size() - 1).getValue(), 0.0000001);
+    }
 }
