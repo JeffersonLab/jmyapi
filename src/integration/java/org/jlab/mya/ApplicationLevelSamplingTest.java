@@ -1,21 +1,18 @@
-package org.jlab.mya.stream;
+package org.jlab.mya;
 
-import org.jlab.mya.*;
-import org.jlab.mya.RunningStatistics;
 import org.jlab.mya.event.EventCode;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
+import org.jlab.mya.stream.*;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 public class ApplicationLevelSamplingTest {
 
@@ -61,7 +58,7 @@ public class ApplicationLevelSamplingTest {
             }
         }
         if (eventList.size() != expSize) {
-            fail("List size does not match expected");
+            Assert.fail("List size does not match expected");
         }
     }
 
@@ -135,7 +132,7 @@ public class ApplicationLevelSamplingTest {
             System.out.println("Mean: " + stats.getMean());
 
             if (eventList.size() != expSize) {
-                fail("List size does not match expected");
+                Assert.fail("List size does not match expected");
             }
         }
 
@@ -189,7 +186,7 @@ public class ApplicationLevelSamplingTest {
         }
 
         // Since we know ahead of time there are 20 points of data, start + end + (10 bins with min,max,lttb points) + zero non-update events = between 12 and 20
-        assertEquals("List size does not match expected", expSize, eventList.size());
+        Assert.assertEquals("List size does not match expected", expSize, eventList.size());
     }
 
     /**
@@ -234,6 +231,6 @@ public class ApplicationLevelSamplingTest {
         }
 
         // Since we know ahead of time there are 20 points of data, start + end + (10 bins with min,max,lttb points) + zero non-update events = between 12 and 20
-        assertEquals("List size does not match expected", expSize, eventList.size());
+        Assert.assertEquals("List size does not match expected", expSize, eventList.size());
     }
 }

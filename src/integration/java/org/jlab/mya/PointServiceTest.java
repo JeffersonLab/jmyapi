@@ -1,4 +1,4 @@
-package org.jlab.mya.nexus;
+package org.jlab.mya;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -10,6 +10,8 @@ import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;
+import org.jlab.mya.nexus.DataNexus;
+import org.jlab.mya.nexus.OnDemandNexus;
 import org.junit.*;
 
 import static org.junit.Assert.*;
@@ -73,7 +75,7 @@ public class PointServiceTest {
 
         System.out.println(result);
 
-        assertEquals(expResult, result.getValue(), 0.01);
+        Assert.assertEquals(expResult, result.getValue(), 0.01);
     }
 
     /**
@@ -92,7 +94,7 @@ public class PointServiceTest {
         IntEvent result =  nexus.findEvent(metadata, timestamp);
 
         Assert.assertEquals(expResult.getTimestamp(), result.getTimestamp());
-        assertEquals(expResult.getValue(), result.getValue());
+        Assert.assertEquals(expResult.getValue(), result.getValue());
         Assert.assertEquals(expResult.getCode(), result.getCode());
     }
 
@@ -137,7 +139,7 @@ public class PointServiceTest {
         for(String v : result.getValue()) {
             System.out.println(v);
         }
-        assertArrayEquals(expResult.getValue(), result.getValue());
+        Assert.assertArrayEquals(expResult.getValue(), result.getValue());
         Assert.assertEquals(expResult.getTimestampAsInstant().getEpochSecond(), result.getTimestampAsInstant().getEpochSecond());
     }
 

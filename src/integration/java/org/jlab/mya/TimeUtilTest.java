@@ -28,7 +28,7 @@ public class TimeUtilTest {
         Instant instant = TimeUtil.toLocalDT(dateStr);
         long expResult = 398156031588037989L;
         long result = TimeUtil.toMyaTimestamp(instant);
-        assertEquals(expResult, result, 4);
+        Assert.assertEquals(expResult, result, 4);
         
     }
 
@@ -43,7 +43,7 @@ public class TimeUtilTest {
         long timestamp = 398156031588037989L;
         Instant expResult = TimeUtil.toLocalDT(dateStr);
         Instant result = TimeUtil.fromMyaTimestamp(timestamp);
-        assertEquals(expResult.getNano(), result.getNano(), 1);
+        Assert.assertEquals(expResult.getNano(), result.getNano(), 1);
     }
 
     /**

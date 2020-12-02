@@ -6,6 +6,7 @@ import org.jlab.mya.TimeUtil;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.StandaloneJndi;
 import org.jlab.mya.event.FloatEvent;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -35,7 +36,7 @@ public class PooledNexusTest {
             PointQueryParams<FloatEvent> params = new PointQueryParams<>(metadata, timestamp);
             float expResult = -7.2f;
             FloatEvent result = service.findFloatEvent(params);
-            assertEquals(expResult, result.getValue(), 0.01);
+            Assert.assertEquals(expResult, result.getValue(), 0.01);
             System.out.println(result);
         }
     }

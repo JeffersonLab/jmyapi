@@ -1,6 +1,5 @@
 package org.jlab.mya.nexus;
 
-import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
@@ -12,8 +11,8 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Assert;
 import org.junit.Before;
-import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
@@ -49,7 +48,7 @@ public class IntervalServiceTest {
     public void testFindMetadata() throws Exception {
         Metadata<FloatEvent> expResult = TEST_METADATA;
         Metadata<FloatEvent> result = nexus.findMetadata(TEST_PV, FloatEvent.class);
-        assertEquals(expResult, result);
+        Assert.assertEquals(expResult, result);
     }
 
     /**
@@ -61,7 +60,7 @@ public class IntervalServiceTest {
     public void testCount() throws Exception {
         long expResult = 12615L;
         long result = nexus.count(TEST_METADATA, TEST_BEGIN, TEST_END);
-        assertEquals(expResult, result);
+        Assert.assertEquals(expResult, result);
     }
 
     /**
@@ -77,7 +76,7 @@ public class IntervalServiceTest {
                 eventList.add(event);
             }
         }
-        assertEquals(expSize, eventList.size());
+        Assert.assertEquals(expSize, eventList.size());
     }
 
     @Test
@@ -92,7 +91,7 @@ public class IntervalServiceTest {
                 eventList.add(event);
             }
         }
-        assertEquals(expSize, eventList.size());
+        Assert.assertEquals(expSize, eventList.size());
     }
 
     /**
@@ -119,8 +118,8 @@ public class IntervalServiceTest {
                 System.out.println("(" + event.getTimestamp() + ") " + event);
             }
         }
-        assertEquals(expSize, eventList.size());
-        assertEquals(expLastValue, eventList.get(eventList.size() - 1).getValue(), 0.0000001);
+        Assert.assertEquals(expSize, eventList.size());
+        Assert.assertEquals(expLastValue, eventList.get(eventList.size() - 1).getValue(), 0.0000001);
     }
 
     /**
@@ -147,7 +146,7 @@ public class IntervalServiceTest {
                 System.out.println("(" + event.getTimestamp() + ") " + event);
             }
         }
-        assertEquals(expSize, eventList.size());
-        assertEquals(expLastValue, eventList.get(eventList.size() - 1).getValue(), 0.0000001);
+        Assert.assertEquals(expSize, eventList.size());
+        Assert.assertEquals(expLastValue, eventList.get(eventList.size() - 1).getValue(), 0.0000001);
     }
 }

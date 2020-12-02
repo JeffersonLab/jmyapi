@@ -1,4 +1,4 @@
-package org.jlab.mya.nexus;
+package org.jlab.mya;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -7,16 +7,15 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
 
+import org.jlab.mya.nexus.DataNexus;
+import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.event.AnalyzedFloatEvent;
-import org.jlab.mya.Metadata;
-import org.jlab.mya.RunningStatistics;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.stream.BoundaryAwareStream;
 import org.jlab.mya.stream.FloatAnalysisStream;
 import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 /**
  *
@@ -138,13 +137,13 @@ public class AnalysisServiceTest {
 
         // Make sure we get something back
         Assert.assertNotEquals(null, result);
-        assertEquals(min, result.getMin(), minMaxDiff);
-        assertEquals(max, result.getMax(), minMaxDiff);
-        assertEquals(mean, result.getMean(), Math.abs(percDiff*mean));  // difference within a percentage of the expected value
-        assertEquals(sigma, result.getSigma(), Math.abs(percDiff * sigma));
-        assertEquals(rms, result.getRms(), Math.abs(percDiff * rms));
+        Assert.assertEquals(min, result.getMin(), minMaxDiff);
+        Assert.assertEquals(max, result.getMax(), minMaxDiff);
+        Assert.assertEquals(mean, result.getMean(), Math.abs(percDiff*mean));  // difference within a percentage of the expected value
+        Assert.assertEquals(sigma, result.getSigma(), Math.abs(percDiff * sigma));
+        Assert.assertEquals(rms, result.getRms(), Math.abs(percDiff * rms));
 
         // This test is known to fail as of now.  I believe this is due to a difference in time representation
-        assertEquals(integration, result.getIntegration(), Math.abs(percDiff * integration));
+        Assert.assertEquals(integration, result.getIntegration(), Math.abs(percDiff * integration));
     }
 }

@@ -1,15 +1,12 @@
-package org.jlab.mya.nexus;
+package org.jlab.mya;
 
-import org.jlab.mya.Metadata;
-import org.jlab.mya.TimeUtil;
-import org.jlab.mya.event.FloatEvent;
+import org.jlab.mya.nexus.DataNexus;
+import org.jlab.mya.nexus.OnDemandNexus;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.Instant;
 import java.util.List;
-
-import static org.junit.Assert.assertEquals;
 
 public class ChannelLookupTest {
     private DataNexus nexus;
@@ -37,6 +34,6 @@ public class ChannelLookupTest {
 
         long expectedSize = 10;
 
-        assertEquals(expectedSize, metadataList.size());
+        Assert.assertEquals(expectedSize, metadataList.size());
     }
 }

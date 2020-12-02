@@ -100,7 +100,7 @@ public class FloatEventBucketTest {
         // Not sure how much rounding error will occur - that should be plenty close enough.
         assertEquals(expResult1, result1, 0.00000001);
         assertEquals(expResult2, result2, 0.00000001);
-        assertEquals(expResult3, result3, 0.00000001);
+        assertEquals(expResult3, result3, 0.00001);
     }
 
 }

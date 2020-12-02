@@ -1,9 +1,11 @@
-package org.jlab.mya.nexus;
+package org.jlab.mya;
 
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jlab.mya.nexus.DataNexus;
+import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.stream.EventStream;
 import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
@@ -11,6 +13,7 @@ import org.jlab.mya.event.FloatEvent;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -55,9 +58,9 @@ public class SourceSamplingServiceTest {
                 //        System.out.println(event.toString(fractionalDigits));
             }
         }
-        assertEquals(expSize, eventList.size());
+        Assert.assertEquals(expSize, eventList.size());
         if (eventList.size() != expSize) {
-            fail("List size does not match expected");
+            Assert.fail("List size does not match expected");
         }
     }
 
@@ -85,6 +88,6 @@ public class SourceSamplingServiceTest {
                 //        System.out.println(event);
             }
         }
-        assertEquals("List size does not match expected", expSize, eventList.size());
+        Assert.assertEquals("List size does not match expected", expSize, eventList.size());
     }
 }
