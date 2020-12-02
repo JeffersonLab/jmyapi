@@ -11,6 +11,9 @@ If you are looking for a quick and easy way to obtain Archiver data see: [Public
 ---
 
 ## Install
+### Download
+You can include jmyapi in your project via [Bintray](https://bintray.com/slominskir/maven/jmyapi).
+### Build
 Use Gradle to download dependencies:
 ```
 git clone https://github.com/JeffersonLab/jmyapi
