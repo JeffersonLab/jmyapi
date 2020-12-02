@@ -39,5 +39,4 @@ Documentation (with examples): [javadocs](https://jeffersonlab.github.io/jmyapi/
 ## See Also
    - [Developer Notes](https://github.com/JeffersonLab/jmyapi/wiki/Developer-Notes)
    - [myquery](https://github.com/JeffersonLab/myquery)  
-   - [MYAPI DOCS (Internal)](http://devweb.acc.jlab.org/controls_web/certified/myapi/)
    - [trippy](https://github.com/JeffersonLab/trippy)
