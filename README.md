@@ -37,8 +37,7 @@ __Note__: The client query API requires a connection the Mya MySQL databases.  I
 Documentation (with examples): [javadocs](https://jeffersonlab.github.io/jmyapi/)   
 
 ## See Also
-   - [myquery](https://github.com/JeffersonLab/myquery)
-   - [Download](https://github.com/JeffersonLab/jmyapi/releases)    
-   - [Publish New Release](https://github.com/JeffersonLab/jmyapi/wiki/Publish-New-Releases-to-Artifactory)
+   - [Developer Notes](https://github.com/JeffersonLab/jmyapi/wiki/Developer-Notes)
+   - [myquery](https://github.com/JeffersonLab/myquery)  
    - [MYAPI DOCS (Internal)](http://devweb.acc.jlab.org/controls_web/certified/myapi/)
    - [trippy](https://github.com/JeffersonLab/trippy)
