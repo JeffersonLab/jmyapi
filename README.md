@@ -3,12 +3,23 @@ A Java client query API library for MYA (JLab's EPICS Archiver).
 
 If you are looking for a quick and easy way to obtain Archiver data see: [Public MYA Web Service](https://epicsweb.jlab.org/myquery/), which is built using this API plus [myquery](https://github.com/JeffersonLab/myquery).
 
-## Automated Install
+---
+- [Install](https://github.com/JeffersonLab/jmyapi#install)
+- [Configure](https://github.com/JeffersonLab/jmyapi#configure)
+- [API](https://github.com/JeffersonLab/jmyapi#api)
+- [See Also](https://github.com/JeffersonLab/jmyapi#see-also)
+---
+
+## Install
 Use Gradle to download dependencies:
 ```
 git clone https://github.com/JeffersonLab/jmyapi
 cd jmyapi
 gradlew build -x test
+```
+
+## Configure
+```
 gradlew -Dorg.gradle.daemon=false config
 vi config/deployments.properties
 gradlew hello
@@ -19,8 +30,8 @@ __Note__: A copy of the deployments.properties file is stored in our internal AC
 
 __Note__: The client query API requires a connection the Mya MySQL databases.  If you are behind a firewall you can setup tunnels with a tool such as PuTTy.   The deployments.properties template has examples of configuring proxy ports.
 
-## API Docs (with Examples)
-[javadocs](https://jeffersonlab.github.io/jmyapi/)   
+## API
+Documentation (with examples): [javadocs](https://jeffersonlab.github.io/jmyapi/)   
 
 ## See Also
    - [myquery](https://github.com/JeffersonLab/myquery)
