@@ -1,4 +1,4 @@
-# jmyapi
+# jmyapi [![Build Status](https://travis-ci.com/JeffersonLab/jmyapi.svg?branch=master)](https://travis-ci.com/JeffersonLab/jmyapi)
 A Java client query API library for MYA (JLab's EPICS Archiver).  
 
 If you are looking for a quick and easy way to obtain Archiver data see: [Public MYA Web Service](https://epicsweb.jlab.org/myquery/), which is built using this API plus [myquery](https://github.com/JeffersonLab/myquery).
