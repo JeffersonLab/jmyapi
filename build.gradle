@@ -130,7 +130,7 @@ def pomConfig = {
     }
 
     scm {
-        url "https://github.com/JeffersonLab/kafka-transform-epics"
+        url "https://github.com/JeffersonLab/jmyapi"
     }
 }
 
