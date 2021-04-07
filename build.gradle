@@ -115,7 +115,7 @@ publishing {
         }
         maven {
             name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/JeffersonLab/jlog")
+            url = uri("https://maven.pkg.github.com/JeffersonLab/jmyapi")
             credentials {
                 username = project.findProperty("github.user") ?: System.getenv("GITHUB_USER")
                 password = project.findProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
