@@ -1,18 +1,22 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'com.jfrog.bintray' version "1.8.5"
+    id 'signing'
 }
 
 description = 'Java MYA API'
 group 'org.jlab'
-version '6.0.0'
+version '6.1.0'
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    withJavadocJar()
+    withSourcesJar()
+}
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 sourceSets {
@@ -25,7 +29,6 @@ sourceSets {
 }
 
 configurations {
-    //testImplementation.extendsFrom compileOnly
     integrationImplementation.extendsFrom testImplementation
     integrationRuntimeOnly.extendsFrom runtimeOnly
 }
@@ -60,14 +63,11 @@ task integrationTest(type: Test) {
 
     testClassesDirs = sourceSets.integration.output.classesDirs
     classpath = sourceSets.integration.runtimeClasspath
-    //shouldRunAfter test
 
     testLogging {
         showStandardStreams = true
     }
 }
-
-//check.dependsOn integrationTest
 
 task hello (type: JavaExec) {
     group 'Application'
@@ -100,70 +100,67 @@ jar {
 
 javadoc {
     options.overview = "src/overview.html"
-    //source = sourceSets.main.allJava
-    //classpath = sourceSets.main.allSource
+    options.source = 8
     options.with {
         links 'https://docs.oracle.com/javase/8/docs/api/'
-        //links 'https://docs.oracle.com/en/java/javase/11/docs/api/'
     }
 }
 
-def pomConfig = {
-    licenses {
-        license {
-            name "MIT License"
-            url "http://www.opensource.org/licenses/mit-license"
-            distribution "repo"
-        }
-    }
-    developers {
-        developer {
-            id "slominskir"
-            name "Ryan Slominski"
-            email "ryans@jlab.org"
-        }
-        developer {
-            id "apcarp"
-            name "Adam Carpenter"
-            email "adamc@jlab.org"
-        }
-    }
-
-    scm {
-        url "https://github.com/JeffersonLab/jmyapi"
-    }
+signing {
+    sign publishing.publications
 }
 
 publishing {
-    publications {
-        ProjectPublication(MavenPublication) {
-            from components.java
-            groupId group
-            artifactId project.name
-            version version
-            pom.withXml {
-                def root = asNode()
-                root.appendNode('description', project.description)
-                root.appendNode('name', project.name)
-                root.children().last() + pomConfig
+    repositories {
+        maven {
+            name "OSSRH"
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username = project.findProperty("ossrh.user") ?: System.getenv("OSSRH_USER")
+                password = project.findProperty("ossrh.token") ?: System.getenv("OSSRH_TOKEN")
             }
         }
-    }
-}
-
-bintray {
-    user = project.hasProperty('bintrayUser') ? project.property('bintrayUser') : System.getenv('BINTRAY_USER')
-    key = project.hasProperty('bintrayApiKey') ? project.property('bintrayApiKey') : System.getenv('BINTRAY_API_KEY')
-
-    publications = ['ProjectPublication']
-
-    pkg {
-        repo = 'maven'
-        name = project.name
-        licenses = ['MIT']
-        vcsUrl = 'https://github.com/JeffersonLab/jmyapi.git'
-        version {
-            name = project.version
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/JeffersonLab/jlog")
+            credentials {
+                username = project.findProperty("github.user") ?: System.getenv("GITHUB_USER")
+                password = project.findProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
+            }
+        }
+        publications {
+            maven(MavenPublication) {
+                from(components.java)
+                pom {
+                    name = project.name
+                    description = project.description
+                    url = "https://github.com/JeffersonLab/jmyapi"
+                    licenses {
+                        license {
+                            name = "The MIT License"
+                            url = "https://github.com/JeffersonLab/jmyapi/blob/master/LICENSE"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "slominskir"
+                            name = "Ryan Slominski"
+                            email = "ryans@jlab.org"
+                        }
+                        developer {
+                            id = "apcarp"
+                            name = "Adam Carpenter"
+                            email = "adamc@jlab.org"
+                        }
+                    }
+                    scm {
+                        url = "https://github.com/JeffersonLab/jmyapi.git"
+                    }
+                }
+            }
+        }
+        artifacts {
+            archives javadocJar, sourcesJar
         }
     }
 }
