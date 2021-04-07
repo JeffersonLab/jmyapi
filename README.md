@@ -1,4 +1,4 @@
-# jmyapi [![Build Status](https://travis-ci.com/JeffersonLab/jmyapi.svg?branch=master)](https://travis-ci.com/JeffersonLab/jmyapi) [ ![Download](https://api.bintray.com/packages/slominskir/maven/jmyapi/images/download.svg?version=6.0.0) ](https://bintray.com/slominskir/maven/jmyapi/6.0.0/link)
+# jmyapi [![Java CI with Gradle](https://github.com/JeffersonLab/jmyapi/actions/workflows/gradle.yml/badge.svg)](https://github.com/JeffersonLab/jmyapi/actions/workflows/gradle.yml) [ ![Download](https://api.bintray.com/packages/slominskir/maven/jmyapi/images/download.svg?version=6.0.0) ](https://bintray.com/slominskir/maven/jmyapi/6.0.0/link)
 A Java client query API library for MYA (JLab's EPICS Archiver).  
 
 If you are looking for a quick and easy way to obtain Archiver data see: [Public MYA Web Service](https://epicsweb.jlab.org/myquery/), which is built using this API plus [myquery](https://github.com/JeffersonLab/myquery).
