@@ -1,4 +1,4 @@
-# jmyapi [![Java CI with Gradle](https://github.com/JeffersonLab/jmyapi/actions/workflows/gradle.yml/badge.svg)](https://github.com/JeffersonLab/jmyapi/actions/workflows/gradle.yml) [![Maven Central](https://img.shields.io/maven-central/v/org.jlab/jmyapi)](https://repo1.maven.org/maven2/org/jlab/jmyapi)
+# jmyapi [![Java CI with Gradle](https://github.com/JeffersonLab/jmyapi/actions/workflows/gradle.yml/badge.svg)](https://github.com/JeffersonLab/jmyapi/actions/workflows/gradle.yml) [![Maven Central](https://img.shields.io/maven-central/v/org.jlab/jmyapi)](https://repo1.maven.org/maven2/org/jlab/jmyapi/)
 A Java client query API library for MYA (JLab's EPICS Archiver).  
 
 If you are looking for a quick and easy way to obtain Archiver data see: [Public MYA Web Service](https://epicsweb.jlab.org/myquery/), which is built using this API plus [myquery](https://github.com/JeffersonLab/myquery).
@@ -13,7 +13,7 @@ If you are looking for a quick and easy way to obtain Archiver data see: [Public
 ---
 
 ## Usage
-The library is a single jar file plus a dependency on the MySQL database driver jar and the Java 8+ JVM and standard library.  You can obtain the jmyapi jar file from the [Maven Central repository](https://repo1.maven.org/maven2/org/jlab/jmyapi) directly or from a Maven friendly build tool with the following coordinates (Gradle example shown):
+The library is a single jar file plus a dependency on the MySQL database driver jar and the Java 8+ JVM and standard library.  You can obtain the jmyapi jar file from the [Maven Central repository](https://repo1.maven.org/maven2/org/jlab/jmyapi/) directly or from a Maven friendly build tool with the following coordinates (Gradle example shown):
 ```
 implementation 'org.jlab:jmyapi:6.1.0'
 ```
