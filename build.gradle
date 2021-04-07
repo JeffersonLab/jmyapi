@@ -82,20 +82,13 @@ task config {
         if (console) {
             def username = console.readLine('> Please enter mya username: ')
             def password = console.readPassword('> Please enter mya password: ')
-            new File("$projectDir/src/main/resoureces/credentials.properties").text = """username=$username
+            new File("$projectDir/config/credentials.properties").text = """username=$username
 password=$password
 """
         } else {
             logger.error "Cannot get console, try running as: 'gradlew -Dorg.gradle.daemon=false config'"
         }
     }
-}
-
-// This is dumb, but works.  I can't get Gradle to add config dir to classpath when running JUnit tests so I move the
-// properties files where Gradle expects them.   But now I have to tell Gradle to not package our passwords
-// into the jar file!
-jar {
-    exclude('credentials.properties', 'deployments.properties', 'credentials.properties.template', 'deployments.properties.template')
 }
 
 javadoc {
