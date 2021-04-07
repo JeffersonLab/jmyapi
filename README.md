@@ -46,7 +46,7 @@ You can check the [Release Notes](https://github.com/JeffersonLab/jmyapi/release
 The library requires configuration properties be included in the runtime classpath.  Specifically a _deployments.properties_ file is needed to indicate the host names of MYA servers.  A template for the properties can be found [here](https://github.com/JeffersonLab/jmyapi/blob/master/config/deployments.properties.template).   You must create your own _deployments.properties_ file and include it on the runtime classpath.
 
 #### Authentication
-In order to interact with the MYA server users must authenticate (MySQL user auth).  This is done using a username and password from a _credentials.properties_ file, which is must be included in the runtime classpath.  A template for the properties can be found [here](https://github.com/JeffersonLab/jmyapi/blob/master/config/credentials.properties.template).
+In order to interact with the MYA server users must authenticate (MySQL user auth).  This is done using a username and password from a _credentials.properties_ file, which must be included in the runtime classpath.  A template for the properties can be found [here](https://github.com/JeffersonLab/jmyapi/blob/master/config/credentials.properties.template).
 
 
 ### Build
