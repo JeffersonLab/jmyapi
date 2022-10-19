@@ -15,3 +15,12 @@ CREATE TABLE `channels` (
                             UNIQUE KEY `name` (`name`),
                             KEY `host` (`host`(16)),
                             KEY `alert` (`alert`));
+
+CREATE TABLE `metadata` (
+                            `chan_id` int(10) unsigned NOT NULL,
+                            `keyword` varchar(255) COLLATE latin1_general_cs NOT NULL,
+                            `stamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                            `info` text COLLATE latin1_general_cs NOT NULL,
+                            KEY `chan_id` (`chan_id`),
+                            KEY `keyword` (`keyword`(16)),
+                            CONSTRAINT `metadata_ibfk_1` FOREIGN KEY (`chan_id`) REFERENCES `channels` (`chan_id`) ON DELETE CASCADE);
