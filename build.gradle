@@ -72,7 +72,7 @@ task integrationTest(type: Test) {
 task hello (type: JavaExec) {
     group 'Application'
     description 'Hello World Test'
-    main = 'org.jlab.mya.HelloWorld'
+    mainClass = 'org.jlab.mya.HelloWorld'
     classpath = sourceSets.test.runtimeClasspath
 }
 
