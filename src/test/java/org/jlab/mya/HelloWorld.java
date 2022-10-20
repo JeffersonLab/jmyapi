@@ -24,16 +24,16 @@ public class HelloWorld {
      */
     public static void main(String[] args) throws SQLException, IOException {
 
-        DataNexus nexus = new OnDemandNexus("history");
+        DataNexus nexus = new OnDemandNexus("docker");
 
         for (String name : DataNexus.getDeploymentNames()) {
             System.out.println(name);
         }
         
         
-        String pv = "R123PMES";
-        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00.123456");
-        Instant end = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
+        String pv = "channel1";
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00.123456");
+        Instant end = TimeUtil.toLocalDT("2019-08-12T00:01:00.123456");
 
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
         try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {

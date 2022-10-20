@@ -78,6 +78,9 @@ public class OnDemandNexus extends DataNexus {
 
         options.put("noAccessToProcedureBodies", "true"); // Required to use stored procedures from limited access user
 
+        options.put("sslMode", "DISABLED");
+        options.put("allowPublicKeyRetrieval", "true");
+
         try {
             return DriverManager.getConnection(url, options);
         } catch (SQLException e) {

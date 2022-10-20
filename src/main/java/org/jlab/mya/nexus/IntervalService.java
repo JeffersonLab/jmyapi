@@ -157,16 +157,16 @@ class IntervalService extends QueryService {
             fetchSize = Integer.MIN_VALUE;
         } else if(params.getFetchStrategy() == DataNexus.IntervalQueryFetchStrategy.CHUNK) {
             fetchSize = 4098;
-            ((com.mysql.jdbc.Connection)con).setUseCursorFetch(true);
+            //((com.mysql.jdbc.Connection)con).setUseCursorFetch(true);
         }
         PreparedStatement stmt = generator.getEventIntervalStatement(con, params, fetchSize);
         stmt.setLong(1, TimeUtil.toMyaTimestamp(params.getBegin()));
         stmt.setLong(2, TimeUtil.toMyaTimestamp(params.getEnd()));
         ResultSet rs = stmt.executeQuery();
 
-        if(params.getFetchStrategy() == DataNexus.IntervalQueryFetchStrategy.CHUNK) {
+        /*if(params.getFetchStrategy() == DataNexus.IntervalQueryFetchStrategy.CHUNK) {
             ((com.mysql.jdbc.Connection)con).setUseCursorFetch(false);
-        }
+        }*/
 
         iip.con = con;
         iip.stmt = stmt;
