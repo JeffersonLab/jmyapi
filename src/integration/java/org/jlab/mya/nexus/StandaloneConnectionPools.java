@@ -1,6 +1,6 @@
 package org.jlab.mya.nexus;
 
-import com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource;
+import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 import java.io.IOException;
 import java.nio.channels.Channel;
 import java.sql.SQLException;
@@ -10,8 +10,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.jlab.mya.nexus.DataNexus;
-import org.jlab.mya.nexus.OnDemandNexus;
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 
 /**
@@ -75,13 +73,14 @@ public class StandaloneConnectionPools implements Channel {
             pds.setNoAccessToProcedureBodies(true);
             
             // Specific to Connections from a pool
-            pds.setCachePrepStmts(true);            
-            pds.setCacheCallableStatements(true);
-            
-            pds.setPreparedStatementCacheSqlLimit(1024); // I assume this is max length of SQL query string
-            
-            pds.setPreparedStatementCacheSize(1024); // Each PV table requires a separate stmt
-            pds.setCallableStatementCacheSize(8);  
+            pds.setCachePrepStmts(true);
+            pds.setAllowPublicKeyRetrieval(true);
+            pds.setSslMode("DISABLED");
+
+            /*pds.setCacheCallableStatements(true);
+            pds.setPreparedStatementCacheSqlLimit(1024);
+            pds.setPreparedStatementCacheSize(1024);
+            pds.setCallableStatementCacheSize(8);  */
             
             // These look interesting, but can't find any docs on them
             //pds.setUseServerPreparedStmts(true); // Should be true by default?

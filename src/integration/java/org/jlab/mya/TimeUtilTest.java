@@ -8,8 +8,6 @@ import org.jlab.mya.nexus.OnDemandNexus;
 import org.jlab.mya.stream.EventStream;
 import org.junit.*;
 
-import static org.junit.Assert.*;
-
 /**
  * Test the TimeUtil.
  * 
@@ -55,10 +53,10 @@ public class TimeUtilTest {
     @Test
     public void testABunchOData() throws Exception {
         float delta = 100; // nanoseconds of fudge
-        DataNexus nexus = new OnDemandNexus("history");
-        Metadata<FloatEvent> metadata = nexus.findMetadata("R123PMES", FloatEvent.class);
-        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
-        Instant end = TimeUtil.toLocalDT("2017-02-01T00:00:00");
+        DataNexus nexus = new OnDemandNexus("docker");
+        Metadata<FloatEvent> metadata = nexus.findMetadata("channel1", FloatEvent.class);
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-08-13T00:00:00");
         try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {

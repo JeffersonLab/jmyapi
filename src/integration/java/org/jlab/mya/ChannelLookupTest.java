@@ -13,7 +13,7 @@ public class ChannelLookupTest {
 
     @Before
     public void setUp() {
-        nexus = new OnDemandNexus("history");
+        nexus = new OnDemandNexus("docker");
     }
 
     /**
@@ -22,7 +22,7 @@ public class ChannelLookupTest {
     @Test
     public void testFindChannel() throws Exception {
         System.out.println("findChannel");
-        String q = "%R123%";
+        String q = "%chan%1";
         long limit = 10;
         long offset = 0;
 
@@ -32,7 +32,7 @@ public class ChannelLookupTest {
             System.out.println(metadata);
         }
 
-        long expectedSize = 10;
+        long expectedSize = 1;
 
         Assert.assertEquals(expectedSize, metadataList.size());
     }
