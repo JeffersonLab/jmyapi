@@ -24,3 +24,10 @@ CREATE TABLE `metadata` (
                             KEY `chan_id` (`chan_id`),
                             KEY `keyword` (`keyword`(16)),
                             CONSTRAINT `metadata_ibfk_1` FOREIGN KEY (`chan_id`) REFERENCES `channels` (`chan_id`) ON DELETE CASCADE);
+
+CREATE TABLE `table_1` (
+                               `time` bigint(20) NOT NULL,
+                               `code` tinyint(3) unsigned NOT NULL DEFAULT '0',
+                               `val1` float NOT NULL DEFAULT '0',
+                               PRIMARY KEY (`time`)
+)
