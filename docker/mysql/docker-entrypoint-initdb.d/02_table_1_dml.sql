@@ -1,5 +1,5 @@
 -- hstmya00: select * from channels where name = 'IGL1I00POTcurrent';
--- result modified
+-- name and host modified
 insert into channels (chan_id, name, type, adel, size, clip, active, request, alert, host, backup, ioc) values (1, 'channel1', 6, 0.1, 1, NULL, 1, 1, 0, 'localhost', 6199944484738826240, NULL);
 
 -- hstmya03: mysqldump -t -u myapi -p archive table_15766 --single-transaction --compact --where="time between 420257825449574400 and 420281018272972800" > /tmp/dump.sql

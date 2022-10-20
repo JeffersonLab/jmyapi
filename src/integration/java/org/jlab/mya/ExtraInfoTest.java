@@ -22,11 +22,11 @@ public class ExtraInfoTest {
 
     @Test
     public void testEnumLabels() throws SQLException, IOException {
-        DataNexus nexus = new OnDemandNexus("history");
+        DataNexus nexus = new OnDemandNexus("docker");
 
-        String pv = "IPMBMOD";
-        Instant begin = TimeUtil.toLocalDT("2007-01-01T00:00:00");
-        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00");
+        String pv = "channel2";
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-08-13T00:00:00");
 
         Metadata<IntEvent> metadata = nexus.findMetadata(pv, IntEvent.class);
         List<ExtraInfo> infoList = nexus.findExtraInfo(metadata, "enum_strings", null, null);
@@ -61,11 +61,11 @@ public class ExtraInfoTest {
 
     @Test
     public void testEnumLabelsSubset() throws SQLException, IOException {
-        DataNexus nexus = new OnDemandNexus("history");
+        DataNexus nexus = new OnDemandNexus("docker");
 
-        String pv = "IGL1I00BEAMODE";
-        Instant begin = TimeUtil.toLocalDT("2017-10-15T00:00:00");
-        Instant end = TimeUtil.toLocalDT("2017-10-20T00:00:00");
+        String pv = "channel2";
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-08-13T00:00:00");
 
         Metadata<IntEvent> metadata = nexus.findMetadata(pv, IntEvent.class);
         List<ExtraInfo> infoList = nexus.findExtraInfo(metadata, "enum_strings", begin, end);
