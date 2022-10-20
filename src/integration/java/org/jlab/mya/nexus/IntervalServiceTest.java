@@ -21,11 +21,11 @@ import org.junit.Test;
  */
 public class IntervalServiceTest {
 
-    private static final String HISTORY_DEPLOYMENT = "history";
-    private static final String TEST_PV = "MQA3S06M";
-    private static final String TEST_PV_MULTI = "HLA:bta_uxtime_h";
-    private static final Instant TEST_BEGIN = TimeUtil.toLocalDT("2016-08-22T08:43:00");
-    private static final Instant TEST_END = TimeUtil.toLocalDT("2017-09-22T08:43:00");
+    private static final String HISTORY_DEPLOYMENT = "docker";
+    private static final String TEST_PV = "channel1";
+    private static final String TEST_PV_MULTI = "channel3";
+    private static final Instant TEST_BEGIN = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+    private static final Instant TEST_END = TimeUtil.toLocalDT("2019-08-13T00:00:00");
 
     private Metadata<FloatEvent> TEST_METADATA;
     private Metadata<MultiStringEvent> TEST_METADATA_MULTI;
@@ -58,7 +58,7 @@ public class IntervalServiceTest {
      */
     @Test
     public void testCount() throws Exception {
-        long expResult = 12615L;
+        long expResult = 32990L;
         long result = nexus.count(TEST_METADATA, TEST_BEGIN, TEST_END);
         Assert.assertEquals(expResult, result);
     }
@@ -68,7 +68,7 @@ public class IntervalServiceTest {
      */
     @Test
     public void testOpenStream() throws Exception {
-        long expSize = 12615L;
+        long expSize = 32990L;
         List<FloatEvent> eventList = new ArrayList<>();
         try (EventStream<FloatEvent> stream = nexus.openEventStream(TEST_METADATA, TEST_BEGIN, TEST_END)) {
             FloatEvent event;
@@ -81,7 +81,7 @@ public class IntervalServiceTest {
 
     @Test
     public void testMultiStringEvent() throws Exception {
-        long expSize = 9593;
+        long expSize = 24;
         List<MultiStringEvent> eventList = new ArrayList<>();
         long count = nexus.count(TEST_METADATA_MULTI, TEST_BEGIN, TEST_END);
         System.out.println("count: " + count);
@@ -99,7 +99,7 @@ public class IntervalServiceTest {
      *
      * myget -c iocin1:heartbeat -b '2020-05-13 09:28:00' -e '2020-05-13 09:29:00'
      */
-    @Test
+    //@Test
     public void testLargeNumbersWithTinyChangesStream() throws Exception {
 
         DataNexus us = new OnDemandNexus("ops");
@@ -127,7 +127,7 @@ public class IntervalServiceTest {
      *
      * myget -c VIP2L251 -b '2020-08-12 00:00:00' -e '2020-08-12 14:00:00'
      */
-    @Test
+    //@Test
     public void testTinyNumbersWithTinyChangesStream() throws Exception {
 
         DataNexus us = new OnDemandNexus("ops");

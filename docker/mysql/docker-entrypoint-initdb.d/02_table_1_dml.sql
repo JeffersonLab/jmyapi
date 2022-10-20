@@ -1,3 +1,5 @@
+-- channel1 is a scalar double floating point type
+
 -- hstmya00: select * from channels where name = 'IGL1I00POTcurrent';
 -- name and host modified
 insert into channels (chan_id, name, type, adel, size, clip, active, request, alert, host, backup, ioc) values (1, 'channel1', 6, 0.1, 1, NULL, 1, 1, 0, 'localhost', 6199944484738826240, NULL);

@@ -1,3 +1,5 @@
+-- channel2 is a scalar floating point type with enum_strings
+
 -- hstmya00: select * from channels where name = 'IGL1I00BEAMODE';
 -- name and host modified
 INSERT INTO `channels` VALUES (2,'channel2',3,NULL,1,NULL,1,1,0,'localhost',6199944484738826240,NULL);
