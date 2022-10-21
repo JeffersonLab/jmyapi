@@ -82,15 +82,17 @@ public class PointServiceTest {
     public void testFindIntEvent() throws Exception {
         System.out.println("findIntEvent");
 
-        String pv = "MFELINJC";
-        Instant timestamp = TimeUtil.toLocalDT("2017-09-08T14:50:38");
+        String pv = "channel2";
+        Instant lessThanOrEqual = TimeUtil.toLocalDT("2019-08-12T01:00:00");
+        Instant actual = TimeUtil.toLocalDT("2019-08-12T00:44:11.532879147");
         Metadata<IntEvent> metadata = nexus.findMetadata(pv, IntEvent.class);
-        
-        // Roughly 2017-09-08 14:50:37
-        IntEvent expResult = new IntEvent(403967615077170415L, EventCode.UPDATE, 0);
-        IntEvent result =  nexus.findEvent(metadata, timestamp);
 
-        Assert.assertEquals(expResult.getTimestamp(), result.getTimestamp());
+        IntEvent expResult = new IntEvent(actual, EventCode.UPDATE, 3);
+        IntEvent result =  nexus.findEvent(metadata, lessThanOrEqual);
+
+        System.out.println(result.getTimestampAsInstant().atZone(ZoneId.of("America/New_York")));
+
+        Assert.assertEquals(expResult.getTimestamp(), result.getTimestamp(), 0.0000001);
         Assert.assertEquals(expResult.getValue(), result.getValue());
         Assert.assertEquals(expResult.getCode(), result.getCode());
     }

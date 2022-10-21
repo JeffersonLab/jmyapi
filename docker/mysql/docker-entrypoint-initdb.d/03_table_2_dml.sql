@@ -1,4 +1,4 @@
--- channel2 is a scalar floating point type with enum_strings
+-- channel2 is a scalar int type with enum_strings
 
 -- hstmya00: select * from channels where name = 'IGL1I00BEAMODE';
 -- name and host modified
