@@ -5,8 +5,6 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
 import org.jlab.mya.event.EventCode;
-import org.jlab.mya.Metadata;
-import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.jlab.mya.event.MultiStringEvent;
@@ -14,7 +12,6 @@ import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
 import org.junit.*;
 
-import static org.junit.Assert.*;
 
 /**
  * Test the point service.
@@ -27,7 +24,7 @@ public class PointServiceTest {
 
     @Before
     public void setUp() {
-        nexus = new OnDemandNexus("history");
+        nexus = new OnDemandNexus("docker");
     }
 
     /**
@@ -48,8 +45,8 @@ public class PointServiceTest {
     @Test
     public void testFindFloatEvent() throws Exception {
         System.out.println("findFloatEvent");
-        String pv = "R123PMES";
-        Instant timestamp = TimeUtil.toLocalDT("2017-01-01T00:00:05");
+        String pv = "channel1";
+        Instant timestamp = TimeUtil.toLocalDT("2019-08-12T00:00:05");
 
         System.out.println("begin in myatime format: " + TimeUtil.toMyaTimestamp(timestamp));
 
@@ -63,7 +60,7 @@ public class PointServiceTest {
 
         System.out.println(metadata);
 
-        float expResult = -7.2f;
+        float expResult = 95.21179962158203f;
 
         start = System.currentTimeMillis();
 
@@ -104,43 +101,193 @@ public class PointServiceTest {
     @Test
     public void testFindMultiStringEvent() throws Exception {
         System.out.println("findMultiStringEvent");
-        String pv = "HLA:bta_uxtime_h";
-        Instant time = Instant.from(ZonedDateTime.of(2017, 8, 21, 0, 0, 0, 0, ZoneId.of("America/New_York")));
+        String pv = "channel3";
+        Instant lessThanOrEqual = Instant.from(ZonedDateTime.of(2019, 8, 12, 1, 0, 0, 0, ZoneId.of("America/New_York")));
+        Instant actual = Instant.from(ZonedDateTime.of(2019, 8, 12, 0, 0, 1, 418386347, ZoneId.of("America/New_York")));
 
-        String value = "1.50328e+09,1.50328e+09,1.50328e+09,1.50327e+09,1.50327e+09,1.50327e+09,1.50326e+09,1.50326e+09,"
-                + "1.50326e+09,1.50325e+09,1.50325e+09,1.50324e+09,1.50324e+09,1.50324e+09,1.50323e+09,1.50323e+09,"
-                + "1.50323e+09,1.50322e+09,1.50322e+09,1.50322e+09,1.50321e+09,1.50321e+09,1.50321e+09,1.5032e+09,"
-                + "1.5032e+09,1.50319e+09,1.50319e+09,1.50319e+09,1.50318e+09,1.50318e+09,1.50318e+09,1.50317e+09,"
-                + "1.50317e+09,1.50317e+09,1.50316e+09,1.50316e+09,1.50315e+09,1.50315e+09,1.50315e+09,1.50314e+09,"
-                + "1.50314e+09,1.50314e+09,1.50313e+09,1.50313e+09,1.50313e+09,1.50312e+09,1.50312e+09,1.50312e+09,"
-                + "1.50311e+09,1.50311e+09,1.5031e+09,1.5031e+09,1.5031e+09,1.50309e+09,1.50309e+09,1.50309e+09,"
-                + "1.50308e+09,1.50308e+09,1.50308e+09,1.50307e+09,1.50307e+09,1.50306e+09,1.50306e+09,1.50306e+09,"
-                + "1.50305e+09,1.50305e+09,1.50305e+09,1.50304e+09,1.50304e+09,1.50304e+09,1.50303e+09,1.50303e+09,"
-                + "1.50303e+09,1.50302e+09,1.50302e+09,1.50301e+09,1.50301e+09,1.50301e+09,1.503e+09,1.503e+09,"
-                + "1.503e+09,1.50299e+09,1.50299e+09,1.50299e+09,1.50298e+09,1.50298e+09,1.50297e+09,1.50297e+09,"
-                + "1.50297e+09,1.50296e+09,1.50296e+09,1.50296e+09,1.50295e+09,1.50295e+09,1.50295e+09,1.50294e+09,"
-                + "1.50294e+09,1.50294e+09,1.50293e+09,1.50293e+09,1.50292e+09,1.50292e+09,1.50292e+09,1.50291e+09,"
-                + "1.50291e+09,1.50291e+09,1.5029e+09,1.5029e+09,1.5029e+09,1.50289e+09,1.50289e+09,1.50288e+09,"
-                + "1.50288e+09,1.50288e+09,1.50287e+09,1.50287e+09,1.50287e+09,1.50286e+09,1.50286e+09,1.50286e+09,"
-                + "1.50285e+09,1.50285e+09,1.50285e+09,1.50284e+09,1.50284e+09,1.50283e+09,1.50283e+09,1.50283e+09,"
-                + "1.50282e+09,1.50282e+09,1.50282e+09,1.50281e+09,1.50281e+09,1.50281e+09,1.5028e+09,1.5028e+09,"
-                + "1.50279e+09,1.50279e+09,1.50279e+09,1.50278e+09,1.50278e+09,1.50278e+09,1.50277e+09,1.50277e+09,"
-                + "1.50277e+09,1.50276e+09,1.50276e+09,1.50276e+09,1.50275e+09,1.50275e+09,1.50274e+09,1.50274e+09,"
-                + "1.50274e+09,1.50273e+09,1.50273e+09,1.50273e+09,1.50272e+09,1.50272e+09,1.50272e+09,1.50271e+09,"
-                + "1.50271e+09,1.5027e+09,1.5027e+09,1.5027e+09,1.50269e+09,1.50269e+09,1.50269e+09,1.50268e+09";
+
+        String value = "1.56558E9," +
+                "1.56558E9," +
+                "1.56558E9," +
+                "1.56557E9," +
+                "1.56557E9," +
+                "1.56556E9," +
+                "1.56556E9," +
+                "1.56556E9," +
+                "1.56555E9," +
+                "1.56555E9," +
+                "1.56555E9," +
+                "1.56554E9," +
+                "1.56554E9," +
+                "1.56554E9," +
+                "1.56553E9," +
+                "1.56553E9," +
+                "1.56552E9," +
+                "1.56552E9," +
+                "1.56552E9," +
+                "1.56551E9," +
+                "1.56551E9," +
+                "1.56551E9," +
+                "1.5655E9," +
+                "1.5655E9," +
+                "1.5655E9," +
+                "1.56549E9," +
+                "1.56549E9," +
+                "1.56549E9," +
+                "1.56548E9," +
+                "1.56548E9," +
+                "1.56547E9," +
+                "1.56547E9," +
+                "1.56547E9," +
+                "1.56546E9," +
+                "1.56546E9," +
+                "1.56546E9," +
+                "1.56545E9," +
+                "1.56545E9," +
+                "1.56545E9," +
+                "1.56544E9," +
+                "1.56544E9," +
+                "1.56543E9," +
+                "1.56543E9," +
+                "1.56543E9," +
+                "1.56542E9," +
+                "1.56542E9," +
+                "1.56542E9," +
+                "1.56541E9," +
+                "1.56541E9," +
+                "1.56541E9," +
+                "1.5654E9," +
+                "1.5654E9," +
+                "1.5654E9," +
+                "1.56539E9," +
+                "1.56539E9," +
+                "1.56538E9," +
+                "1.56538E9," +
+                "1.56538E9," +
+                "1.56537E9," +
+                "1.56537E9," +
+                "1.56537E9," +
+                "1.56536E9," +
+                "1.56536E9," +
+                "1.56536E9," +
+                "1.56535E9," +
+                "1.56535E9," +
+                "1.56534E9," +
+                "1.56534E9," +
+                "1.56534E9," +
+                "1.56533E9," +
+                "1.56533E9," +
+                "1.56533E9," +
+                "1.56532E9," +
+                "1.56532E9," +
+                "1.56532E9," +
+                "1.56531E9," +
+                "1.56531E9," +
+                "1.56531E9," +
+                "1.5653E9," +
+                "1.5653E9," +
+                "1.56529E9," +
+                "1.56529E9," +
+                "1.56529E9," +
+                "1.56528E9," +
+                "1.56528E9," +
+                "1.56528E9," +
+                "1.56527E9," +
+                "1.56527E9," +
+                "1.56527E9," +
+                "1.56526E9," +
+                "1.56526E9," +
+                "1.56525E9," +
+                "1.56525E9," +
+                "1.56525E9," +
+                "1.56524E9," +
+                "1.56524E9," +
+                "1.56524E9," +
+                "1.56523E9," +
+                "1.56523E9," +
+                "1.56523E9," +
+                "1.56522E9," +
+                "1.56522E9," +
+                "1.56522E9," +
+                "1.56521E9," +
+                "1.56521E9," +
+                "1.5652E9," +
+                "1.5652E9," +
+                "1.5652E9," +
+                "1.56519E9," +
+                "1.56519E9," +
+                "1.56519E9," +
+                "1.56518E9," +
+                "1.56518E9," +
+                "1.56518E9," +
+                "1.56517E9," +
+                "1.56517E9," +
+                "1.56516E9," +
+                "1.56516E9," +
+                "1.56516E9," +
+                "1.56515E9," +
+                "1.56515E9," +
+                "1.56515E9," +
+                "1.56514E9," +
+                "1.56514E9," +
+                "1.56514E9," +
+                "1.56513E9," +
+                "1.56513E9," +
+                "1.56513E9," +
+                "1.56512E9," +
+                "1.56512E9," +
+                "1.56511E9," +
+                "1.56511E9," +
+                "1.56511E9," +
+                "1.5651E9," +
+                "1.5651E9," +
+                "1.5651E9," +
+                "1.56509E9," +
+                "1.56509E9," +
+                "1.56509E9," +
+                "1.56508E9," +
+                "1.56508E9," +
+                "1.56507E9," +
+                "1.56507E9," +
+                "1.56507E9," +
+                "1.56506E9," +
+                "1.56506E9," +
+                "1.56506E9," +
+                "1.56505E9," +
+                "1.56505E9," +
+                "1.56505E9," +
+                "1.56504E9," +
+                "1.56504E9," +
+                "1.56504E9," +
+                "1.56503E9," +
+                "1.56503E9," +
+                "1.56502E9," +
+                "1.56502E9," +
+                "1.56502E9," +
+                "1.56501E9," +
+                "1.56501E9," +
+                "1.56501E9," +
+                "1.565E9," +
+                "1.565E9," +
+                "1.565E9," +
+                "1.56499E9," +
+                "1.56499E9," +
+                "1.56498E9," +
+                "1.56498E9";
         
-        MultiStringEvent expResult = new MultiStringEvent(Instant.from(ZonedDateTime.of(2017,8, 20, 23, 0, 0, 0, ZoneId.of("America/New_York"))),
+        MultiStringEvent expResult = new MultiStringEvent(actual,
                 EventCode.UPDATE, value.split(","));
 
         Metadata<MultiStringEvent> metadata = nexus.findMetadata(pv, MultiStringEvent.class);
 
-        MultiStringEvent result = nexus.findEvent(metadata, time);
-        System.out.println(result.getTimestampAsInstant().toString());
+        MultiStringEvent result = nexus.findEvent(metadata, lessThanOrEqual);
+        System.out.println(result.getTimestampAsInstant().atZone(ZoneId.of("America/New_York")));
         for(String v : result.getValue()) {
             System.out.println(v);
         }
-        Assert.assertArrayEquals(expResult.getValue(), result.getValue());
+
         Assert.assertEquals(expResult.getTimestampAsInstant().getEpochSecond(), result.getTimestampAsInstant().getEpochSecond());
+        Assert.assertArrayEquals(expResult.getValue(), result.getValue());
     }
 
 }
