@@ -22,11 +22,11 @@ public class PerformanceTest {
 
     @Test
     public void doNestedStreamsTest() throws SQLException, IOException {
-        DataNexus nexus = new OnDemandNexus("history");
+        DataNexus nexus = new OnDemandNexus("docker");
 
-        String pv = "IDC1G03sh_cur";
-        Instant begin = TimeUtil.toLocalDT("2016-06-01T00:00:00");
-        Instant end = TimeUtil.toLocalDT("2017-07-01T00:00:00");
+        String pv = "channel1";
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-08-13T00:00:00");
 
         Runtime rt = Runtime.getRuntime();
         long stopBytes;
@@ -148,6 +148,8 @@ public class PerformanceTest {
     }
 
     /**
+     * WARNING: With the latest mysql driver this test no longer sets useCursorFetch
+     *
      * Looks like streaming is nearly always best if count > 16,000.
      * If less than perhaps 4096 then transferring results all
      * at once back is generally slightly faster.
@@ -163,11 +165,11 @@ public class PerformanceTest {
      */
     @Test
     public void doIntervalFetchStrategyTest() throws SQLException, IOException {
-        DataNexus nexus = new OnDemandNexus("history");
+        DataNexus nexus = new OnDemandNexus("docker");
 
-        String pv = "IDC1G03sh_cur";
-        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
-        Instant end = TimeUtil.toLocalDT("2018-01-26T18:00:00");
+        String pv = "channel1";
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-01-13T00:00:00");
 
         Runtime rt = Runtime.getRuntime();
         long startBytes;
