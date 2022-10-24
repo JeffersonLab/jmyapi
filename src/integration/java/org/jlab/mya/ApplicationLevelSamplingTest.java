@@ -20,7 +20,7 @@ public class ApplicationLevelSamplingTest {
 
     @Before
     public void setUp() {
-        nexus = new OnDemandNexus("history");
+        nexus = new OnDemandNexus("docker");
     }
 
     /**
@@ -29,16 +29,11 @@ public class ApplicationLevelSamplingTest {
     @Test
     public void testSimpleEventBinSampler() throws Exception {
 
-        String pv = "R123PMES";
+        String pv = "channel1";
         // 20 second test
-        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
-        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:20");
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-08-13T00:00:00");
 
-        // One year test
-//        Instant begin = TimeUtil.toLocalDT("2016-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-//        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
         long limit = 10;
 
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
@@ -54,12 +49,11 @@ public class ApplicationLevelSamplingTest {
             FloatEvent event;
             while ((event = sampleStream.read()) != null) {
                 eventList.add(event);
-//                System.out.println(event.toString(displayFractionalDigits));
+                //System.out.println(event.toString(displayFractionalDigits));
             }
         }
-        if (eventList.size() != expSize) {
-            Assert.fail("List size does not match expected");
-        }
+
+        Assert.assertEquals(expSize, eventList.size());
     }
 
     /**
@@ -68,16 +62,11 @@ public class ApplicationLevelSamplingTest {
     @Test
     public void testAnalyzeThenSimpleEventBinSampler() throws Exception {
 
-        String pv = "R123PMES";
+        String pv = "channel1";
         // 20 second test
-        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00");
-        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:20");
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-08-13T00:00:00");
 
-        // One year test
-//        Instant begin = TimeUtil.toLocalDT("2016-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-//        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
         long limit = 10;
 
         long start = System.currentTimeMillis();
@@ -108,7 +97,7 @@ public class ApplicationLevelSamplingTest {
 
         short[] eventStatsMap = new short[]{RunningStatistics.INTEGRATION};
 
-        long expSize = 12;
+        long expSize = 10;
         List<FloatEvent> eventList = new ArrayList<>();
 
         start = System.currentTimeMillis();
@@ -131,9 +120,7 @@ public class ApplicationLevelSamplingTest {
             System.out.println("Min: " + stats.getMin());
             System.out.println("Mean: " + stats.getMean());
 
-            if (eventList.size() != expSize) {
-                Assert.fail("List size does not match expected");
-            }
+            Assert.assertEquals(expSize, eventList.size());
         }
 
         stop = System.currentTimeMillis();
@@ -146,17 +133,10 @@ public class ApplicationLevelSamplingTest {
      */
     @Test
     public void testGraphicalSampler() throws Exception {
+        String pv = "channel1";
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
+        Instant end = TimeUtil.toLocalDT("2019-08-13T00:00:00");
 
-        // Limited test
-        String pv = "R12XGMES";
-        Instant begin = TimeUtil.toLocalDT("2017-02-11T00:00:00");
-        Instant end = TimeUtil.toLocalDT("2017-02-11T02:30:00");
-
-//        String pv = "R123PMES";
-//        Instant begin = TimeUtil.toLocalDT("2016-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
-//        Instant end = TimeUtil.toLocalDT("2017-01-01T00:00:00").atZone(
-//                ZoneId.systemDefault()).toInstant();
         long numBins = 10;
         int displayFractionalDigits = 6; // microseconds; seems to be max precision of myget
 
@@ -170,7 +150,7 @@ public class ApplicationLevelSamplingTest {
         // the smallest bin size that produces no more than numBins-2.  Then each bin can produce min, max, and largest triangle three bucket (lttb) point
         // and also return an unlimited number of non-update events plus surrounding update events.  A good rule of thumb for number of points returned is
         // between 1*(numBins-2) + numNonUpdateEvents*3 + 2 and 3*(numBins-2) + numNonUpdateEvents*3 + 2
-        long expSize = 15; // 2 + 1*8 = 10, 2 + 3*8 = 26, so it's a broad range
+        long expSize = 23;
 
         List<FloatEvent> eventList = new ArrayList<>();
         try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
