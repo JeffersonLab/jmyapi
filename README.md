@@ -6,7 +6,6 @@ A Java client query API library for MYA (JLab's EPICS Archiver).
 - [Quick Start with Compose](https://github.com/JeffersonLab/jmyapi#quick-start-with-compose)   
 - [Install](https://github.com/JeffersonLab/jmyapi#install)
 - [API](https://github.com/JeffersonLab/jmyapi#api) 
-- [Example](https://github.com/JeffersonLab/jmyapi#example) 
 - [Configure](https://github.com/JeffersonLab/jmyapi#configure) 
 - [Build](https://github.com/JeffersonLab/jmyapi#build)
 - [Test](https://github.com/JeffersonLab/jmyapi#test)
@@ -41,7 +40,7 @@ implementation 'org.jlab:jmyapi:<version>'
 ```
 Check the [Release Notes](https://github.com/JeffersonLab/jmyapi/releases) to see what has changed in each version.  
 
-### API
+## API
    - [Javadocs](https://jeffersonlab.github.io/jmyapi/)
 
 ### Example
@@ -64,10 +63,10 @@ Check the [Release Notes](https://github.com/JeffersonLab/jmyapi/releases) to se
 ```
 
 ## Configure
-#### Properties
+### Properties
 The library requires configuration properties be included in the runtime classpath.  Specifically a _deployments.properties_ file is needed to indicate the host names of MYA servers.  A template for the properties can be found [here](https://github.com/JeffersonLab/jmyapi/blob/main/config/deployments.properties.template).   You must create your own _deployments.properties_ file and include it on the runtime classpath.
 
-#### Authentication
+### Authentication
 In order to interact with the MYA server users must authenticate (MySQL user auth).  This is done using a username and password from a _credentials.properties_ file, which must be included in the runtime classpath.  A template for the properties can be found [here](https://github.com/JeffersonLab/jmyapi/blob/main/config/credentials.properties.template).
 
 
