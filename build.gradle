@@ -6,7 +6,7 @@ plugins {
 
 description = 'Java MYA API'
 group 'org.jlab'
-version '6.1.0'
+version '6.2.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
