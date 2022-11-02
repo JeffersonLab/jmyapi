@@ -33,6 +33,9 @@ public class RunningStatistics {
     private long eventCount;
     private long updateCount;
 
+    /**
+     * Integration statistic
+     */
     public static final short INTEGRATION = 0;
 
     private final short[] eventStatsMap;

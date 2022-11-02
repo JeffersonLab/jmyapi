@@ -8,15 +8,45 @@ package org.jlab.mya.event;
  * @author slominskir
  */
 public enum EventCode {
+    /**
+     * Update
+     */
     UPDATE(0, "Normal channel data point", false),
+    /**
+     * Network Disconnection
+     */
     NETWORK_DISCONNECTION(1, "Network disconnection", true),
+    /**
+     * Archiving Disabled
+     */
     ARCHIVING_OF_CHANNEL_TURNED_OFF(2, "Archiving of channel turned off", true),
+    /**
+     * Archiver Shutdown
+     */
     ARCHIVER_SHUTDOWN(3, "Archiver shutdown", true),
+    /**
+     * Unknown
+     */
     UNKNOWN_UNAVAILABILTY(4, "Unknown unavailability", true),
+    /**
+     * NaN or Infinity
+     */
     NAN_OR_INFINITY(5, "NaN/infinity encountered", false),
+    /**
+     * Origin
+     */
     ORIGIN_OF_CHANNELS_HISTORY(16, "Origin of channel's history", false),
+    /**
+     * Offline
+     */
     CHANNELS_PRIOR_DATA_MOVED_OFFLINE(32, "Channel's prior data moved offline", false),
+    /**
+     * Discarded
+     */
     CHANNELS_PRIOR_DATA_DISCARDED(48, "Channel's prior data discarded", false),
+    /**
+     * Undefined
+     */
     UNDEFINED(128, "undefined", false);
 
     private final int codeNumber;

@@ -6,11 +6,32 @@ package org.jlab.mya;
  * @author slominskir
  */
 public enum MyaDataType {
-    DBR_STRING, // 0
-    DBR_SHORT, // 1
-    DBR_FLOAT, // 2
-    DBR_ENUM, // 3
-    DBR_CHAR, // 4
-    DBR_LONG, // 5
-    DBR_DOUBLE, // 6    
+    /**
+     * String: 0
+     */
+    DBR_STRING,
+    /**
+     * Short: 1
+     */
+    DBR_SHORT,
+    /**
+     * Float: 2
+     */
+    DBR_FLOAT,
+    /**
+     * Enum: 3
+     */
+    DBR_ENUM,
+    /**
+     * Char: 4
+     */
+    DBR_CHAR,
+    /**
+     * Long: 5
+     */
+    DBR_LONG,
+    /**
+     * Double: 6
+     */
+    DBR_DOUBLE,
 }
