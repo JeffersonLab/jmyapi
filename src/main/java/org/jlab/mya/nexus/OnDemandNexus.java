@@ -67,7 +67,7 @@ public class OnDemandNexus extends DataNexus {
             port = Integer.parseInt(proxyPort);
         }
 
-        String url = "jdbc:mysql://" + host + ":" + port + "/archive";
+        String url = "jdbc:mariadb://" + host + ":" + port + "/archive";
 
         Properties options = new Properties();
 

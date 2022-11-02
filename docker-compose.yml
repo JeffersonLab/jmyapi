@@ -1,6 +1,6 @@
 services:
   mysql:
-    image: mysql:8.0.31
+    image: mariadb:5.5.64
     hostname: mysql
     container_name: mysql
     ports:

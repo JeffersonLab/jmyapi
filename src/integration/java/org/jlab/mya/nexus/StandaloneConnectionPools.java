@@ -1,6 +1,5 @@
 package org.jlab.mya.nexus;
 
-import com.mysql.cj.jdbc.MysqlConnectionPoolDataSource;
 import java.io.IOException;
 import java.nio.channels.Channel;
 import java.sql.SQLException;
@@ -11,6 +10,7 @@ import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
 import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
+import org.mariadb.jdbc.MariaDbPoolDataSource;
 
 /**
  * Allows use of the PooledNexus when outside of a Java application server such as Tomcat.
@@ -62,41 +62,19 @@ public class StandaloneConnectionPools implements Channel {
             if (proxyPort != null) {
                 connectPort = Integer.parseInt(proxyPort);
             }
-            String url = "jdbc:mysql://" + connectHost + ":" + connectPort + "/archive";
+            String url = "jdbc:mariadb://" + connectHost + ":" + connectPort + "/archive";
 
-            MysqlConnectionPoolDataSource pds = new MysqlConnectionPoolDataSource();
+            MariaDbPoolDataSource pds = new MariaDbPoolDataSource();
             pds.setUrl(url);
             pds.setUser(user);
             pds.setPassword(password);
-            
-            pds.setUseCompression(true);
+
+            /*pds.setUseCompression(true);
             pds.setNoAccessToProcedureBodies(true);
-            
-            // Specific to Connections from a pool
+
             pds.setCachePrepStmts(true);
             pds.setAllowPublicKeyRetrieval(true);
-            pds.setSslMode("DISABLED");
-
-            /*pds.setCacheCallableStatements(true);
-            pds.setPreparedStatementCacheSqlLimit(1024);
-            pds.setPreparedStatementCacheSize(1024);
-            pds.setCallableStatementCacheSize(8);  */
-            
-            // These look interesting, but can't find any docs on them
-            //pds.setUseServerPreparedStmts(true); // Should be true by default?
-            //pds.setAutoClosePStmtStreams(true);
-            //pds.setAutoReconnect(true);
-            //pds.setConnectTimeout(1000);
-            //pds.setEnablePacketDebug(true);
-            //pds.setDumpQueriesOnException(true);
-            //pds.setGatherPerfMetrics(true);
-            //pds.setMaxAllowedPacket(1000);
-            //pds.setUseStreamLengthsInPrepStmts(true);
-            //pds.setUltraDevHack(true);
-            //pds.setStrictFloatingPoint(true);
-            //pds.setSlowQueryThresholdMillis(1000);
-            //pds.setResultSetSizeThreshold(1000);
-            //pds.setNetTimeoutForStreamingResults(1000);
+            pds.setSslMode("DISABLED");*/
             
             SharedPoolDataSource ds = new SharedPoolDataSource();
             ds.setConnectionPoolDataSource(pds);

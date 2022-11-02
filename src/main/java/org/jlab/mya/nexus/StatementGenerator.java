@@ -106,7 +106,7 @@ class StatementGenerator {
 
         PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_FORWARD_ONLY,
                 ResultSet.CONCUR_READ_ONLY);
-        stmt.setFetchSize(fetchSize); // MySQL Driver specific hint that should be used wisely
+        stmt.setFetchSize(fetchSize);
         return stmt;
     }
 
