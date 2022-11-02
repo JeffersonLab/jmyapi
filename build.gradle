@@ -35,9 +35,7 @@ configurations {
 
 dependencies {
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
-    testImplementation 'junit:junit:4.13.2',
-            'org.apache.commons:commons-dbcp2:2.9.0',
-            'org.apache.commons:commons-pool2:2.11.1'
+    testImplementation 'junit:junit:4.13.2'
 }
 
 processIntegrationResources {
