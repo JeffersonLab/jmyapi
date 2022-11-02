@@ -79,7 +79,7 @@ gradlew integrationTest
 
 ## Release
 1. Run the integration tests to ensure code is good.
-2. Bump the version number and release date in the build.gradle file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
+2. Bump the version number in the build.gradle file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
 3. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/jmyapi/releases) page corresponding to the version in build.gradle (Enumerate changes and link issues). 
 4. Publish new artifact to maven central with:
 ```
