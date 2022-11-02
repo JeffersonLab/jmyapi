@@ -2,15 +2,20 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
+    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
 }
 
 description = 'Java MYA API'
 group 'org.jlab'
 version '6.2.0'
 
+tasks.withType(JavaCompile) {
+    options.release = 8
+    options.encoding = 'UTF-8'
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
     withJavadocJar()
     withSourcesJar()
 }
@@ -96,7 +101,7 @@ javadoc {
     options.overview = "src/overview.html"
     options.source = 8
     options.with {
-        links 'https://docs.oracle.com/javase/8/docs/api/'
+        links 'https://devdocs.io/openjdk~8/'
     }
 }
 
@@ -155,6 +160,15 @@ publishing {
         }
         artifacts {
             archives javadocJar, sourcesJar
+        }
+    }
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
         }
     }
 }
