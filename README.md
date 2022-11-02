@@ -14,7 +14,7 @@ A Java client query API library for MYA (JLab's EPICS Archiver).
 ---
 
 ## Overview
-The Jeffeson Lab [EPICS](https://en.wikipedia.org/wiki/EPICS) archiver is named MYA, and was designed with command line and C++ APIs.  This library provides a native Java API for querying MYA.  If you are looking for a quick and easy way to obtain Archiver data see: [Public MYA Web Service](https://epicsweb.jlab.org/myquery/), which is built using this API plus [myquery](https://github.com/JeffersonLab/myquery).
+The Jeffeson Lab [EPICS](https://en.wikipedia.org/wiki/EPICS) archiver is named MYA, and was designed with command line and C++ APIs.  This library provides a native Java API for querying MYA.  If you are looking for a quick and easy way to obtain MYA data see: [Public MYA Web Service](https://epicsweb.jlab.org/myquery/), which is built using this API plus [myquery](https://github.com/JeffersonLab/myquery).
 
 ## Quick Start with Compose
 1. Grab project
