@@ -13,6 +13,7 @@ public enum EventCode {
     ARCHIVING_OF_CHANNEL_TURNED_OFF(2, "Archiving of channel turned off", true),
     ARCHIVER_SHUTDOWN(3, "Archiver shutdown", true),
     UNKNOWN_UNAVAILABILTY(4, "Unknown unavailability", true),
+    NAN_OR_INFINITY(5, "NaN/infinity encountered", false),
     ORIGIN_OF_CHANNELS_HISTORY(16, "Origin of channel's history", false),
     CHANNELS_PRIOR_DATA_MOVED_OFFLINE(32, "Channel's prior data moved offline", false),
     CHANNELS_PRIOR_DATA_DISCARDED(48, "Channel's prior data discarded", false),
