@@ -44,23 +44,7 @@ Check the [Release Notes](https://github.com/JeffersonLab/jmyapi/releases) to se
    - [Javadocs](https://jeffersonlab.github.io/jmyapi/)
 
 ### Example
-```
-        DataNexus nexus = new OnDemandNexus("ops");
-
-        String pv = "R123PMES";
-        Instant begin = TimeUtil.toLocalDT("2017-01-01T00:00:00.123456");
-        Instant end = TimeUtil.toLocalDT("2017-01-01T00:01:00.123456");
-
-        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
-        try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
-
-            FloatEvent event;
-
-            while ((event = stream.read()) != null) {
-                System.out.println(event.toString(6));
-            }
-        }
-```
+https://github.com/JeffersonLab/jmyapi/blob/36e9f0b55b9707f7d910ca0deb73e377153117bc/src/test/java/org/jlab/mya/HelloWorld.java#L27-L47
 
 ## Configure
 ### Deployments
