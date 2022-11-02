@@ -50,7 +50,7 @@ https://github.com/JeffersonLab/jmyapi/blob/36e9f0b55b9707f7d910ca0deb73e3771531
 ### Deployments
 A _deployments.properties_ file must be included in the runtime classpath to indicate the host names of MYA servers.  A template for the properties can be found [here](https://github.com/JeffersonLab/jmyapi/blob/main/config/deployments.properties.template).
 
-### Authentication
+### Credentials
 A _credentials.properties_ file must be included in the runtime classpath to indicate the MariaDB username and password to use.  A template for the properties can be found [here](https://github.com/JeffersonLab/jmyapi/blob/main/config/credentials.properties.template).
 
 
