@@ -81,10 +81,7 @@ gradlew integrationTest
 1. Run the integration tests to ensure code is good.
 2. Bump the version number in the build.gradle file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
 3. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/jmyapi/releases) page corresponding to the version in build.gradle (Enumerate changes and link issues). 
-4. Publish new artifact to maven central with:
-```
-gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
-```
+4. Publish new artifact to maven central by running the [Publish to Maven Central](https://github.com/JeffersonLab/jmyapi/actions/workflows/maven-publish.yml) GitHub Action.
 5. Update javadocs by copying them from build dir into gh-pages branch and updating index.html (commit, push).
 
 ## See Also
