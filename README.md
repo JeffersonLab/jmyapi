@@ -22,7 +22,7 @@ The Jeffeson Lab [EPICS](https://en.wikipedia.org/wiki/EPICS) archiver is named 
 git clone https://github.com/JeffersonLab/jmyapi
 cd jmyapi
 ```
-2. Launch Docker
+2. Launch [Compose](https://github.com/docker/compose)
 ```
 docker compose up
 ```
