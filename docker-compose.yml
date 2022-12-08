@@ -1,14 +1,10 @@
 services:
-  mysql:
-    image: mariadb:5.5.64
-    hostname: mysql
-    container_name: mysql
+  mya:
+    image: jeffersonlab/mycontainer:1.0.0
+    hostname: mya
+    container_name: mya
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: archive
-      MYSQL_USER: myapi
       MYSQL_PASSWORD: password
-    volumes:
-      - ./docker/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
