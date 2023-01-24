@@ -1,6 +1,6 @@
 services:
   mya:
-    image: jeffersonlab/mycontainer:1.0.0
+    image: jeffersonlab/mycontainer:1.1.0
     hostname: mya
     container_name: mya
     ports:
