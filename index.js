@@ -1,4 +1,4 @@
-const repo = 'jeffersonlab/jaws-libp';
+const repo = 'jeffersonlab/jmyapi';
 const url = 'https://api.github.com/repos/' + repo + '/contents/?ref=gh-pages';
 
 const list = document.getElementById('dirlist');
