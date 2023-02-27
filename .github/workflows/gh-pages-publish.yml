@@ -31,5 +31,5 @@ jobs:
       - name: Deploy Docs
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: build/docs
+          folder: build/docs/javadoc
           target-folder: ${{ github.ref_name }}
