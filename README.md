@@ -53,6 +53,7 @@ A _deployments.properties_ file must be included in the runtime classpath to ind
 ### Credentials
 A _credentials.properties_ file must be included in the runtime classpath to indicate the MariaDB username and password to use.  A template for the properties can be found [here](https://github.com/JeffersonLab/jmyapi/blob/main/config/credentials.properties.template).
 
+**Note**: An alternative is to use a JNDI DataSource via the [PooledNexus](https://github.com/JeffersonLab/jmyapi/blob/f4f27b9e1cb7c4430d467d409cdf530d2c4aa8ac/src/main/java/org/jlab/mya/nexus/PooledNexus.java#L21) instead of using the OnDemandNexus with a credentials file.  A PooledNexus is often used with an application server such as Tomcat.  See [DataSource Notes](https://github.com/JeffersonLab/jmyapi/wiki/Developer-Notes#datasource-notes).
 
 ## Build
 This project is built with [Java 17](https://adoptium.net/) (compiled to Java 8 bytecode), and uses the [Gradle 7](https://gradle.org/) build tool to automatically download dependencies and build the project from source:
