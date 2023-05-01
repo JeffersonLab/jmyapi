@@ -330,7 +330,9 @@ public abstract class DataNexus {
      * @param sampleCount The number of samples
      * @return A new EventStream
      * @throws SQLException If unable to query the database
+     * @deprecated use {@link org.jlab.mya.stream.MySamplerStream} instead.
      */
+    @Deprecated
     public EventStream<FloatEvent> openMySamplerStream(Metadata<FloatEvent> metadata, Instant begin, long stepMilliseconds, long sampleCount) throws
             SQLException {
         return sourceSampleService.openMySamplerFloatStream(metadata, begin, stepMilliseconds, sampleCount);
