@@ -28,7 +28,8 @@ public class MySamplerStreamTest {
         // Event does not define equals, so this is about as good as it gets.
         assertEquals("Received a different number of events than expected", exp.size(), result.size());
         for (int i = 0; i < exp.size(); i++) {
-            assertEquals("Mismatch at event " + i, exp.get(i).toString(), result.get(i).toString());
+            assertEquals( "Value mismatch at event " + i, exp.get(i).getValue(), result.get(i).getValue(), 0.001);
+            assertEquals( "Timestamp mismatch at event " + i, exp.get(i).getTimestamp(), result.get(i).getTimestamp());
         }
     }
 
