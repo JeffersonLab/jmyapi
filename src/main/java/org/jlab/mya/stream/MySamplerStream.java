@@ -62,6 +62,7 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
      * @return The next sample event or null if future.
      * @throws IOException If unable to read the next event
      */
+    @SuppressWarnings("unchecked")
     public T read() throws IOException {
 
         // Have we got all of our samples?  Was there no data here to start?  Return null to indicate there is nothing
