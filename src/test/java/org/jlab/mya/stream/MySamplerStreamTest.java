@@ -167,6 +167,46 @@ public class MySamplerStreamTest {
     }
 
     /**
+     * Test the sampling behavior when getting more samples than updates.
+     * @throws IOException On error reading from underlying stream
+     */
+    @Test
+    public void overSampleTest() throws IOException {
+        FloatEvent priorPoint = new FloatEvent(TimeUtil.toLocalDT("2019-08-12T00:00:19.0"), EventCode.UPDATE, 4.4f);
+        List<FloatEvent> events = new ArrayList<>();
+        events.add(new FloatEvent(TimeUtil.toLocalDT("2019-08-12T00:00:20.00"), EventCode.UPDATE, 5.5f));
+        events.add(new FloatEvent(TimeUtil.toLocalDT("2019-08-12T00:00:21.00"), EventCode.UPDATE, 6.6f));
+
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:19.9");
+        long stepMilliseconds = 200; // ten second sample interval
+        long sampleCount = 7;
+        boolean updatesOnly = true;
+
+        // Generate the expected list
+        List<FloatEvent> exp = new ArrayList<>();
+        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin), EventCode.UPDATE, 4.4f));
+        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(stepMilliseconds)), EventCode.UPDATE, 5.5f));
+        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(2 * stepMilliseconds)), EventCode.UPDATE, 5.5f));
+        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(3 * stepMilliseconds)), EventCode.UPDATE, 5.5f));
+        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(4 * stepMilliseconds)), EventCode.UPDATE, 5.5f));
+        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(5 * stepMilliseconds)), EventCode.UPDATE, 5.5f));
+        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(6 * stepMilliseconds)), EventCode.UPDATE, 6.6f));
+
+
+        List<FloatEvent> result = new ArrayList<>();
+        try (EventStream<FloatEvent> stream = new MySamplerStream<>(new ListStream<>(events, FloatEvent.class), begin,
+                stepMilliseconds, sampleCount, priorPoint, updatesOnly, FloatEvent.class)) {
+            FloatEvent event;
+            while ((event = stream.read()) != null) {
+                result.add(event);
+                System.out.println(event);
+            }
+        }
+
+        assertFloatEventListEquals(exp, result);
+    }
+
+    /**
      * This check tests the behavior when we try to sample from the future.  We should return the last known value
      * in order to match the behavior of the command line mySampler app.
      * To make this test repeatable, we sample from a known timestamp with data, e.g. 2019, a timestamp from tomorrow,
