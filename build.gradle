@@ -7,7 +7,7 @@ plugins {
 
 description = 'Java MYA API'
 group 'org.jlab'
-version '6.2.0'
+version '6.3.0'
 
 tasks.withType(JavaCompile) {
     options.release = 8

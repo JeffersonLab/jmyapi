@@ -113,7 +113,9 @@ class SourceSamplingService extends QueryService {
      * @param sampleCount The number of samples
      * @return A new FloatEventStream
      * @throws SQLException If unable to query the database
+     * @deprecated use {@link org.jlab.mya.stream.MySamplerStream} instead.
      */
+    @Deprecated
     public EventStream<FloatEvent> openMySamplerFloatStream(Metadata<FloatEvent> metadata, Instant begin, long stepMilliseconds, long sampleCount) throws
             SQLException {
         String host = metadata.getHost();

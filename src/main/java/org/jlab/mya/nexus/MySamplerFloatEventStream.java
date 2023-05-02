@@ -16,7 +16,9 @@ import org.jlab.mya.event.FloatEvent;
  * Unlike a standard EventStream this one actually creates a new ResultSet for each sample.
  * 
  * @author slominskir
+ * @deprecated  use {@link org.jlab.mya.stream.MySamplerStream} instead
  */
+@Deprecated
 class MySamplerFloatEventStream extends FloatEventStream {
 
     private Instant begin;
