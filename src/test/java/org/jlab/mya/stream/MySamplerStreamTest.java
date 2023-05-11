@@ -28,8 +28,8 @@ public class MySamplerStreamTest {
         // Event does not define equals, so this is about as good as it gets.
         assertEquals("Received a different number of events than expected", exp.size(), result.size());
         for (int i = 0; i < exp.size(); i++) {
-            assertEquals( "Value mismatch at event " + i, exp.get(i).getValue(), result.get(i).getValue(), 0.001);
-            assertEquals( "Timestamp mismatch at event " + i, exp.get(i).getTimestamp(), result.get(i).getTimestamp());
+            assertEquals("Value mismatch at event " + i, exp.get(i).getValue(), result.get(i).getValue(), 0.001);
+            assertEquals("Timestamp mismatch at event " + i, exp.get(i).getTimestamp(), result.get(i).getTimestamp());
         }
     }
 
@@ -44,8 +44,8 @@ public class MySamplerStreamTest {
         // Event does not define equals, so this is about as good as it gets.
         assertEquals("Received a different number of events than expected", exp.size(), result.size());
         for (int i = 0; i < exp.size(); i++) {
-            assertEquals( "Value mismatch at event " + i, exp.get(i).getValue(), result.get(i).getValue());
-            assertEquals( "Timestamp mismatch at event " + i, exp.get(i).getTimestamp(), result.get(i).getTimestamp());
+            assertEquals("Value mismatch at event " + i, exp.get(i).getValue(), result.get(i).getValue());
+            assertEquals("Timestamp mismatch at event " + i, exp.get(i).getTimestamp(), result.get(i).getTimestamp());
         }
     }
 
@@ -95,7 +95,7 @@ public class MySamplerStreamTest {
 
 
         List<FloatEvent> result = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = new MySamplerStream<>(new ListStream<>(events, FloatEvent.class), begin,
+        try (EventStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(new ListStream<>(events, FloatEvent.class), begin,
                 stepMilliseconds, sampleCount, priorPoint, updatesOnly, FloatEvent.class)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
@@ -154,7 +154,7 @@ public class MySamplerStreamTest {
 
 
         List<FloatEvent> result = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = new MySamplerStream<>(new ListStream<>(events, FloatEvent.class), begin,
+        try (EventStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(new ListStream<>(events, FloatEvent.class), begin,
                 stepMilliseconds, sampleCount, priorPoint, updatesOnly, FloatEvent.class)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
@@ -168,6 +168,7 @@ public class MySamplerStreamTest {
 
     /**
      * Test the sampling behavior when getting more samples than updates.
+     *
      * @throws IOException On error reading from underlying stream
      */
     @Test
@@ -194,7 +195,7 @@ public class MySamplerStreamTest {
 
 
         List<FloatEvent> result = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = new MySamplerStream<>(new ListStream<>(events, FloatEvent.class), begin,
+        try (EventStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(new ListStream<>(events, FloatEvent.class), begin,
                 stepMilliseconds, sampleCount, priorPoint, updatesOnly, FloatEvent.class)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
@@ -234,7 +235,7 @@ public class MySamplerStreamTest {
         exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(2 * stepMilliseconds)), EventCode.UPDATE, 1.0715f));
 
         List<FloatEvent> result = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = new MySamplerStream<>(new ListStream<>(events, FloatEvent.class), begin,
+        try (EventStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(new ListStream<>(events, FloatEvent.class), begin,
                 stepMilliseconds, sampleCount, priorPoint, updatesOnly, FloatEvent.class)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
@@ -247,34 +248,74 @@ public class MySamplerStreamTest {
     }
 
     /**
-     * Test that the MySamplerStream constructor does not allow null priorPoints (with an empty stream).
+     * Test that the MySamplerStream constructor returns all UNDEFINED events if no data is given.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void nullPriorPointTest1() {
-        ListStream<FloatEvent> empty = new ListStream<>(new ArrayList<>(), FloatEvent.class);
+    @Test
+    public void nullPriorPointTest1() throws IOException {
         System.out.println("priorPoint == " + null);
-        new MySamplerStream<>(empty, Instant.now(), 1000, 10, null, false, FloatEvent.class);
+        ListStream<FloatEvent> empty = new ListStream<>(new ArrayList<>(), FloatEvent.class);
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00.00");
+        long intervalMillis = 1000;
 
-        // Should fail if exception is not thrown
-        fail();
+        List<FloatEvent> exp = new ArrayList<>();
+        FloatEvent undef = new FloatEvent(begin, EventCode.UNDEFINED, 0);
+        exp.add(undef);
+        exp.add(undef.copyTo(begin.plusMillis(intervalMillis)));
+        exp.add(undef.copyTo(begin.plusMillis(intervalMillis * 2)));
+
+        List<FloatEvent> result = new ArrayList<>();
+        FloatEvent event;
+        try (MySamplerStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(empty, begin, intervalMillis, 3,
+                null, false, FloatEvent.class)) {
+            while ((event = stream.read()) != null) {
+                result.add(event);
+                System.out.println(event);
+            }
+        }
+
+        assertFloatEventListEquals(exp, result);
     }
 
     /**
-     * Test that the MySamplerStream constructor does not allow null priorPoints (with a non-empty stream).
+     * Test that the MySamplerStream constructor returns UNDEFINED events until data is available.
      */
-    @Test(expected = IllegalArgumentException.class)
-    public void nullPriorPointTest2() {
-        Instant now = Instant.now();
-        List<FloatEvent> events = new ArrayList<>();
-        events.add(new FloatEvent(now.plusMillis(100), EventCode.UPDATE, 10));
-        events.add(new FloatEvent(now.plusMillis(200), EventCode.UPDATE, 20));
-        ListStream<FloatEvent> stream = new ListStream<>(events, FloatEvent.class);
-
+    @Test
+    public void nullPriorPointTest2() throws IOException {
         System.out.println("priorPoint == " + null);
-        new MySamplerStream<>(stream, Instant.now(), 1000,10, null, false, FloatEvent.class);
 
-        // Should fail if exception is not thrown
-        fail();
+        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00.00");
+        long intervalMillis = 1000;
+        long sampleCount = 5;
+
+        List<FloatEvent> events = new ArrayList<>();
+        FloatEvent e1 = new FloatEvent(begin.plusMillis(1001), EventCode.UPDATE, 10);
+        FloatEvent e2 = new FloatEvent(begin.plusMillis(2001), EventCode.UPDATE, 20);
+        FloatEvent e3 = new FloatEvent(begin.plusMillis(3001), EventCode.UPDATE, 30);
+        events.add(e1);
+        events.add(e2);
+        events.add(e3);
+        ListStream<FloatEvent> wrapped = new ListStream<>(events, FloatEvent.class);
+
+        List<FloatEvent> exp = new ArrayList<>();
+
+        FloatEvent undef = new FloatEvent(begin, EventCode.UNDEFINED, 0);
+        exp.add(undef);
+        exp.add(undef.copyTo(begin.plusMillis(intervalMillis)));
+        exp.add(e1.copyTo(begin.plusMillis(intervalMillis * 2)));
+        exp.add(e2.copyTo(begin.plusMillis(intervalMillis * 3)));
+        exp.add(e3.copyTo(begin.plusMillis(intervalMillis * 4)));
+
+        List<FloatEvent> result = new ArrayList<>();
+        FloatEvent event;
+        try (MySamplerStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(wrapped, begin, intervalMillis,
+                sampleCount, null, false, FloatEvent.class)) {
+            while((event = stream.read()) != null) {
+                result.add(event);
+                System.out.println(event);
+            }
+        }
+
+        assertFloatEventListEquals(exp, result);
     }
 
 
@@ -302,7 +343,7 @@ public class MySamplerStreamTest {
 
         List<FloatEvent> result = new ArrayList<>();
         try (EventStream<FloatEvent> stream =
-                     new MySamplerStream<>(new ListStream<>(new ArrayList<>(), FloatEvent.class), begin,
+                     MySamplerStream.getMySamplerStream(new ListStream<>(new ArrayList<>(), FloatEvent.class), begin,
                              stepMilliseconds, sampleCount, priorPoint, updatesOnly, FloatEvent.class)) {
             FloatEvent event;
             while ((event = stream.read()) != null) {
@@ -352,8 +393,8 @@ public class MySamplerStreamTest {
 
 
         List<IntEvent> result = new ArrayList<>();
-        try (EventStream<IntEvent> stream = new MySamplerStream<>(new ListStream<>(events, IntEvent.class), begin,
-                stepMilliseconds, sampleCount, priorPoint, updatesOnly, IntEvent.class)) {
+        try (EventStream<IntEvent> stream = MySamplerStream.getMySamplerStream(new ListStream<>(events, IntEvent.class),
+                begin, stepMilliseconds, sampleCount, priorPoint, updatesOnly, IntEvent.class)) {
             IntEvent event;
             while ((event = stream.read()) != null) {
                 result.add(event);
