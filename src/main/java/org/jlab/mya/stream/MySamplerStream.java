@@ -1,7 +1,7 @@
 package org.jlab.mya.stream;
 
 import org.jlab.mya.TimeUtil;
-import org.jlab.mya.event.Event;
+import org.jlab.mya.event.*;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -37,17 +37,36 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
      * @param updatesOnly    Should the final event from the BoundaryAwareStream only be an update event.
      * @param type           The type of Event produced by the wrapped stream
      */
-    public MySamplerStream(EventStream<T> wrapped, Instant begin, long intervalMillis, long sampleCount, T priorPoint,
+    private MySamplerStream(EventStream<T> wrapped, Instant begin, long intervalMillis, long sampleCount, T priorPoint,
                            boolean updatesOnly, Class<T> type) {
         super(wrapped, begin, begin.plusMillis(intervalMillis * (sampleCount - 1)), priorPoint, updatesOnly,
                 type);
-        if (priorPoint == null) {
-            throw new IllegalArgumentException("mySamplerStream requires a non-null priorPoint.");
-        }
         this.intervalMillis = intervalMillis;
         this.sampleCount = sampleCount;
         this.sampleTimeMya = TimeUtil.toMyaTimestamp(begin);
         this.sampleTimeInstant = begin;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Event> MySamplerStream<T> getMySamplerStream(EventStream<T> wrapped, Instant begin, long intervalMillis, long sampleCount, T priorPoint,
+                                              boolean updatesOnly, Class<T> type) {
+        if (priorPoint == null) {
+            long priorTime = TimeUtil.toMyaTimestamp(begin.minusMillis(1));
+            if (type == FloatEvent.class) {
+                priorPoint = (T) new FloatEvent(priorTime, EventCode.UNDEFINED, 0f);
+            } else if (type == IntEvent.class) {
+                priorPoint = (T) new IntEvent(priorTime, EventCode.UNDEFINED, 0);
+            } else if (type == MultiStringEvent.class) {
+                priorPoint = (T) new MultiStringEvent(priorTime, EventCode.UNDEFINED, new String[]{});
+            } else if (type == AnalyzedFloatEvent.class) {
+                priorPoint = (T) new AnalyzedFloatEvent(priorTime,EventCode.UNDEFINED, 0f, new double[]{});
+            } else if (type == LabeledEnumEvent.class) {
+                priorPoint = (T) new LabeledEnumEvent(priorTime, EventCode.UNDEFINED, 0, "");
+            } else {
+                throw new IllegalArgumentException("Unsupported type " + type.getName());
+            }
+        }
+        return new MySamplerStream<>(wrapped, begin, intervalMillis, sampleCount, priorPoint, updatesOnly, type);
     }
 
     /**
