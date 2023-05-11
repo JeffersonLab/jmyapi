@@ -118,6 +118,9 @@ public enum EventCode {
             case 4:
                 code = EventCode.UNKNOWN_UNAVAILABILTY;
                 break;
+            case 5:
+                code = EventCode.NAN_OR_INFINITY;
+                break;
             case 16:
                 code = EventCode.ORIGIN_OF_CHANNELS_HISTORY;
                 break;
@@ -126,6 +129,9 @@ public enum EventCode {
                 break;
             case 48:
                 code = EventCode.CHANNELS_PRIOR_DATA_DISCARDED;
+                break;
+            case 128:
+                code = EventCode.UNDEFINED;
                 break;
             default:
                 throw new IllegalArgumentException("Unknown code number: " + number);
