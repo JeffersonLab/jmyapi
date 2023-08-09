@@ -110,7 +110,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
             }
         } else {
             if(updatesOnly) {
-                if(current.getCode() == EventCode.UPDATE) {
+                if(!current.getCode().isDisconnection()) {
                     lastEvent = current;
                 }
             } else {
