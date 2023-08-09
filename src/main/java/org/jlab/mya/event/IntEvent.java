@@ -78,10 +78,13 @@ public class IntEvent extends Event {
         String result = this.getTimestampAsInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
                 + " ";
 
-        if (code == EventCode.UPDATE) {
-            result = result + String.valueOf(value);
-        } else {
+        if (code.isDisconnection()) {
             result = result + "<" + code.getDescription() + ">";
+        } else {
+            result = result + value;
+            if (!code.getDescription().isEmpty()) {
+                result = result + " <" + code.getDescription() + ">";
+            }
         }
 
         return result;

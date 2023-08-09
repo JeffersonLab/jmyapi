@@ -82,10 +82,13 @@ public class LabeledEnumEvent extends IntEvent {
         String result = this.getTimestampAsInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
                 + " ";
 
-        if (code == EventCode.UPDATE) {
-            result = result + (label == null ? String.valueOf(value) : label);
-        } else {
+        if (code.isDisconnection()) {
             result = result + "<" + code.getDescription() + ">";
+        } else {
+            result = result + (label == null ? String.valueOf(value) : label);
+            if (!code.getDescription().isEmpty()) {
+                result = result + " <" + code.getDescription() + ">";
+            }
         }
 
         return result;
