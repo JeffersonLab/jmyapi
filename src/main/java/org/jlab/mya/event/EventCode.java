@@ -152,7 +152,7 @@ public enum EventCode {
             case 48:
                 code = EventCode.CHANNELS_PRIOR_DATA_DISCARDED;
                 break;
-            case 128:
+            case 255:
                 code = EventCode.UNDEFINED;
                 break;
             default:
