@@ -49,8 +49,10 @@ public enum EventCode {
      */
     CHANNELS_PRIOR_DATA_DISCARDED(48, "Channel's prior data discarded"),
     /**
-     * Undefined.  This event code is not defined in the C++ API.  It is used to indicate an end of the known state of
-     * the channel and is an "artificial" event.
+     * Undefined.  This event code is not defined in the C++ API.  It is used to indicate the lack of the known state of
+     * the channel and is an "artificial" event.  This is best used to simulate an event that happens before the start
+     * of recorded data in the database or an event that happens in the future.  mySamplerStream provides a good example
+     * of this.
      */
     UNDEFINED(255, "undefined");
 
