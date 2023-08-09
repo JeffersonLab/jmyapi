@@ -75,7 +75,7 @@ class MySamplerFloatEventStream extends FloatEventStream {
         float value = result.getFloat(3);
 
         // mySampler treats anything but an UPDATE as UNDEFINED
-        if(code != EventCode.UPDATE) {
+        if(code.isDisconnection()) {
             code = EventCode.UNDEFINED;
         }
         
