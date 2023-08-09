@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Responsible for generating SQL statements.
@@ -16,6 +17,15 @@ import java.util.List;
  * @author slominskir
  */
 class StatementGenerator {
+    /**
+     * Get the SQL list of event code numbers that match to data updates.  E.g., "where column in [some_list]".
+     * @return A string suitable for use in a SQL query.
+     */
+    private static String getDataEventListString() {
+        return "(" + String.join(",", EventCode.getDataEventCodes().stream()
+                .map((EventCode e)->String.valueOf(e.getCodeNumber()))
+                .collect(Collectors.toSet()))  + ")";
+    }
     /**
      * Return a prepared statement for the given connection to query for channel names.
      *
@@ -123,7 +133,7 @@ class StatementGenerator {
         filterList.add("time < ?");
 
         if (params.isUpdatesOnly()) {
-            filterList.add("code = " + EventCode.UPDATE.getCodeNumber());
+            filterList.add("code in " + getDataEventListString());
         }
 
         String where = "";
@@ -193,7 +203,7 @@ class StatementGenerator {
         filterList.add("time " + sign + equal + " ?");
 
         if (params.isUpdatesOnly()) {
-            filterList.add("code = " + EventCode.UPDATE.getCodeNumber());
+            filterList.add("code in " + getDataEventListString());
         }
 
         String where = "";
