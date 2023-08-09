@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import org.jlab.mya.event.EventCode;
 import org.jlab.mya.event.FloatEvent;
 
 /**
@@ -51,20 +50,20 @@ class FloatEventBucket<T extends FloatEvent> {
         double area;
         
         // Since we are saving non-update events, we should also include the adjacent points to accurately display the
-        // disconnect.  If non-update event, look back for last point.  If update, look back to see if last was non-update.
+        // disconnect.  If non-update event, look back for last point.  If data event, look back to see if last was disconnect event.
         T prev = null;
 
         for(T e : events) {
 
             // Non-update events - filter these out first since they don't have meaningful values
-            if ( e.getCode() != EventCode.UPDATE ) {
+            if ( e.getCode().isDisconnection() ) {
                 if (prev != null ) {
                     output.add(prev);
                 }
                 output.add(e);
                 prev = e;
                 continue;
-            } else if ( prev != null && prev.getCode() != EventCode.UPDATE ) {
+            } else if ( prev != null && prev.getCode().isDisconnection() ) {
                 output.add(e);
                 // no continue here since this point may also be the min/max/lttb.  We'll end up with fewer
                 // points on average since duplicate hits get removed.
@@ -135,10 +134,10 @@ class FloatEventBucket<T extends FloatEvent> {
         // may be a smarter choice, but this whole thing is complicated enough as it is.
         //
         // We assume e1 is always a non-update event.  Seems reasonable since we iterate over the initial points until
-        // we find an UPDATE event which becomes the first lttb/e1 point, and the downsample always passes forward the
-        // last good lttb point (e1) if no UPDATE events were in the bucket.
+        // we find a data event which becomes the first lttb/e1 point, and the downsample always passes forward the
+        // last good lttb point (e1) if no data events were in the bucket.
         double y3;
-        if (e3.getCode() != EventCode.UPDATE) {
+        if (e3.getCode().isDisconnection()) {
             y3 = e1.getValue();
         } else {
             y3 = e3.getValue();
