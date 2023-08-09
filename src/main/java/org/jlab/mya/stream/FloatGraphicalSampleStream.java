@@ -113,8 +113,8 @@ public class FloatGraphicalSampleStream<T extends FloatEvent> extends WrappedStr
         if (!hasFirst) {
             T first;
 
-            // Keep reading events and putting them on the queue until you find the first "update" event
-            while ((first = wrapped.read()) != null && (!first.getCode().equals(EventCode.UPDATE))) {
+            // Keep reading events and putting them on the queue until you find the first data event
+            while ((first = wrapped.read()) != null && (first.getCode().isDisconnection())) {
                 queue.add(first);
                 pointsProcessed++;
             }
