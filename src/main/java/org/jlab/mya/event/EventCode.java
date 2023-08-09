@@ -52,7 +52,7 @@ public enum EventCode {
      * Undefined.  This event code is not defined in the C++ API.  It is used to indicate an end of the known state of
      * the channel and is an "artificial" event.
      */
-    UNDEFINED(128, "undefined");
+    UNDEFINED(255, "undefined");
 
     private final int codeNumber;
     private final String description;
