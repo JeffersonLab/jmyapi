@@ -1,5 +1,9 @@
 package org.jlab.mya.event;
 
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 /**
  * Mya event codes. There are two types of events: updates and informational.
  * Some informational event types are also intended to represent disconnections,
@@ -11,60 +15,70 @@ public enum EventCode {
     /**
      * Update
      */
-    UPDATE(0, "Normal channel data point", false),
+    UPDATE(0, "Normal channel data point"),
     /**
      * Network Disconnection
      */
-    NETWORK_DISCONNECTION(1, "Network disconnection", true),
+    NETWORK_DISCONNECTION(1, "Network disconnection"),
     /**
      * Archiving Disabled
      */
-    ARCHIVING_OF_CHANNEL_TURNED_OFF(2, "Archiving of channel turned off", true),
+    ARCHIVING_OF_CHANNEL_TURNED_OFF(2, "Archiving of channel turned off"),
     /**
      * Archiver Shutdown
      */
-    ARCHIVER_SHUTDOWN(3, "Archiver shutdown", true),
+    ARCHIVER_SHUTDOWN(3, "Archiver shutdown"),
     /**
      * Unknown
      */
-    UNKNOWN_UNAVAILABILTY(4, "Unknown unavailability", true),
+    UNKNOWN_UNAVAILABILTY(4, "Unknown unavailability"),
     /**
      * NaN or Infinity
      */
-    NAN_OR_INFINITY(5, "NaN/infinity encountered", false),
+    NAN_OR_INFINITY(5, "NaN/infinity encountered"),
     /**
      * Origin
      */
-    ORIGIN_OF_CHANNELS_HISTORY(16, "Origin of channel's history", false),
+    ORIGIN_OF_CHANNELS_HISTORY(16, "Origin of channel's history"),
     /**
      * Offline
      */
-    CHANNELS_PRIOR_DATA_MOVED_OFFLINE(32, "Channel's prior data moved offline", false),
+    CHANNELS_PRIOR_DATA_MOVED_OFFLINE(32, "Channel's prior data moved offline"),
     /**
      * Discarded
      */
-    CHANNELS_PRIOR_DATA_DISCARDED(48, "Channel's prior data discarded", false),
+    CHANNELS_PRIOR_DATA_DISCARDED(48, "Channel's prior data discarded"),
     /**
-     * Undefined
+     * Undefined.  This event code is not defined in the C++ API.  It is used to indicate an end of the known state of
+     * the channel and is an "artificial" event.
      */
-    UNDEFINED(128, "undefined", false);
+    UNDEFINED(128, "undefined");
 
     private final int codeNumber;
     private final String description;
     private final boolean disconnection;
 
+    private static final Set<EventCode> dataEventCodes = Collections.unmodifiableSet(Stream.of(UPDATE,
+            ORIGIN_OF_CHANNELS_HISTORY, CHANNELS_PRIOR_DATA_MOVED_OFFLINE, CHANNELS_PRIOR_DATA_DISCARDED)
+            .collect(Collectors.toSet()));
+
     /**
      * Create a new EventCode enum value with the specified description.
+     *
+     * @implNote MYA event code numbers are split into two orthogonal components stored in the low and high nibble.  The
+     * low nibble has the event has data or reason why is doesn't (disconnect event).  The high nibble has the reason
+     * why there is no data prior to this event or that there is data prior to this event.  MYA history for a channel
+     * should not start on an event that does not have data.  Beyond that there is a convention that "normal" updates
+     * should not have messages displayed since they make up the vast bulk of all updates and are implied.
      *
      * @param codeNumber The event code number
      * @param description The description, which is intended to match the core
      * C++ based MYA tools
-     * @param disconnection Whether the event represents a disconnection
      */
-    private EventCode(int codeNumber, String description, boolean disconnection) {
+    EventCode(int codeNumber, String description) {
         this.codeNumber = codeNumber;
         this.description = description;
-        this.disconnection = disconnection;
+        this.disconnection = (codeNumber & 0b1111) > 0;
     }
 
     /**
@@ -82,7 +96,11 @@ public enum EventCode {
      * @return The description
      */
     public String getDescription() {
-        return description;
+        if (codeNumber > 0) {
+            return description;
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -92,6 +110,10 @@ public enum EventCode {
      */
     public boolean isDisconnection() {
         return disconnection;
+    }
+
+    public static Set<EventCode> getDataEventCodes() {
+        return dataEventCodes;
     }
 
     /**
