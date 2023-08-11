@@ -23,7 +23,6 @@ public class FloatEventBucketTest {
      * Test of downSample and getDownSample method, of class FloatEventBucket.
      */
     @Test
-    @SuppressWarnings("unchecked")
     public void testDownSampleAndGetDownSample() {
         System.out.println("downSample");
         Instant begin = TimeUtil.toLocalDT("2017-03-01T00:00:00");
@@ -34,14 +33,16 @@ public class FloatEventBucketTest {
 
         List<FloatEvent> events = new ArrayList<>();
         
-        // Event adds start on line 70 so they are easier to count
-        events.add(new FloatEvent(begin.plusSeconds(1),        EventCode.NETWORK_DISCONNECTION, 0.0f ));  // non-update
-        events.add(new FloatEvent(begin.plusSeconds(2),        EventCode.NETWORK_DISCONNECTION, 0.0f ));  // non-update
-        events.add(new FloatEvent(begin.plusSeconds(3),        EventCode.NETWORK_DISCONNECTION, 0.0f ));  // non-update
+        // Include the ORIGIN_... event to make sure it gets treated like a regular update and is skipped.
+        events.add(new FloatEvent(begin.plusMillis(500),        EventCode.ORIGIN_OF_CHANNELS_HISTORY, 0.5f ));  // non-disconnect, should be skipped
+        events.add(new FloatEvent(begin.plusSeconds(1),        EventCode.UPDATE, 0.6f ));  // update, included because it precedes a disconnect event
+        events.add(new FloatEvent(begin.plusSeconds(2),        EventCode.NETWORK_DISCONNECTION, 0.0f ));  // disconnect
+        events.add(new FloatEvent(begin.plusSeconds(3),        EventCode.ARCHIVER_SHUTDOWN, 0.0f ));  // disconnect
+        events.add(new FloatEvent(begin.plusSeconds(4),        EventCode.ARCHIVING_OF_CHANNEL_TURNED_OFF, 0.0f ));  // disconnect
         events.add(new FloatEvent(begin.plusSeconds(5),        EventCode.UPDATE, 10.0f ));  // max
         events.add(new FloatEvent(begin.plusSeconds(3998),   EventCode.UPDATE, 0.9f ));  // Should be skipped
         events.add(new FloatEvent(begin.plusSeconds(3999),   EventCode.UPDATE, 1.9f ));  // Included because it precedes a non-update
-        events.add(new FloatEvent(begin.plusSeconds(4000),   EventCode.NETWORK_DISCONNECTION, 0.0f));  // non-update
+        events.add(new FloatEvent(begin.plusSeconds(4000),   EventCode.NAN_OR_INFINITY, 0.0f));  // disconnect
         events.add(new FloatEvent(begin.plusSeconds(5000),   EventCode.UPDATE, 2.0f ));  // Included since it follows a non-update event
         events.add(new FloatEvent(begin.plusSeconds(43200), EventCode.UPDATE, 9.99f ));  // lttb with given e1, e3
         events.add(new FloatEvent(begin.plusSeconds(43201), EventCode.UPDATE, 0.9f ));  // Should be skipped
@@ -52,12 +53,12 @@ public class FloatEventBucketTest {
         events.add(new FloatEvent(end.minusSeconds(5),        EventCode.UPDATE, 3.3f ));  // should be skipped
         events.add(new FloatEvent(end.minusSeconds(1),        EventCode.UPDATE, -5.1f)); // min
 
-        FloatEventBucket instance = new FloatEventBucket(events);
-        FloatEvent expLTTB = events.get(8);
+        FloatEventBucket<FloatEvent> instance = new FloatEventBucket<>(events);
+        FloatEvent expLTTB = events.get(10);
         FloatEvent resultLTTB = instance.downSample(e1, e3);
         SortedSet<FloatEvent> expSet = new TreeSet<>();
         // Added the lists
-        int[] keepers = {0,1,2,3,5,6,7,8,11,12,13,15};
+        int[] keepers = {1,2,3,4,5,7,8,9,10,13,14,15,17};
         for(int i : keepers ) {
             expSet.add(events.get(i));
         }
@@ -75,8 +76,8 @@ public class FloatEventBucketTest {
         List<FloatEvent> events = new ArrayList<>();
         Instant now = Instant.now();
         
-        // Triangle 1 - area = 5
-        events.add(new FloatEvent(now, EventCode.UPDATE, 0.0f));
+        // Triangle 1 - area = 5.   ORIGIN should be treated same as UPDATE
+        events.add(new FloatEvent(now, EventCode.ORIGIN_OF_CHANNELS_HISTORY, 0.0f));
         events.add(new FloatEvent(now.minusSeconds(5), EventCode.UPDATE, 1.0f));
         events.add(new FloatEvent(now.minusSeconds(10), EventCode.UPDATE, 0.0f));
 

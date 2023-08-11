@@ -315,30 +315,6 @@ public abstract class DataNexus {
     }
 
     /**
-     * Open a stream to float events associated with the specified
-     * IntervalQueryParams and sampled using the mySampler algorithm.
-     *
-     * The mySampler algorithm is what you get with MYA 'mySampler'. Each sample is
-     * obtained from a separate query. Bins are based on date.
-     *
-     * Generally you'll want to use try-with-resources around a call to this
-     * method to ensure you close the stream properly.
-     *
-     * @param metadata The metadata
-     * @param begin The begin timestamp (inclusive)
-     * @param stepMilliseconds The milliseconds between bins
-     * @param sampleCount The number of samples
-     * @return A new EventStream
-     * @throws SQLException If unable to query the database
-     * @deprecated use {@link org.jlab.mya.stream.MySamplerStream} instead.
-     */
-    @Deprecated
-    public EventStream<FloatEvent> openMySamplerStream(Metadata<FloatEvent> metadata, Instant begin, long stepMilliseconds, long sampleCount) throws
-            SQLException {
-        return sourceSampleService.openMySamplerFloatStream(metadata, begin, stepMilliseconds, sampleCount);
-    }
-
-    /**
      * The fetch strategy for obtaining records from the database.  See the JUnit tests which show STREAM is generally
      * the correct choice and conditionally choosing between them based on record count likely isn't worth your time.
      */

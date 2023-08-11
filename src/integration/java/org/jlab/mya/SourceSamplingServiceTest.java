@@ -54,31 +54,4 @@ public class SourceSamplingServiceTest {
         }
         Assert.assertEquals(expSize, eventList.size());
     }
-
-    /**
-     * Test basic sampler.
-     * <p>
-     * Compare with: "mySampler -b 2019-08-12 -s 1d -n 24 IGL1I00POTcurrent"
-     */
-    @Test
-    public void testMySampler() throws Exception {
-
-        String pv = "channel1";
-        Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
-        long stepMilliseconds = 86400000;
-        long sampleCount = 24;
-
-        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
-
-        long expSize = 24;
-        List<FloatEvent> eventList = new ArrayList<>();
-        try (EventStream<FloatEvent> stream = nexus.openMySamplerStream(metadata, begin, stepMilliseconds, sampleCount)) {
-            FloatEvent event;
-            while ((event = stream.read()) != null) {
-                eventList.add(event);
-                //        System.out.println(event);
-            }
-        }
-        Assert.assertEquals("List size does not match expected", expSize, eventList.size());
-    }
 }

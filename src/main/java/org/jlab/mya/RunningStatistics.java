@@ -1,6 +1,5 @@
 package org.jlab.mya;
 
-import org.jlab.mya.event.EventCode;
 import org.jlab.mya.event.FloatEvent;
 
 /**
@@ -106,8 +105,9 @@ public class RunningStatistics {
         prev = curr;
         curr = event;
 
-        // Statistics are only valid for UPDATE and should be weighted/normalized over the time that we were in an UPDATE state
-        if (prev.getCode().equals(EventCode.UPDATE)) {
+        // Statistics are only valid for events with data and should be weighted/normalized over the time that we were
+        // in "connected" states
+        if (!prev.getCode().isDisconnection()) {
             updateCount++;
             double value = prev.getValue();
 

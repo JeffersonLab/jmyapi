@@ -96,36 +96,4 @@ class SourceSamplingService extends QueryService {
         IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, end);
         return new FloatEventStream(params, con, stmtB, rs);
     }
-
-    /**
-     * Open a stream to float events associated with the specified
-     * IntervalQueryParams and sampled using the mySampler algorithm.
-     *
-     * The mySampler algorithm is what you get with MYA 'mySampler'. Each sample is
-     * obtained from a separate query. Bins are based on date.
-     *
-     * Generally you'll want to use try-with-resources around a call to this
-     * method to ensure you close the stream properly.
-     *
-     * @param metadata The metadata
-     * @param begin The begin timestamp (inclusive)
-     * @param stepMilliseconds The milliseconds between bins
-     * @param sampleCount The number of samples
-     * @return A new FloatEventStream
-     * @throws SQLException If unable to query the database
-     * @deprecated use {@link org.jlab.mya.stream.MySamplerStream} instead.
-     */
-    @Deprecated
-    public EventStream<FloatEvent> openMySamplerFloatStream(Metadata<FloatEvent> metadata, Instant begin, long stepMilliseconds, long sampleCount) throws
-            SQLException {
-        String host = metadata.getHost();
-        Connection con = nexus.getConnection(host);
-        String query = "select * from table_" + metadata.getId()
-                + " force index for order by (primary) where time <= ? order by time desc limit 1";
-        PreparedStatement stmt = con.prepareStatement(query);
-
-        IntervalQueryParams<FloatEvent> params = new IntervalQueryParams<>(metadata, begin, begin.plusMillis(stepMilliseconds * sampleCount));
-        return new MySamplerFloatEventStream(params, stepMilliseconds, sampleCount, con, stmt);
-
-    }
 }

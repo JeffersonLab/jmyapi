@@ -70,10 +70,9 @@ public class FloatEvent extends Event {
      */
     public String toString(int f) {
         String format = TimeUtil.getFractionalSecondsTimestampFormat(f);
-
         return this.getTimestampAsInstant().atZone(ZoneId.systemDefault()).format(DateTimeFormatter.ofPattern(format))
-                + " " + ((code == EventCode.UPDATE) ? String.valueOf(value) : "<"
-                        + code.getDescription() + ">");
+                + (code.isDisconnection() ? "" : " " + value)
+                + " " + (code.getDescription().isEmpty() ? "" : "<" + code.getDescription() + ">");
     }
 
     /**

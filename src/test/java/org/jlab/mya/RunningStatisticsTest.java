@@ -144,7 +144,7 @@ public class RunningStatisticsTest {
         Instant t3 = LocalDateTime.of(2017, Month.JANUARY, 1, 0, 3, 0, 0).toInstant(ZoneOffset.UTC);
         Instant t4 = LocalDateTime.of(2017, Month.JANUARY, 1, 0, 5, 0, 0).toInstant(ZoneOffset.UTC);
 
-        rs.push(new FloatEvent(t1, EventCode.UPDATE, 2.f));
+        rs.push(new FloatEvent(t1, EventCode.CHANNELS_PRIOR_DATA_DISCARDED, 2.f));
         rs.push(new FloatEvent(t2, EventCode.UPDATE, 1.f));
         rs.push(new FloatEvent(t3, EventCode.UPDATE, 3.f));
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
@@ -166,7 +166,7 @@ public class RunningStatisticsTest {
         Instant t3 = LocalDateTime.of(2017, Month.JANUARY, 1, 0, 3, 0, 0).toInstant(ZoneOffset.UTC);
         Instant t4 = LocalDateTime.of(2017, Month.JANUARY, 1, 0, 5, 0, 0).toInstant(ZoneOffset.UTC);
 
-        rs.push(new FloatEvent(t1, EventCode.UPDATE, 2.f));
+        rs.push(new FloatEvent(t1, EventCode.ORIGIN_OF_CHANNELS_HISTORY, 2.f));
         rs.push(new FloatEvent(t2, EventCode.UPDATE, 1.f));
         rs.push(new FloatEvent(t3, EventCode.UPDATE, 3.f));
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
@@ -210,7 +210,7 @@ public class RunningStatisticsTest {
         Instant t3 = LocalDateTime.of(2017, Month.JANUARY, 1, 0, 0, 3, 0).toInstant(ZoneOffset.UTC);
         Instant t4 = LocalDateTime.of(2017, Month.JANUARY, 1, 0, 0, 5, 0).toInstant(ZoneOffset.UTC);
 
-        rs.push(new FloatEvent(t1, EventCode.UPDATE, 2.f));
+        rs.push(new FloatEvent(t1, EventCode.ORIGIN_OF_CHANNELS_HISTORY, 2.f));
         rs.push(new FloatEvent(t2, EventCode.UPDATE, 1.f));
         rs.push(new FloatEvent(t3, EventCode.UPDATE, 3.f));
         rs.push(new FloatEvent(t4, EventCode.UPDATE, 4.f));
