@@ -35,9 +35,9 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
     private boolean buffered = false;
     private final T priorPoint;
     private T secondPointBuffer;
-    private final Instant begin;
+    protected final Instant begin;
     private final Instant end;
-    private final boolean updatesOnly;
+    protected final boolean updatesOnly;
     private final Instant now;
 
     /**
