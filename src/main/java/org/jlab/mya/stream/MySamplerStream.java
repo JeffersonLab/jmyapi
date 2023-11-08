@@ -1,15 +1,19 @@
 package org.jlab.mya.stream;
 
+import org.jlab.mya.Metadata;
 import org.jlab.mya.TimeUtil;
 import org.jlab.mya.event.*;
+import org.jlab.mya.nexus.DataNexus;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.time.Instant;
 
 /**
  * This is a class that attempts to mimic the commandline mySampler application.  You specify the start time, sample
  * interval in terms of time, and the number of samples, along with an EventStream and prior Event that contains the data
  * to be sampled from.
+ *
  * @param <T> The Event type (FloatEvent, IntEvent, etc.)
  */
 public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
@@ -23,6 +27,44 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
     private T previousEvent = null;
     private boolean firstRead = true;
     private boolean endOfStream = false;
+    private boolean useStream = true;
+    private DataNexus nexus;
+    private Metadata<T> metadata;
+    private RingBuffer buffer;
+    private int bufferSize;
+    private long bufferCheck;
+    private long bufferCount;
+    private double streamThreshold;
+
+    private class RingBuffer {
+        private long[] values;
+        private int write;
+        private int count;
+
+        public RingBuffer(int size) {
+            write = 0;
+            values = new long[size];
+            count = 0;
+        }
+
+        public void write(long val) {
+            values[write++] = val;
+            if (write == values.length) {
+                write = 0;
+            }
+            if (count < values.length) {
+                count++;
+            }
+        }
+
+        public double getMean() {
+            double sum = 0;
+            for (long val : values) {
+                sum = sum + val;
+            }
+            return sum / values.length;
+        }
+    }
 
     /**
      * Create an instance of MySamplerStream.  This extends a special case of the BoundaryAwareStream that always has
@@ -38,18 +80,34 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
      * @param type           The type of Event produced by the wrapped stream
      */
     private MySamplerStream(EventStream<T> wrapped, Instant begin, long intervalMillis, long sampleCount, T priorPoint,
-                           boolean updatesOnly, Class<T> type) {
+                            boolean updatesOnly, Class<T> type, DataNexus nexus, Metadata<T> metadata) {
         super(wrapped, begin, begin.plusMillis(intervalMillis * (sampleCount - 1)), priorPoint, updatesOnly,
                 type);
         this.intervalMillis = intervalMillis;
         this.sampleCount = sampleCount;
         this.sampleTimeMya = TimeUtil.toMyaTimestamp(begin);
         this.sampleTimeInstant = begin;
+        this.nexus = nexus;
+        this.metadata = metadata;
+
+        // Keep a buffer of time intervals between events.  Check it every bufferCheck reads from the stream to see if
+        // the stream is so busy we should switch to using a repeated query approach.  If average interval on the stream
+        // is streamThreshold times smaller than the requested sample interval, we will switch to making repeated point
+        // queries.
+        this.bufferSize = 50;
+        this.buffer = new RingBuffer(bufferSize);
+        this.bufferCheck = 10000;
+        // We want to check the stream early on, but it's possible that the first few points will be from before the
+        // read update events begin.  Skipping 50 is just a guess at the right number, but it's hard to determine a
+        // better strategy.
+        this.bufferCount = bufferCheck - bufferSize - 50;
+//        this.bufferCount = 0;
+        this.streamThreshold = 10_000.0;
     }
 
     @SuppressWarnings("unchecked")
     public static <T extends Event> MySamplerStream<T> getMySamplerStream(EventStream<T> wrapped, Instant begin, long intervalMillis, long sampleCount, T priorPoint,
-                                              boolean updatesOnly, Class<T> type) {
+                                                                          boolean updatesOnly, Class<T> type, DataNexus nexus, Metadata<T> metadata) {
         if (priorPoint == null) {
             long priorTime = TimeUtil.toMyaTimestamp(begin.minusMillis(1));
             if (type == FloatEvent.class) {
@@ -59,14 +117,38 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
             } else if (type == MultiStringEvent.class) {
                 priorPoint = (T) new MultiStringEvent(priorTime, EventCode.UNDEFINED, new String[]{});
             } else if (type == AnalyzedFloatEvent.class) {
-                priorPoint = (T) new AnalyzedFloatEvent(priorTime,EventCode.UNDEFINED, 0f, new double[]{});
+                priorPoint = (T) new AnalyzedFloatEvent(priorTime, EventCode.UNDEFINED, 0f, new double[]{});
             } else if (type == LabeledEnumEvent.class) {
                 priorPoint = (T) new LabeledEnumEvent(priorTime, EventCode.UNDEFINED, 0, "");
             } else {
                 throw new IllegalArgumentException("Unsupported type " + type.getName());
             }
         }
-        return new MySamplerStream<>(wrapped, begin, intervalMillis, sampleCount, priorPoint, updatesOnly, type);
+        return new MySamplerStream<>(wrapped, begin, intervalMillis, sampleCount, priorPoint, updatesOnly, type,
+                nexus, metadata);
+    }
+
+    public T read() throws IOException {
+        try {
+            if (useStream) {
+                return readStream();
+            } else {
+                return readService();
+            }
+        } catch (SQLException ex) {
+            throw new IOException("Error querying Database.", ex);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private T readService() throws SQLException {
+        if (sampleTimeInstant.toEpochMilli() - begin.toEpochMilli() > intervalMillis * (sampleCount - 1)) {
+            return null;
+        }
+        T event = nexus.findEvent(metadata, sampleTimeInstant, true, true, updatesOnly);
+        T out = (T) event.copyTo(sampleTimeInstant);
+        moveSampleCursor();
+        return out;
     }
 
     /**
@@ -82,7 +164,7 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
      * @throws IOException If unable to read the next event
      */
     @SuppressWarnings("unchecked")
-    public T read() throws IOException {
+    public T readStream() throws IOException, SQLException {
 
         // Have we got all of our samples?  Was there no data here to start?  Return null to indicate there is nothing
         // left to read.
@@ -110,9 +192,14 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
             currentEvent = (T) previousEvent.copyTo(sampleTimeInstant);
         }
 
+
         // We need to work through the stream to find the next sample point.  We want the points straddling the sample
         // time.
         while (determinePosition(previousEvent, currentEvent, sampleTimeMya) < 0) {
+            trackBuffer();
+            if (!useStream) {
+                return readService();
+            }
             previousEvent = currentEvent;
             currentEvent = super.read();
 
@@ -131,6 +218,29 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
         moveSampleCursor();
 
         return out;
+    }
+
+    /**
+     * Update the event interval buffer if it's time and we still plan on using the stream.  If the buffer suggests the
+     * stream is to busy to continue reading from, then we flag that we're done with stream.
+     */
+    void trackBuffer() {
+        if (useStream && bufferCount >= (bufferCheck - bufferSize)) {
+            System.out.println("Buffer TRACKED this: " + currentEvent + "  (count=" + bufferCount + ")");
+            buffer.write(currentEvent.getTimestampAsInstant().toEpochMilli() -
+                    previousEvent.getTimestampAsInstant().toEpochMilli());
+            bufferCount++;
+            if (bufferCount == bufferCheck) {
+                bufferCount = 0;
+                if (buffer.getMean() < intervalMillis / streamThreshold) {
+                    useStream = false;
+                    System.out.println("===== STREAM TOO BUSY (" + buffer.getMean() + " < " + intervalMillis / streamThreshold + ") =====");
+                }
+            }
+        } else {
+            System.out.println("Buffer skipped this: " + currentEvent + " (count = " + bufferCount + ")");
+            bufferCount++;
+        }
     }
 
     /**
