@@ -38,7 +38,7 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
     protected final Instant begin;
     private final Instant end;
     protected final boolean updatesOnly;
-    private final Instant now;
+    protected final Instant now;
 
     /**
      * Create a new BoundaryAwareStream.
