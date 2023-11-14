@@ -213,10 +213,10 @@ public class MySamplerStreamTest {
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
         // First event at 2022-12-04 10:50:56
         // Last event at 2022-12-05 16:48:47
-        Instant begin = TimeUtil.toLocalDT("2022-12-04T10:49:59");
+        Instant begin = TimeUtil.toLocalDT("2022-12-05T14:49:59");
         Instant end = TimeUtil.toLocalDT("2023-01-17T03:00:00");
         long sampleCount = 10;
-        long intervalMillis = 1_000_000_000;
+        long intervalMillis = 1_000_000_000; //
         boolean updatesOnly = true;
         int bufferSize = 5;
         int bufferCheck = 100;
@@ -244,12 +244,18 @@ public class MySamplerStreamTest {
         // Last event at 2022-12-05 16:48:47
         Instant begin = TimeUtil.toLocalDT("2022-12-04T10:49:59");
         Instant end = TimeUtil.toLocalDT("2023-01-17T03:00:00");
-        long sampleCount = 10;
-        long intervalMillis = 1_000_000_000;
+        long sampleCount = 20;
+        long intervalMillis = 8_640_000; // 1 day. Everything except the 2nd sample should be UNDEFINED.
         boolean updatesOnly = false;
 
-        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata, null, null,
-                null, null);
+        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata,
+                null, null, null, null);
+
+        FloatEvent e = stream.get(0);
+        // Make sure the first value is what we expect.  It should be UNDEFINED at the same time as begin.
+        assertEquals(e.toString(), EventCode.UNDEFINED, e.getCode());
+        assertEquals(e.toString(), 0, e.getValue(), 1e-10);
+        assertEquals(e.toString(), TimeUtil.toLocalDT("2022-12-04T10:49:59"), e.getTimestampAsInstant());
     }
 
     /**
@@ -267,7 +273,7 @@ public class MySamplerStreamTest {
         // First event at 2022-12-04 10:50:56
         // Last event at 2022-12-05 16:48:47
         Instant begin = TimeUtil.toLocalDT("2022-12-04T10:49:59");
-        Instant end = TimeUtil.toLocalDT("2023-01-17T03:00:00");
+        Instant end = TimeUtil.toLocalDT("2023-12-05T17:00:00");
         long sampleCount = 10;
         long intervalMillis = 10_000;
         boolean updatesOnly = false;
@@ -276,8 +282,11 @@ public class MySamplerStreamTest {
         int bufferDelay = 50;
         double streamThreshold = 5_000.0;
 
-        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata, bufferSize, bufferCheck,
-                bufferDelay, streamThreshold);
+        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata,
+                bufferSize, bufferCheck, bufferDelay, streamThreshold);
+
+        // Check that they all equal and the last event is undefined since it should be in the future.
+        assertEquals(stream.get(0).toString(), EventCode.UNDEFINED, stream.get(0).getCode());
     }
 
     /**
@@ -325,24 +334,34 @@ public class MySamplerStreamTest {
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
         // First event at 2022-12-04 10:50:56
         // Last event at 2022-12-05 16:48:47
-        Instant begin = TimeUtil.toLocalDT("2022-12-04T11:00:00");
+        Instant begin = TimeUtil.toLocalDT("2022-12-05T15:00:00");
         Instant end = TimeUtil.toLocalDT("2022-12-05T18:00:00");
         long sampleCount = 10;
-        long intervalMillis = 40_000_000; // ~5 hours or ~50 hour total span.
+        long intervalMillis = 8_000_000; // ~1 hours or ~10 hour total span.
         boolean updatesOnly = false;
         int bufferSize = 1000;
         int bufferCheck = 10_000;
         int bufferDelay = 0;
         double streamThreshold = 1_500.0;
 
-        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata, bufferSize, bufferCheck,
-                bufferDelay, streamThreshold);
+        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata,
+                bufferSize, bufferCheck, bufferDelay, streamThreshold);
+
+        FloatEvent e = stream.get(stream.size() - 1);
+        // Make sure the last value is what we expect.  It should match last Event, but have a timestamp of the last
+        // sample time.
+        assertEquals(e.toString(), EventCode.UPDATE, e.getCode());
+        assertEquals(e.toString(), 9021.0, e.getValue(),
+                1e-10);
+        assertEquals(e.toString(), TimeUtil.toLocalDT("2022-12-06T11:00:00"), e.getTimestampAsInstant());
+
     }
 
 
     /**
      * Test the equivalence of the three strategies when the sample happens before start of data and across the end of
-     * the stream boundary * (i.e. samples before start of and after the end of the update events)
+     * the stream boundary (i.e. samples before start of and after the end of the update events).  This test takes
+     * a couple of seconds since it has to stream across the entirety of the busy stream for the slowest strategy.
      *
      * @throws SQLException If trouble connecting to database
      * @throws IOException  If trouble querying data
@@ -383,7 +402,7 @@ public class MySamplerStreamTest {
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
         // First event at 2022-12-04 10:50:56
         // Last event at 2022-12-05 16:48:47
-        Instant begin = TimeUtil.toLocalDT("2022-12-04T10:00:00");
+        Instant begin = TimeUtil.toLocalDT("2022-12-05T16:00:00");
         Instant end = Instant.now().plusMillis(1_000_000); // now + ~20 minutes
         long sampleCount = 10;
         // Make sure the last sample lands on the last after "now"
@@ -394,26 +413,16 @@ public class MySamplerStreamTest {
         int bufferDelay = 50;
         double streamThreshold = 5_000.0;
 
-        List<FloatEvent> dynamic = getDynamicSamples(begin, end, intervalMillis, sampleCount, updatesOnly, metadata.getType(),
-                nexus, metadata, bufferSize, bufferCheck, bufferDelay, streamThreshold);
-
-        List<FloatEvent> streamed = getStreamedSamples(begin, end, intervalMillis, sampleCount, updatesOnly, metadata.getType(),
-                nexus, metadata);
-
-        List<FloatEvent> queried = getQueriedSamples(begin, intervalMillis, sampleCount, updatesOnly, metadata.getType(),
-                nexus, metadata);
+        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata,
+                bufferSize, bufferCheck, bufferDelay, streamThreshold);
 
         // Check that they all equal and the last event is undefined since it should be in the future.
-        assertEquals(dynamic.get(dynamic.size() - 1).toString(),
-                EventCode.UNDEFINED,
-                dynamic.get(dynamic.size() - 1).getCode());
+        assertEquals(stream.get(stream.size() - 1).toString(), EventCode.UNDEFINED,
+                stream.get(stream.size() - 1).getCode());
 
-        assertFloatEventListsEqual(dynamic, streamed);
-        assertFloatEventListsEqual(dynamic, queried);
-        assertFloatEventListsEqual(streamed, queried);
     }
 
-    public <T extends Event> void testEquivalency(Instant begin, Instant end, long intervalMillis, long sampleCount,
+    public <T extends Event> List<T> testEquivalency(Instant begin, Instant end, long intervalMillis, long sampleCount,
                                                   boolean updatesOnly, DataNexus nexus, Metadata<T> metadata,
                                                   Integer bufferSize, Integer bufferCheck, Integer bufferDelay,
                                                   Double streamThreshold) throws SQLException, IOException {
@@ -429,6 +438,8 @@ public class MySamplerStreamTest {
         assertFloatEventListsEqual(dynamic, streamed);
         assertFloatEventListsEqual(dynamic, queried);
         assertFloatEventListsEqual(streamed, queried);
+
+        return dynamic;
     }
 
     public <T extends Event> void assertFloatEventListsEqual(List<T> l1, List<T> l2) {
