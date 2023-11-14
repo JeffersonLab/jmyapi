@@ -42,7 +42,20 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
     private boolean endOfStream = false;
     private boolean strategyLocked;
 
-    public enum Strategy {STREAM, N_QUERIES}
+    /**
+     * The different sampling strategies that can be used.
+     */
+    public enum Strategy {
+        /**
+         * Application-based sampling that is achieved by streaming data from the database as part of a single query.
+         */
+        STREAM,
+        /**
+         * Sampling is done at the database level by making a SQL query for each individual sample that is produced by
+         * the read() method.
+         */
+        N_QUERIES
+    }
 
     private Strategy strategy;
     private final DataNexus nexus;
@@ -371,6 +384,8 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
     /**
      * Factory method that produces a MySamplerStream that exclusively performs the N_QUERIES strategy.  As such, there
      * is no underlying EventStream or prior point to wrap.
+     *<p>
+     * Created largely for API symmetry as it's just a wrapper on the constructor
      *
      * @param begin          The time of the first sample point
      * @param intervalMillis The time between sample points
@@ -379,8 +394,8 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
      * @param type           The type of Event that is being streamed
      * @param nexus          A DataNexus that can be used to perform the n-query strategy if needed.
      * @param metadata       Metadata object for the wrapped EventStream.  Used in the switch to n-query.
+     * @param <T> The type of Event that is to be streamed
      * @return A MySamplerStream of the wrapped EventStream
-     * @apiNote Created largely for API symmetry as it's just a wrapper on the constructor
      */
     public static <T extends Event> MySamplerStream<T> getMySamplerStream(Instant begin, long intervalMillis,
                                                                           long sampleCount, boolean updatesOnly,
@@ -457,7 +472,8 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
      * over the wrapped stream until we find two points that straddle the sample time or the end of the stream.
      *
      * @return The next sample event
-     * @throws IOException If unable to read the next event
+     * @throws IOException If trouble with the stream
+     * @throws SQLException If trouble querying data from the database
      */
     @SuppressWarnings("unchecked")
     public T readStream() throws IOException, SQLException {
