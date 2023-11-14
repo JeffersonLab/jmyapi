@@ -35,10 +35,19 @@ public class BoundaryAwareStream<T extends Event> extends WrappedStream<T, T> {
     private boolean buffered = false;
     private final T priorPoint;
     private T secondPointBuffer;
-    private final Instant begin;
+    /**
+     * Start time of the stream.  The first event can only occur after this.
+     */
+    protected final Instant begin;
     private final Instant end;
-    private final boolean updatesOnly;
-    private final Instant now;
+    /**
+     * Should only non-disconnect events be streamed
+     */
+    protected final boolean updatesOnly;
+    /**
+     * The time the stream was created.
+     */
+    protected final Instant now;
 
     /**
      * Create a new BoundaryAwareStream.

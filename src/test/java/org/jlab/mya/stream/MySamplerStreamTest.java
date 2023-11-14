@@ -225,14 +225,14 @@ public class MySamplerStreamTest {
 
         Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:20.0");
         Instant tomorrow = Instant.now().plusMillis(1000 * 60 * 60 * 24);
-        long stepMilliseconds = begin.until(tomorrow, ChronoUnit.MILLIS);
+        long stepMilliseconds = begin.until(tomorrow, ChronoUnit.MILLIS) / 2;
         long sampleCount = 3;
         boolean updatesOnly = false;
 
         List<FloatEvent> exp = new ArrayList<>();
         exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin), EventCode.UPDATE, 94.7978f));
         exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(stepMilliseconds)), EventCode.UPDATE, 1.0715f));
-        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(2 * stepMilliseconds)), EventCode.UPDATE, 1.0715f));
+        exp.add(new FloatEvent(TimeUtil.toMyaTimestamp(begin.plusMillis(2 * stepMilliseconds)), EventCode.UNDEFINED, 0f));
 
         List<FloatEvent> result = new ArrayList<>();
         try (EventStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(new ListStream<>(events, FloatEvent.class), begin,
