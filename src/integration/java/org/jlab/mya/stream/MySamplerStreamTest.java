@@ -22,25 +22,6 @@ import java.util.List;
 @SuppressWarnings("DuplicatedCode")
 public class MySamplerStreamTest {
 
-    public <T extends Event> List<T> getDynamicSamples(Instant begin, Instant end, long intervalMillis,
-                                                       long sampleCount, boolean updatesOnly, Class<T> type,
-                                                       DataNexus nexus, Metadata<T> metadata, Integer bufferSize,
-                                                       Integer bufferCheck, Integer bufferDelay,
-                                                       Double streamThreshold) throws SQLException, IOException {
-        List<T> samples = new ArrayList<>();
-        T priorPoint = nexus.findEvent(metadata, begin, true, true, updatesOnly);
-        try (EventStream<T> stream = MySamplerStream.getMySamplerStream(nexus.openEventStream(metadata, begin, end),
-                begin, intervalMillis, sampleCount, priorPoint, updatesOnly, type, nexus, metadata, bufferSize,
-                bufferCheck, bufferDelay,
-                streamThreshold)) {
-            T event;
-            while ((event = stream.read()) != null) {
-                samples.add(event);
-            }
-        }
-        return samples;
-    }
-
     public <T extends Event> List<T> getStreamedSamples(Instant begin, Instant end, long intervalMillis,
                                                         long sampleCount, boolean updatesOnly, Class<T> type,
                                                         DataNexus nexus,
@@ -72,9 +53,8 @@ public class MySamplerStreamTest {
         return samples;
     }
 
-    public static long timer(String pv, Instant begin, Instant end, long stepMilliseconds, long sampleCount,
-                             boolean updatesOnly, DataNexus nexus, int bufferSize, int bufferCheck, int bufferDelay,
-                             double streamThreshold) throws SQLException, IOException {
+    public static void timeStream(String pv, Instant begin, Instant end, long stepMilliseconds, long sampleCount,
+                             boolean updatesOnly, DataNexus nexus) throws SQLException, IOException {
 
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
         FloatEvent priorPoint = nexus.findEvent(metadata, begin, true, true, false);
@@ -83,9 +63,7 @@ public class MySamplerStreamTest {
         long startMillis = Instant.now().toEpochMilli();
         MySamplerStream.Strategy strategy;
         try (MySamplerStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(nexus.openEventStream(metadata,
-                        begin, end),
-                begin, stepMilliseconds, sampleCount, priorPoint, updatesOnly, FloatEvent.class, nexus, metadata,
-                bufferSize, bufferCheck, bufferDelay, streamThreshold)) {
+                        begin, end), begin, stepMilliseconds, sampleCount, priorPoint, updatesOnly, FloatEvent.class)) {
             while (stream.read() != null) {
                 count++;
             }
@@ -93,16 +71,35 @@ public class MySamplerStreamTest {
         }
         long stopMillis = Instant.now().toEpochMilli();
         double events_per_sample = stepMilliseconds / 100.0;
-        System.out.println(events_per_sample + "," + streamThreshold + "," + strategy.toString() + ": " +
-                count + " samples in " + (stopMillis - startMillis) + " ms");
+        System.out.println(events_per_sample + "," + strategy.toString() + ": " + count + " samples in " +
+                (stopMillis - startMillis) + " ms");
+    }
 
-        return stopMillis - startMillis;
+    public static void timeNQueries(String pv, Instant begin, long stepMilliseconds, long sampleCount,
+                             boolean updatesOnly, DataNexus nexus) throws SQLException, IOException {
+
+        Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
+
+        long count = 0;
+        long startMillis = Instant.now().toEpochMilli();
+        MySamplerStream.Strategy strategy;
+        try (MySamplerStream<FloatEvent> stream = MySamplerStream.getMySamplerStream(begin, stepMilliseconds,
+                sampleCount, updatesOnly, FloatEvent.class, nexus, metadata)) {
+            while (stream.read() != null) {
+                count++;
+            }
+            strategy = stream.getStrategy();
+        }
+        long stopMillis = Instant.now().toEpochMilli();
+        double events_per_sample = stepMilliseconds / 100.0;
+        System.out.println(events_per_sample + "," + strategy.toString() + ": " +count + " samples in " +
+                (stopMillis - startMillis) + " ms");
     }
 
     /**
      * Run a test on a very busy channel.  A single query is performance limited by how long it takes to the time it
-     * takes to stream the entire channel unless we do something clever.  Let's make sure we don't end up taking too
-     * long.
+     * takes to stream the entire channel unless we do something clever.  Since we've currently abandoned a built-in
+     * hybrid approach, this is of a more of an academic interest.
      * This test is commented out as it is more of a study in algorithmic tuning.
      *
      * @throws IOException If trouble querying data
@@ -123,25 +120,16 @@ public class MySamplerStreamTest {
         int bufferCheck = 10_000;
         int bufferDelay = 50;
 
-        double[] thresholds = new double[]{100_000, 50_000, 25_000, 10_000, 7_500, 5_000, 2_500, 1_000, 100};
         long[] steps = new long[]{840_000_000L, 340_000_000L, 170_000_000L, 84_000_000L, 42_000_000L, 21_000_000L,
                 10_500_000L, 3_600_000L, 2_700_000L, 1_800_000L, 900_000L, 600_000L, 450_000L, 300_000L, 230_000L,
                 60_000L};
 
-        for (double t : thresholds) {
-            List<Double> durs = new ArrayList<>();
-            System.out.println("=======   threshold=" + t + "   =======");
-            System.out.println("Events/Sample,Threshold,Strategy: Results");
-            for (long s : steps) {
-                durs.add((double) timer(pv, begin, end, s, sampleCount, updatesOnly, nexus, bufferSize, bufferCheck,
-                        bufferDelay, t));
-            }
-            System.out.println("Max query duration = " + durs.stream().mapToDouble(v -> v).max() + " ms");
-            System.out.println("Average query duration = " + durs.stream().mapToDouble(v -> v).average() + " ms");
-            System.out.println();
-            System.out.println();
-            System.out.println();
+        System.out.println("Events/Sample,Threshold,Strategy: Results");
+        for (long s : steps) {
+            timeStream(pv, begin, end, s, sampleCount, updatesOnly, nexus);
+            timeNQueries(pv, begin, s, sampleCount, updatesOnly, nexus);
         }
+        System.out.println();
 
         // Print out the first few and last events.
         Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
@@ -188,13 +176,9 @@ public class MySamplerStreamTest {
         long sampleCount = 10;
         long intervalMillis = 1_000;
         boolean updatesOnly = false;
-        int bufferSize = 500;
-        int bufferCheck = 10_000;
-        int bufferDelay = 1_000;
-        double streamThreshold = 500.0;
 
-        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata, bufferSize, bufferCheck,
-                bufferDelay, streamThreshold);
+        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata
+        );
 
     }
 
@@ -218,13 +202,9 @@ public class MySamplerStreamTest {
         long sampleCount = 10;
         long intervalMillis = 1_000_000_000; //
         boolean updatesOnly = true;
-        int bufferSize = 5;
-        int bufferCheck = 100;
-        int bufferDelay = 25;
-        double streamThreshold = 50_000_000.0;
 
-        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata, bufferSize, bufferCheck,
-                bufferDelay, streamThreshold);
+        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata
+        );
     }
 
     /**
@@ -248,8 +228,8 @@ public class MySamplerStreamTest {
         long intervalMillis = 8_640_000; // 1 day. Everything except the 2nd sample should be UNDEFINED.
         boolean updatesOnly = false;
 
-        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata,
-                null, null, null, null);
+        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata
+        );
 
         FloatEvent e = stream.get(0);
         // Make sure the first value is what we expect.  It should be UNDEFINED at the same time as begin.
@@ -277,13 +257,9 @@ public class MySamplerStreamTest {
         long sampleCount = 10;
         long intervalMillis = 10_000;
         boolean updatesOnly = false;
-        int bufferSize = 50;
-        int bufferCheck = 10_000;
-        int bufferDelay = 50;
-        double streamThreshold = 5_000.0;
 
-        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata,
-                bufferSize, bufferCheck, bufferDelay, streamThreshold);
+        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata
+        );
 
         // Check that they all equal and the last event is undefined since it should be in the future.
         assertEquals(stream.get(0).toString(), EventCode.UNDEFINED, stream.get(0).getCode());
@@ -309,13 +285,9 @@ public class MySamplerStreamTest {
         long sampleCount = 10;
         long intervalMillis = 10_000;
         boolean updatesOnly = false;
-        int bufferSize = 50;
-        int bufferCheck = 10_000;
-        int bufferDelay = 50;
-        double streamThreshold = 5_000.0;
 
-        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata, bufferSize, bufferCheck,
-                bufferDelay, streamThreshold);
+        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata
+        );
     }
 
 
@@ -339,13 +311,9 @@ public class MySamplerStreamTest {
         long sampleCount = 10;
         long intervalMillis = 8_000_000; // ~1 hours or ~10 hour total span.
         boolean updatesOnly = false;
-        int bufferSize = 1000;
-        int bufferCheck = 10_000;
-        int bufferDelay = 0;
-        double streamThreshold = 1_500.0;
 
-        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata,
-                bufferSize, bufferCheck, bufferDelay, streamThreshold);
+        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata
+        );
 
         FloatEvent e = stream.get(stream.size() - 1);
         // Make sure the last value is what we expect.  It should match last Event, but have a timestamp of the last
@@ -379,13 +347,9 @@ public class MySamplerStreamTest {
         long sampleCount = 10;
         long intervalMillis = 20_000_000; // ~5 hours or ~50 hour total span.
         boolean updatesOnly = false;
-        int bufferSize = 50;
-        int bufferCheck = 10_000;
-        int bufferDelay = 50;
-        double streamThreshold = 5_000.0;
 
-        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata, bufferSize, bufferCheck,
-                bufferDelay, streamThreshold);
+        testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata
+        );
     }
 
     /**
@@ -408,13 +372,9 @@ public class MySamplerStreamTest {
         // Make sure the last sample lands on the last after "now"
         long intervalMillis = (end.toEpochMilli() - begin.toEpochMilli()) / (sampleCount - 1);
         boolean updatesOnly = false;
-        int bufferSize = 50;
-        int bufferCheck = 10_000;
-        int bufferDelay = 50;
-        double streamThreshold = 5_000.0;
 
-        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata,
-                bufferSize, bufferCheck, bufferDelay, streamThreshold);
+        List<FloatEvent> stream = testEquivalency(begin, end, intervalMillis, sampleCount, updatesOnly, nexus, metadata
+        );
 
         // Check that they all equal and the last event is undefined since it should be in the future.
         assertEquals(stream.get(stream.size() - 1).toString(), EventCode.UNDEFINED,
@@ -423,23 +383,16 @@ public class MySamplerStreamTest {
     }
 
     public <T extends Event> List<T> testEquivalency(Instant begin, Instant end, long intervalMillis, long sampleCount,
-                                                  boolean updatesOnly, DataNexus nexus, Metadata<T> metadata,
-                                                  Integer bufferSize, Integer bufferCheck, Integer bufferDelay,
-                                                  Double streamThreshold) throws SQLException, IOException {
-        List<T> dynamic = getDynamicSamples(begin, end, intervalMillis, sampleCount, updatesOnly, metadata.getType(),
-                nexus, metadata, bufferSize, bufferCheck, bufferDelay, streamThreshold);
-
+                                                  boolean updatesOnly, DataNexus nexus, Metadata<T> metadata) throws SQLException, IOException {
         List<T> streamed = getStreamedSamples(begin, end, intervalMillis, sampleCount, updatesOnly, metadata.getType(),
                 nexus, metadata);
 
         List<T> queried = getQueriedSamples(begin, intervalMillis, sampleCount, updatesOnly, metadata.getType(),
                 nexus, metadata);
 
-        assertFloatEventListsEqual(dynamic, streamed);
-        assertFloatEventListsEqual(dynamic, queried);
         assertFloatEventListsEqual(streamed, queried);
 
-        return dynamic;
+        return streamed;
     }
 
     public <T extends Event> void assertFloatEventListsEqual(List<T> l1, List<T> l2) {
