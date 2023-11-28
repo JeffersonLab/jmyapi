@@ -16,6 +16,7 @@ import java.sql.SQLException;
  * This class is abstract and concrete implementations provide Mya event type specific streams.
  *
  * @author slominskir
+ * @author adamc
  * @param <T> The Event type
  */
 abstract class DatabaseSourceStream<T extends Event> extends EventStream<T> {
@@ -103,14 +104,30 @@ abstract class DatabaseSourceStream<T extends Event> extends EventStream<T> {
     }
 
     /**
-     * Closes the channel.
+     * Closes the channel and underlying database resources.
      *
      * @throws IOException If an I/O error occurs
      */
     @Override
     public void close() throws IOException {
         try {
-            con.close(); // TODO: Make sure closing connection also closes stmt and rs (pooled wrappers I'm looking at you)
+            if (rs != null) {
+                rs.close();
+            }
+        } catch (SQLException e) {
+            throw new IOException(e);
+        }
+        try {
+            if (stmt != null) {
+                stmt.close();
+            }
+        } catch (SQLException e) {
+            throw new IOException(e);
+        }
+        try {
+            if (con != null) {
+                con.close();
+            }
         } catch (SQLException e) {
             throw new IOException(e);
         }
