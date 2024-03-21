@@ -4,18 +4,32 @@ on:
   release:
     types: [published]
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      semvertag:
+        required: true
+        type: string
+    secrets:
+      OSSRH_USERNAME:
+        required: true
+      OSSRH_PASSWORD:
+        required: true
+      SIGNING_KEY:
+        required: true
+      SIGNING_PASSWORD:
+        required: true
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up JDK
-      uses: actions/setup-java@v3
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: temurin
-    - uses: gradle/gradle-build-action@v2
+    - uses: gradle/actions/setup-gradle@v3
       with:
         gradle-version: wrapper
     - name: Publish
