@@ -79,11 +79,10 @@ gradlew integrationTest
 ```
 
 ## Release
-1. Run the integration tests to ensure code is good.
-2. Bump the version number in the build.gradle file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
-3. Create a new release on the GitHub [Releases](https://github.com/JeffersonLab/jmyapi/releases) page corresponding to the version in build.gradle (Enumerate changes and link issues). 
-4. A new artifact should be automatically published to maven central when a new release is published on GitHub, however if something goes wrong you can also manually run the [Publish to Maven Central](https://github.com/JeffersonLab/jmyapi/actions/workflows/maven-publish.yml) GitHub Action.
-5. Update javadocs by copying them from build dir into gh-pages branch and updating index.html (commit, push).  This should occur automatically via [Publish to gh-pages](https://github.com/JeffersonLab/jmyapi/actions/workflows/gh-pages-publish.yml) GitHub Action.
+1. Bump the version number in the VERSION file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
+2. The [Publish a Release](https://github.com/JeffersonLab/jmyapi/blob/main/.github/workflows/release.yml) GitHub Action should run automatically to tag the source and create release notes summarizing any pull requests.   Edit the release notes to add any missing details.
+3. The [Publish artifact](https://github.com/JeffersonLab/jmyapi/blob/main/.github/workflows/maven-publish.yml) GitHub Action should run automatically to create a deployment artifact on maven central
+4The [Publish docs](https://github.com/JeffersonLab/jmyapi/blob/main/.github/workflows/gh-pages-publish.yml) GitHub Action should run automatically to create javadocs.
 
 ## See Also
    - [Developer Notes](https://github.com/JeffersonLab/jmyapi/wiki/Developer-Notes)
