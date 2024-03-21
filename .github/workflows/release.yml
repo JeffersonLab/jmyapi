@@ -13,8 +13,6 @@ jobs:
     needs:
       - release
     uses: jeffersonlab/java-workflows/.github/workflows/maven-publish.yml@main
-    with:
-      semvertag: ${{ needs.release.outputs.semvertag }}
     secrets: inherit
 
   docs_publish:
