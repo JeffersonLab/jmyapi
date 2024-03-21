@@ -1,1 +1,0 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.jlab.mya"},{"l":"org.jlab.mya.event"},{"l":"org.jlab.mya.nexus"},{"l":"org.jlab.mya.stream"}];updateSearchResults();
