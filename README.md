@@ -81,7 +81,7 @@ gradlew integrationTest
 ## Release
 1. Bump the version number in the VERSION file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
 2. The [CD](https://github.com/JeffersonLab/jmyapi/blob/main/.github/workflows/cd.yml) GitHub Action should run automatically invoking:
-   - The [Create release](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/release.yml) GitHub Action to tag the source and create release notes summarizing any pull requests.   Edit the release notes to add any missing details.
+   - The [Create release](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/gh-release.yml) GitHub Action to tag the source and create release notes summarizing any pull requests.   Edit the release notes to add any missing details.
    - The [Publish artifact](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/maven-publish.yml) GitHub Action to create a deployment artifact on maven central.
    - The [Publish docs](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/gh-pages-publish.yml) GitHub Action to create javadocs.
 
