@@ -32,7 +32,7 @@ gradlew hello
 ```
 
 ## Install
-The library requires a Java 8+ JVM and standard library at run time, plus has a depenency on the MariaDB database driver.  
+The library requires a Java 8+ JVM and standard library at run time, plus has a dependency on the MariaDB database driver.  
 
 You can obtain the jmyapi jar file from the [Maven Central repository](https://repo1.maven.org/maven2/org/jlab/jmyapi/) (or [Sonatype Backing Store](https://s01.oss.sonatype.org/content/repositories/releases/org/jlab/jmyapi/)) directly or from a Maven friendly build tool with the following coordinates (Gradle example shown):
 ```
@@ -55,6 +55,9 @@ A _credentials.properties_ file must be included in the runtime classpath to ind
 
 **Note**: An alternative is to use a JNDI DataSource via the [PooledNexus](https://github.com/JeffersonLab/jmyapi/blob/f4f27b9e1cb7c4430d467d409cdf530d2c4aa8ac/src/main/java/org/jlab/mya/nexus/PooledNexus.java#L21) instead of using the OnDemandNexus with a credentials file.  A PooledNexus is often used with an application server such as Tomcat.  See [DataSource Notes](https://github.com/JeffersonLab/jmyapi/wiki/Developer-Notes#datasource-notes).
 
+### Proxies
+If the environment variable `JMYAPI_USE_PROXY=true` then the proxy hostnames defined in deployments.properties will be used instead of the normal hostnames.  This is specifically used when running jmyapi on a localhost workstation with mya inside a docker bridged network.  
+
 ## Build
 This project is built with [Java 17](https://adoptium.net/) (compiled to Java 8 bytecode), and uses the [Gradle 7](https://gradle.org/) build tool to automatically download dependencies and build the project from source:
 
@@ -67,13 +70,22 @@ gradlew build
 
 **Note**: Jefferson Lab has an intercepting [proxy](https://gist.github.com/slominskir/92c25a033db93a90184a5994e71d0b78)
 
+## Develop
+You can use the pre-configured [.devcontainer](https://github.com/JeffersonLab/jmyapi/tree/main/.devcontainer) else [Install](https://github.com/JeffersonLab/jmyapi#install) and [Build](https://github.com/JeffersonLab/jmyapi#build) directly on a local workstation.
+
 ## Test
-The unit tests run automatically upon build.   Integration tests are separate and require docker compose environment (MariaDB database).
+The unit tests run automatically upon build.   Integration tests are separate and require a docker compose environment (MariaDB database).
+
+### Localhost Compose env
 1. Launch Docker:
 ```
 docker compose up
 ```
-2. Run integration tests:
+2. Run integration tests (on localhost forwarded ports):
+```
+gradlew localIntegrationTest
+```
+### Sibling Dev Container env
 ```
 gradlew integrationTest
 ```
