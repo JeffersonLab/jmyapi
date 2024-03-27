@@ -8,3 +8,5 @@ services:
     image: slominskir/gradle-dev:1.0.0
     hostname: dev
     container_name: dev
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
