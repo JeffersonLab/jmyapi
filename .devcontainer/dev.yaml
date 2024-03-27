@@ -5,7 +5,7 @@ services:
       service: mya
 
   dev:
-    image: slominskir/gradle-dev:1.0.0
+    image: jeffersonlab/java-devcontainer:1.0.2
     hostname: dev
     container_name: dev
     volumes:
