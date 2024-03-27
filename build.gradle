@@ -64,6 +64,20 @@ test {
     }
 }
 
+task localhostIntegrationTest(type: Test) {
+    description = 'Runs integration tests on localhost.'
+    group = 'verification'
+
+    testClassesDirs = sourceSets.integration.output.classesDirs
+    classpath = sourceSets.integration.runtimeClasspath
+
+    testLogging {
+        showStandardStreams = true
+    }
+
+    environment 'JMYAPI_USE_PROXY', 'true'
+}
+
 task integrationTest(type: Test) {
     description = 'Runs integration tests.'
     group = 'verification'

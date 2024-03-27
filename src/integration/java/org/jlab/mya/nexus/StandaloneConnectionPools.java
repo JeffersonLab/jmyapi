@@ -49,16 +49,19 @@ public class StandaloneConnectionPools implements Channel {
             String connectHost = host;
             int connectPort = port;
 
-            String proxyHost = DataNexus.DEPLOYMENTS_PROPERTIES.getProperty("proxy.host." + host);
-            String proxyPort = DataNexus.DEPLOYMENTS_PROPERTIES.getProperty("proxy.port." + host);
+            if("true".equals(System.getenv("JMYAPI_USE_PROXY"))) {
+                String proxyHost = DataNexus.DEPLOYMENTS_PROPERTIES.getProperty("proxy.host." + host);
+                String proxyPort = DataNexus.DEPLOYMENTS_PROPERTIES.getProperty("proxy.port." + host);
 
-            if (proxyHost != null) {
-                connectHost = proxyHost;
+                if (proxyHost != null) {
+                    connectHost = proxyHost;
+                }
+
+                if (proxyPort != null) {
+                    connectPort = Integer.parseInt(proxyPort);
+                }
             }
 
-            if (proxyPort != null) {
-                connectPort = Integer.parseInt(proxyPort);
-            }
             String url = "jdbc:mariadb://" + connectHost + ":" + connectPort + "/archive";
 
             pds.setUser(user);

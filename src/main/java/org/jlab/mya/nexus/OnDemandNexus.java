@@ -56,15 +56,17 @@ public class OnDemandNexus extends DataNexus {
         // Port is same for all hosts
         int port = Integer.parseInt(DEPLOYMENTS_PROPERTIES.getProperty("port"));
 
-        String proxyHost = DEPLOYMENTS_PROPERTIES.getProperty("proxy.host." + host);
-        String proxyPort = DEPLOYMENTS_PROPERTIES.getProperty("proxy.port." + host);
+        if("true".equals(System.getenv("JMYAPI_USE_PROXY"))) {
+            String proxyHost = DEPLOYMENTS_PROPERTIES.getProperty("proxy.host." + host);
+            String proxyPort = DEPLOYMENTS_PROPERTIES.getProperty("proxy.port." + host);
 
-        if (proxyHost != null) {
-            host = proxyHost;
-        }
+            if (proxyHost != null) {
+                host = proxyHost;
+            }
 
-        if (proxyPort != null) {
-            port = Integer.parseInt(proxyPort);
+            if (proxyPort != null) {
+                port = Integer.parseInt(proxyPort);
+            }
         }
 
         String url = "jdbc:mariadb://" + host + ":" + port + "/archive";
