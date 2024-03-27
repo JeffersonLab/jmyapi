@@ -1,0 +1,10 @@
+services:
+  mya:
+    extends:
+      file: ../compose.yaml
+      service: mya
+
+  dev:
+    image: slominskir/gradle-dev:1.0.0
+    hostname: dev
+    container_name: dev
