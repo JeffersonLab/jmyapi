@@ -7,7 +7,7 @@ plugins {
 
 description = 'Java MYA API'
 group 'org.jlab'
-version new File("./VERSION").text
+version new File("${projectDir}/VERSION").text
 ext.releaseDate = new Date().format('MMM dd yyyy')
 
 tasks.withType(JavaCompile) {
