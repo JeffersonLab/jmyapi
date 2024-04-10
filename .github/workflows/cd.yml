@@ -8,18 +8,18 @@ on:
 
 jobs:
   release:
-    uses: jeffersonlab/java-workflows/.github/workflows/gh-release.yml@main
+    uses: jeffersonlab/java-workflows/.github/workflows/gh-release.yml@v1
 
   artifact_publish:
     needs:
       - release
-    uses: jeffersonlab/java-workflows/.github/workflows/maven-publish.yml@main
+    uses: jeffersonlab/java-workflows/.github/workflows/maven-publish.yml@v1
     secrets: inherit
 
   docs_publish:
     needs:
       - release
-    uses: jeffersonlab/java-workflows/.github/workflows/gh-pages-publish.yml@main
+    uses: jeffersonlab/java-workflows/.github/workflows/gh-pages-publish.yml@v1
     with:
       semvertag: ${{ needs.release.outputs.semvertag }}
     secrets: inherit
