@@ -68,7 +68,7 @@ public enum EventCode {
      * Create a new EventCode enum value with the specified description.
      *
      * @implNote MYA event code numbers are split into two orthogonal components stored in the low and high nibble.  The
-     * low nibble has the event has data or reason why is doesn't (disconnect event).  The high nibble has the reason
+     * low nibble has the event data or reason why is doesn't (disconnect event).  The high nibble has the reason
      * why there is no data prior to this event or that there is data prior to this event.  MYA history for a channel
      * should not start on an event that does not have data.  Beyond that there is a convention that "normal" updates
      * should not have messages displayed since they make up the vast bulk of all updates and are implied.
@@ -114,6 +114,11 @@ public enum EventCode {
         return disconnection;
     }
 
+    /**
+     * Return all event codes that indicate there is data.
+     * 
+     * @return Set of EventCodes
+     */
     public static Set<EventCode> getDataEventCodes() {
         return dataEventCodes;
     }
