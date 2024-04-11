@@ -1,1 +1,0 @@
-:wave: Hello World from GitHub
