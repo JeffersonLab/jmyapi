@@ -1,4 +1,4 @@
-# jmyapi [![CI](https://github.com/JeffersonLab/jmyapi/actions/workflows/ci.yml/badge.svg)](https://github.com/JeffersonLab/jmyapi/actions/workflows/ci.yml) [![Maven Central](https://badgen.net/maven/v/maven-central/org.jlab/jmyapi)](https://repo1.maven.org/maven2/org/jlab/jmyapi/)
+# jmyapi [![CI](https://github.com/JeffersonLab/jmyapi/actions/workflows/ci.yml/badge.svg)](https://github.com/JeffersonLab/jmyapi/actions/workflows/ci.yml) [![Maven Central](https://badgen.net/maven/v/maven-central/org.jlab/jmyapi)](https://repo1.maven.org/maven2/org/jlab/jmyapi/) <a href="https://codespaces.new/JeffersonLab/jmyapi"><img src="https://github.com/codespaces/badge.svg" height="20"></a>
 A Java client query API library for MYA (JLab's EPICS Archiver).  
 
 ---
