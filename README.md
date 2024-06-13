@@ -1,4 +1,4 @@
-# jmyapi [![CI](https://github.com/JeffersonLab/jmyapi/actions/workflows/ci.yml/badge.svg)](https://github.com/JeffersonLab/jmyapi/actions/workflows/ci.yml) [![Maven Central](https://badgen.net/maven/v/maven-central/org.jlab/jmyapi)](https://repo1.maven.org/maven2/org/jlab/jmyapi/) <a href="https://codespaces.new/JeffersonLab/jmyapi"><img src="https://github.com/codespaces/badge.svg" height="20"></a>
+# jmyapi [![CI](https://github.com/JeffersonLab/jmyapi/actions/workflows/ci.yaml/badge.svg)](https://github.com/JeffersonLab/jmyapi/actions/workflows/ci.yaml) [![Maven Central](https://badgen.net/maven/v/maven-central/org.jlab/jmyapi)](https://repo1.maven.org/maven2/org/jlab/jmyapi/) <a href="https://codespaces.new/JeffersonLab/jmyapi"><img src="https://github.com/codespaces/badge.svg" height="20"></a>
 A Java client query API library for MYA (JLab's EPICS Archiver).  
 
 ---
@@ -92,10 +92,10 @@ gradlew integrationTest
 
 ## Release
 1. Bump the version number in the VERSION file and commit and push to GitHub (using [Semantic Versioning](https://semver.org/)).
-2. The [CD](https://github.com/JeffersonLab/jmyapi/blob/main/.github/workflows/cd.yml) GitHub Action should run automatically invoking:
-   - The [Create release](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/gh-release.yml) GitHub Action to tag the source and create release notes summarizing any pull requests.   Edit the release notes to add any missing details.
-   - The [Publish artifact](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/maven-publish.yml) GitHub Action to create a deployment artifact on maven central.
-   - The [Publish docs](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/gh-pages-publish.yml) GitHub Action to create javadocs.
+2. The [CD](https://github.com/JeffersonLab/jmyapi/blob/main/.github/workflows/cd.yaml) GitHub Action should run automatically invoking:
+   - The [Create release](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/gh-release.yaml) GitHub Action to tag the source and create release notes summarizing any pull requests.   Edit the release notes to add any missing details.
+   - The [Publish artifact](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/maven-publish.yaml) GitHub Action to create a deployment artifact on maven central.
+   - The [Publish docs](https://github.com/JeffersonLab/java-workflows/blob/main/.github/workflows/gh-pages-publish.yaml) GitHub Action to create javadocs.
 
 ## See Also
    - [Developer Notes](https://github.com/JeffersonLab/jmyapi/wiki/Developer-Notes)
