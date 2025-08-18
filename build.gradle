@@ -11,7 +11,7 @@ version = new File("${projectDir}/VERSION").text.trim()
 ext.releaseDate = new Date().format('MMM dd yyyy')
 
 tasks.withType(JavaCompile).configureEach {
-    options.release = 8
+    options.release = 11
     options.encoding = 'UTF-8'
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
@@ -96,9 +96,9 @@ password=$password
 }
 javadoc {
     options.overview = "src/overview.html"
-    options.source = 8
+    options.source = 11
     options.with {
-        //links 'https://devdocs.io/openjdk~8/'
+        links 'https://docs.oracle.com/en/java/javase/11/docs/api'
     }
 }
 signing {
