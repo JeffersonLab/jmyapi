@@ -2,29 +2,29 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'signing'
-    id 'io.github.gradle-nexus.publish-plugin' version '1.1.0'
+    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
 }
 
 description = 'Java MYA API'
-group 'org.jlab'
-version new File("${projectDir}/VERSION").text.trim()
+group = 'org.jlab'
+version = new File("${projectDir}/VERSION").text.trim()
 ext.releaseDate = new Date().format('MMM dd yyyy')
 
-tasks.withType(JavaCompile) {
+tasks.withType(JavaCompile).configureEach {
     options.release = 8
     options.encoding = 'UTF-8'
     options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
 }
-
+compileTestJava {
+    options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
+}
 java {
     withJavadocJar()
     withSourcesJar()
 }
-
 repositories {
     mavenCentral()
 }
-
 sourceSets {
     integration {
         java.srcDir "${projectDir}/src/integration/java"
@@ -33,38 +33,24 @@ sourceSets {
         runtimeClasspath += sourceSets.main.output
     }
 }
-
 configurations {
     integrationImplementation.extendsFrom testImplementation
     integrationRuntimeOnly.extendsFrom runtimeOnly
 }
-
 dependencies {
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
     testImplementation 'junit:junit:4.13.2'
 }
-
 processIntegrationResources {
     duplicatesStrategy = 'include'
 }
-
-compileJava   {
-    options.encoding = 'UTF-8'
-    options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
-}
-
-compileTestJava {
-    options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
-}
-
 test {
     testLogging {
         events "passed", "skipped", "failed"
-        exceptionFormat "full"
+        exceptionFormat = "full"
     }
 }
-
-task localhostIntegrationTest(type: Test) {
+tasks.register('localhostIntegrationTest', Test) {
     description = 'Runs integration tests on localhost.'
     group = 'verification'
 
@@ -77,8 +63,7 @@ task localhostIntegrationTest(type: Test) {
 
     environment 'JMYAPI_USE_PROXY', 'true'
 }
-
-task integrationTest(type: Test) {
+tasks.register('integrationTest', Test) {
     description = 'Runs integration tests.'
     group = 'verification'
 
@@ -89,15 +74,13 @@ task integrationTest(type: Test) {
         showStandardStreams = true
     }
 }
-
-task hello (type: JavaExec) {
+tasks.register('hello', JavaExec) {
     group 'Application'
     description 'Hello World Test'
     mainClass = 'org.jlab.mya.HelloWorld'
     classpath = sourceSets.test.runtimeClasspath
 }
-
-task config {
+tasks.register('config') {
     doLast {
         def console = System.console()
         if (console) {
@@ -111,15 +94,13 @@ password=$password
         }
     }
 }
-
 javadoc {
     options.overview = "src/overview.html"
     options.source = 8
     options.with {
-        links 'https://devdocs.io/openjdk~8/'
+        //links 'https://devdocs.io/openjdk~8/'
     }
 }
-
 signing {
     def signingKey = findProperty("signingKey")
     def signingPassword = findProperty("signingPassword")
@@ -127,11 +108,10 @@ signing {
 
     sign publishing.publications
 }
-
 publishing {
     repositories {
         maven {
-            name "OSSRH"
+            name = "OSSRH"
             url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
             credentials {
                 username = project.findProperty("ossrh.user") ?: System.getenv("OSSRH_USER")
@@ -182,7 +162,6 @@ publishing {
         }
     }
 }
-
 nexusPublishing {
     repositories {
         sonatype {
