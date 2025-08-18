@@ -49,6 +49,7 @@ import java.util.Queue;
  * </p>
  * @author apcarp
  * @author slominskir
+ * @param <T> The Type
  */
 public class FloatGraphicalSampleStream<T extends FloatEvent> extends WrappedStream<T, T> {
 

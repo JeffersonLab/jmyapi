@@ -34,6 +34,7 @@ import java.math.RoundingMode;
  * means you can pass in FloatEvent subclasses such as AnalyzedFloatEvents and they'll come out untouched.
  * </p>
  * @author slominskir
+ * @param <T> The Type
  */
 public class FloatSimpleSampleStream<T extends FloatEvent> extends WrappedStream<T, T> {
 

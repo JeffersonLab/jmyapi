@@ -7,6 +7,7 @@ import org.jlab.mya.event.Event;
  * since it reveals what host to query and what underlying ID to query.
  *
  * @author slominskir
+ * @param <T> Event Type
  */
 public final class Metadata<T extends Event> {
 
