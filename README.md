@@ -32,7 +32,7 @@ gradlew hello
 ```
 
 ## Install
-The library requires a Java 8+ JVM and standard library at run time, plus has a dependency on the MariaDB database driver.  
+The library requires a Java 11+ JVM and standard library at run time, plus has a dependency on the MariaDB database driver.  
 
 You can obtain the jmyapi jar file from the [Maven Central repository](https://repo1.maven.org/maven2/org/jlab/jmyapi/) (or [Sonatype Backing Store](https://s01.oss.sonatype.org/content/repositories/releases/org/jlab/jmyapi/)) directly or from a Maven friendly build tool with the following coordinates (Gradle example shown):
 ```
@@ -59,7 +59,7 @@ A _credentials.properties_ file must be included in the runtime classpath to ind
 If the environment variable `JMYAPI_USE_PROXY=true` then the proxy hostnames defined in deployments.properties will be used instead of the normal hostnames.  This is specifically used when running jmyapi on a localhost workstation with mya inside a docker bridged network.  
 
 ## Build
-This project is built with [Java 17](https://adoptium.net/) (compiled to Java 8 bytecode), and uses the [Gradle 7](https://gradle.org/) build tool to automatically download dependencies and build the project from source:
+This project is built with [Java 21](https://adoptium.net/) (compiled to Java 11 bytecode), and uses the [Gradle 9](https://gradle.org/) build tool to automatically download dependencies and build the project from source:
 
 ```
 git clone https://github.com/JeffersonLab/jmyapi
