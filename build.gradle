@@ -1,13 +1,12 @@
 plugins {
     id 'java-library'
-    id 'maven-publish'
-    id 'signing'
-    id 'io.github.gradle-nexus.publish-plugin' version '2.0.0'
+    id "com.vanniktech.maven.publish" version "0.34.0"
 }
 
 description = 'Java MYA API'
 group = 'org.jlab'
 version = new File("${projectDir}/VERSION").text.trim()
+ext.version = project.version
 ext.releaseDate = new Date().format('MMM dd yyyy')
 
 tasks.withType(JavaCompile).configureEach {
@@ -17,10 +16,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 compileTestJava {
     options.compilerArgs += ["-Xlint:deprecation", "-Xlint:unchecked"]
-}
-java {
-    withJavadocJar()
-    withSourcesJar()
 }
 repositories {
     mavenCentral()
@@ -40,9 +35,6 @@ configurations {
 dependencies {
     implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
     testImplementation 'junit:junit:4.13.2'
-}
-processIntegrationResources {
-    duplicatesStrategy = 'include'
 }
 test {
     testLogging {
@@ -75,8 +67,8 @@ tasks.register('integrationTest', Test) {
     }
 }
 tasks.register('hello', JavaExec) {
-    group 'Application'
-    description 'Hello World Test'
+    group = 'Application'
+    description = 'Hello World Test'
     mainClass = 'org.jlab.mya.HelloWorld'
     classpath = sourceSets.test.runtimeClasspath
 }
@@ -101,72 +93,37 @@ javadoc {
         links 'https://docs.oracle.com/en/java/javase/11/docs/api'
     }
 }
-signing {
-    def signingKey = findProperty("signingKey")
-    def signingPassword = findProperty("signingPassword")
-    useInMemoryPgpKeys(signingKey, signingPassword)
+mavenPublishing {
+    publishToMavenCentral(true)
+    signAllPublications()
+    coordinates("org.jlab", "jmyapi", version)
 
-    sign publishing.publications
-}
-publishing {
-    repositories {
-        maven {
-            name = "OSSRH"
-            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
-            credentials {
-                username = project.findProperty("ossrh.user") ?: System.getenv("OSSRH_USER")
-                password = project.findProperty("ossrh.token") ?: System.getenv("OSSRH_TOKEN")
+    pom {
+        name = project.name
+        description = project.description
+        url = "https://github.com/JeffersonLab/jmyapi/"
+        licenses {
+            license {
+                name = "The MIT License"
+                url = "https://github.com/JeffersonLab/jmyapi/blob/master/LICENSE"
             }
         }
-        maven {
-            name = "GitHubPackages"
-            url = uri("https://maven.pkg.github.com/JeffersonLab/jmyapi")
-            credentials {
-                username = project.findProperty("github.user") ?: System.getenv("GITHUB_USER")
-                password = project.findProperty("github.token") ?: System.getenv("GITHUB_TOKEN")
+        developers {
+            developer {
+                id = "slominskir"
+                name = "Ryan Slominski"
+                url = "https://github.com/slominskir/"
+            }
+            developer {
+                id = "apcarp"
+                name = "Adam Carpenter"
+                url = "https://github.com/apcarp/"
             }
         }
-        publications {
-            maven(MavenPublication) {
-                from(components.java)
-                pom {
-                    name = project.name
-                    description = project.description
-                    url = "https://github.com/JeffersonLab/jmyapi"
-                    licenses {
-                        license {
-                            name = "The MIT License"
-                            url = "https://github.com/JeffersonLab/jmyapi/blob/master/LICENSE"
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = "slominskir"
-                            name = "Ryan Slominski"
-                            email = "ryans@jlab.org"
-                        }
-                        developer {
-                            id = "apcarp"
-                            name = "Adam Carpenter"
-                            email = "adamc@jlab.org"
-                        }
-                    }
-                    scm {
-                        url = "https://github.com/JeffersonLab/jmyapi.git"
-                    }
-                }
-            }
-        }
-        artifacts {
-            archives javadocJar, sourcesJar
-        }
-    }
-}
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+        scm {
+            url = "https://github.com/JeffersonLab/jmyapi"
+            connection = "scm:git:git://github.com/JeffersonLab/jmyapi.git"
+            developerConnection = "scm:git:ssh://git@github.com/JeffersonLab/jmyapi.git"
         }
     }
 }
