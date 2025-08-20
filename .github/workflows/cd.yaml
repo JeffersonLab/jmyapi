@@ -8,15 +8,23 @@ on:
 
 jobs:
   release:
+    permissions:
+      contents: write
     uses: jeffersonlab/java-workflows/.github/workflows/gh-release.yaml@v2
 
   artifact_publish:
+    permissions:
+      contents: read
     needs:
       - release
     uses: jeffersonlab/java-workflows/.github/workflows/maven-publish.yaml@v2
     secrets: inherit
 
   docs_publish:
+    permissions:
+      pages: write
+      id-token: write
+      contents: write
     needs:
       - release
     uses: jeffersonlab/java-workflows/.github/workflows/gh-pages-publish.yaml@v2
