@@ -34,7 +34,7 @@ gradlew hello
 ## Install
 The library requires a Java 11+ JVM and standard library at run time, plus has a dependency on the MariaDB database driver.  
 
-You can obtain the jmyapi jar file from the [Maven Central repository](https://repo1.maven.org/maven2/org/jlab/jmyapi/) (or [Sonatype Backing Store](https://s01.oss.sonatype.org/content/repositories/releases/org/jlab/jmyapi/)) directly or from a Maven friendly build tool with the following coordinates (Gradle example shown):
+You can obtain the jmyapi jar file from the [Maven Central repository](https://repo1.maven.org/maven2/org/jlab/jmyapi/) directly or from a Maven friendly build tool with the following coordinates (Gradle example shown):
 ```
 implementation 'org.jlab:jmyapi:<version>'
 ```
