@@ -1,7 +1,7 @@
 /**
- *         <p>Provides classes for wrapping streams.</p>
- *         <b>Example</b>
- *         <pre>
+ * Provides classes for wrapping streams. <b>Example</b>
+ *
+ * <pre>
  *         DataNexus nexus = new OnDemandNexus("ops");
  *
  *         String pv = "R123PMES";

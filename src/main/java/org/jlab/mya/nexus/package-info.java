@@ -1,7 +1,7 @@
 /**
- *         <p>Provides the query service nexuses.</p>
- *         <b>Example</b>
- *         <pre>
+ * Provides the query service nexuses. <b>Example</b>
+ *
+ * <pre>
  * DataNexus nexus = new OnDemandNexus("ops");
  *         </pre>
  */

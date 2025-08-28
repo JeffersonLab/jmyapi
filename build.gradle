@@ -1,5 +1,6 @@
 plugins {
     id 'java-library'
+    id 'com.diffplug.spotless' version '7.2.1'
     id "com.vanniktech.maven.publish" version "0.34.0"
 }
 
@@ -91,6 +92,11 @@ javadoc {
     options.source = 11
     options.with {
         links 'https://docs.oracle.com/en/java/javase/11/docs/api'
+    }
+}
+spotless {
+    java {
+        googleJavaFormat()
     }
 }
 mavenPublishing {

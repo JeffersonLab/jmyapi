@@ -1,12 +1,11 @@
 package org.jlab.mya.stream;
 
 import java.io.IOException;
-
 import org.jlab.mya.event.Event;
 
 /**
- * An EventStream that wraps another EventStream. The Event Type may be
- * different between the outer and inner streams.
+ * An EventStream that wraps another EventStream. The Event Type may be different between the outer
+ * and inner streams.
  *
  * @author slominskir
  * @param <T> The Outer Event Type
@@ -14,36 +13,36 @@ import org.jlab.mya.event.Event;
  */
 public abstract class WrappedStream<T extends Event, E extends Event> extends EventStream<T> {
 
-    final EventStream<E> wrapped;
+  final EventStream<E> wrapped;
 
-    /**
-     * Create a new WrappedEventStreamAdaptor.
-     * 
-     * @param wrapped The wrapped EventStream
-     * @param type The type
-     */
-    WrappedStream(EventStream<E> wrapped, Class<T> type) {
-        super(type);
-        this.wrapped = wrapped;
-    }
+  /**
+   * Create a new WrappedEventStreamAdaptor.
+   *
+   * @param wrapped The wrapped EventStream
+   * @param type The type
+   */
+  WrappedStream(EventStream<E> wrapped, Class<T> type) {
+    super(type);
+    this.wrapped = wrapped;
+  }
 
-    /**
-     * Tells whether or not this channel is open.
-     *
-     * @return true if, and only if, this channel is open
-     */
-    @Override
-    public boolean isOpen() {
-        return wrapped.isOpen();
-    }
+  /**
+   * Tells whether or not this channel is open.
+   *
+   * @return true if, and only if, this channel is open
+   */
+  @Override
+  public boolean isOpen() {
+    return wrapped.isOpen();
+  }
 
-    /**
-     * Closes the channel.
-     *
-     * @throws IOException If an I/O error occurs
-     */
-    @Override
-    public void close() throws IOException {
-        wrapped.close();
-    }
+  /**
+   * Closes the channel.
+   *
+   * @throws IOException If an I/O error occurs
+   */
+  @Override
+  public void close() throws IOException {
+    wrapped.close();
+  }
 }
