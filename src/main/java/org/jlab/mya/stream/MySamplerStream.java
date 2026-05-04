@@ -9,11 +9,11 @@ import org.jlab.mya.event.*;
 import org.jlab.mya.nexus.DataNexus;
 
 /**
- * This is a class mimics the command line mySampler application. It implements two different
- * strategies, sampling from the data as it is streamed through the library (STREAM), and repeatedly
- * querying the database for each sampled point (N_QUERIES). Different constructors create streams
- * that use either of these two strategy Previous versions attempted a hybrid approach, but that did
- * not work well since processing a ResultSet cannot be cleanly cancelled partway through.
+ * This class mimics the command line mySampler application. It implements two different strategies,
+ * sampling from the data as it is streamed through the library (STREAM), and repeatedly querying
+ * the database for each sampled point (N_QUERIES). Different constructors create streams that use
+ * either of these two strategies. Previous versions attempted a hybrid approach, but that did not
+ * work well since processing a ResultSet cannot be cleanly canceled partway through.
  *
  * <p>For streams where the Event update rate is less than the requested sample rate, then it is
  * obviously better to make one query and stream all the underlying data. For streams where the
@@ -87,7 +87,7 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
 
     if (nexus == null || metadata == null) {
       throw new IllegalArgumentException(
-          "Both nexus and metadata are required non-null the N_QUERIES strategy");
+          "Both nexus and metadata must be non-null for the N_QUERIES strategy");
     }
     this.intervalMillis = intervalMillis;
     this.sampleCount = sampleCount;
@@ -239,7 +239,7 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
    * return the same results.
    *
    * @return The next sampled event or null if end of stream is reached.
-   * @throws IOException If trouble sapling data or an unsupported strategy is attempted.
+   * @throws IOException If trouble sampling data or an unsupported strategy is attempted.
    */
   @Override
   public T read() throws IOException {
