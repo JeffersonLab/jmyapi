@@ -87,7 +87,7 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
 
     if (nexus == null || metadata == null) {
       throw new IllegalArgumentException(
-          "Both nexus and metadata are required non-null the N_QUERIES strategy");
+          "Both nexus and metadata must be non-null for the N_QUERIES strategy");
     }
     this.intervalMillis = intervalMillis;
     this.sampleCount = sampleCount;
