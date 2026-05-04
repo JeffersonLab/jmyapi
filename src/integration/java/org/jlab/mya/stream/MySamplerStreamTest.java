@@ -169,8 +169,6 @@ public class MySamplerStreamTest {
     Instant end = TimeUtil.toLocalDT("2022-12-05T17:00:00");
     long sampleCount = 10;
     boolean updatesOnly = false;
-    int bufferSize = 50;
-    int bufferCheck = 10_000;
 
     long[] steps =
         new long[] {
