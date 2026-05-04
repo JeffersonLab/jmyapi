@@ -9,7 +9,7 @@ import org.jlab.mya.event.*;
 import org.jlab.mya.nexus.DataNexus;
 
 /**
- * This is a class mimics the command line mySampler application. It implements two different
+ * This class mimics the command line mySampler application. It implements two different
  * strategies, sampling from the data as it is streamed through the library (STREAM), and repeatedly
  * querying the database for each sampled point (N_QUERIES). Different constructors create streams
  * that use either of these two strategies. Previous versions attempted a hybrid approach, but that did
