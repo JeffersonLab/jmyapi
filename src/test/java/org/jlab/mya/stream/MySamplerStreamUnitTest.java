@@ -13,7 +13,7 @@ import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.event.IntEvent;
 import org.junit.Test;
 
-public class MySamplerStreamTest {
+public class MySamplerStreamUnitTest {
 
   /**
    * A method for comparing lists of FloatEvents for equality. FloatEvent does not have an equals()
