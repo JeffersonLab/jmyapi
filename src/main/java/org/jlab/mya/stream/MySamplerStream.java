@@ -239,7 +239,7 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
    * return the same results.
    *
    * @return The next sampled event or null if end of stream is reached.
-   * @throws IOException If trouble sapling data or an unsupported strategy is attempted.
+   * @throws IOException If trouble sampling data or an unsupported strategy is attempted.
    */
   @Override
   public T read() throws IOException {
