@@ -9,11 +9,11 @@ import org.jlab.mya.event.*;
 import org.jlab.mya.nexus.DataNexus;
 
 /**
- * This class mimics the command line mySampler application. It implements two different
- * strategies, sampling from the data as it is streamed through the library (STREAM), and repeatedly
- * querying the database for each sampled point (N_QUERIES). Different constructors create streams
- * that use either of these two strategies. Previous versions attempted a hybrid approach, but that did
- * not work well since processing a ResultSet cannot be cleanly cancelled partway through.
+ * This class mimics the command line mySampler application. It implements two different strategies,
+ * sampling from the data as it is streamed through the library (STREAM), and repeatedly querying
+ * the database for each sampled point (N_QUERIES). Different constructors create streams that use
+ * either of these two strategies. Previous versions attempted a hybrid approach, but that did not
+ * work well since processing a ResultSet cannot be cleanly canceled partway through.
  *
  * <p>For streams where the Event update rate is less than the requested sample rate, then it is
  * obviously better to make one query and stream all the underlying data. For streams where the
