@@ -57,6 +57,7 @@ abstract class DatabaseSourceStream<T extends Event> extends EventStream<T> {
    * @throws ClosedChannelException If the channel is closed
    * @throws IOException If unable to read the next event
    */
+  @Override
   public T read() throws ClosedChannelException, IOException {
     try {
       if (rs.next()) {

@@ -82,6 +82,7 @@ public class FloatEvent extends Event {
    *
    * @return A new Event
    */
+  @Override
   public FloatEvent copyTo(Instant timeAsInstant) {
     return new FloatEvent(timeAsInstant, this.getCode(), this.getValue());
   }

@@ -241,6 +241,7 @@ public class MySamplerStream<T extends Event> extends BoundaryAwareStream<T> {
    * @return The next sampled event or null if end of stream is reached.
    * @throws IOException If trouble sapling data or an unsupported strategy is attempted.
    */
+  @Override
   public T read() throws IOException {
     try {
       // Have we got all of our samples?  Was there no data here to start?  Return null to indicate
