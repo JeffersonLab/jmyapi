@@ -38,7 +38,6 @@ public class SourceSamplingServiceTest {
     Instant begin = TimeUtil.toLocalDT("2019-08-12T00:00:00");
     Instant end = TimeUtil.toLocalDT("2019-08-13T00:00:00");
     long limit = 24;
-    int fractionalDigits = 6; // microseconds; seems to be max precision of myget
 
     Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
 

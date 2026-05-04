@@ -60,11 +60,7 @@ public class PerformanceTest {
     startMillis = System.currentTimeMillis();
     try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
 
-      FloatEvent event;
-
-      while ((event = stream.read()) != null) {
-        // System.out.println(event);
-      }
+      while ((stream.read()) != null) {}
     }
     stopMillis = System.currentTimeMillis();
     stopBytes = rt.totalMemory() - rt.freeMemory();
@@ -92,11 +88,7 @@ public class PerformanceTest {
         final BoundaryAwareStream<FloatEvent> boundaryStream =
             new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class); ) {
 
-      FloatEvent event;
-
-      while ((event = boundaryStream.read()) != null) {
-        // System.out.println(event);
-      }
+      while ((boundaryStream.read()) != null) {}
     }
 
     stopMillis = System.currentTimeMillis();
@@ -114,11 +106,7 @@ public class PerformanceTest {
         final FloatAnalysisStream analysisStream =
             new FloatAnalysisStream(stream, new short[] {RunningStatistics.INTEGRATION}); ) {
 
-      FloatEvent event;
-
-      while ((event = analysisStream.read()) != null) {
-        // System.out.println(event);
-      }
+      while ((analysisStream.read()) != null) {}
     }
 
     stopMillis = System.currentTimeMillis();
@@ -136,11 +124,7 @@ public class PerformanceTest {
         final FloatGraphicalSampleStream<FloatEvent> samplerStream =
             new FloatGraphicalSampleStream<>(stream, 3, count, FloatEvent.class); ) {
 
-      FloatEvent event;
-
-      while ((event = samplerStream.read()) != null) {
-        // System.out.println(event);
-      }
+      while ((samplerStream.read()) != null) {}
     }
 
     stopMillis = System.currentTimeMillis();
@@ -175,14 +159,12 @@ public class PerformanceTest {
     Instant end = TimeUtil.toLocalDT("2019-01-13T00:00:00");
 
     Runtime rt = Runtime.getRuntime();
-    long startBytes;
     long stopBytes;
     long startMillis;
     long stopMillis;
 
     System.out.println("---- Metadata Query ----");
     rt.gc();
-    startBytes = rt.totalMemory() - rt.freeMemory();
     startMillis = System.currentTimeMillis();
 
     Metadata<FloatEvent> metadata = nexus.findMetadata(pv, FloatEvent.class);
@@ -196,7 +178,6 @@ public class PerformanceTest {
 
     System.out.println("---- Event Count Query ----");
     rt.gc();
-    startBytes = rt.totalMemory() - rt.freeMemory();
     startMillis = System.currentTimeMillis();
     long count = nexus.count(metadata, begin, end);
     stopMillis = System.currentTimeMillis();
@@ -209,15 +190,10 @@ public class PerformanceTest {
 
     System.out.println("---- Interval Query: Streaming Strategy ----");
     rt.gc();
-    startBytes = rt.totalMemory() - rt.freeMemory();
     startMillis = System.currentTimeMillis();
     try (EventStream<FloatEvent> stream = nexus.openEventStream(metadata, begin, end)) {
 
-      FloatEvent event;
-
-      while ((event = stream.read()) != null) {
-        // System.out.println(event);
-      }
+      while ((stream.read()) != null) {}
     }
     stopMillis = System.currentTimeMillis();
     stopBytes = rt.totalMemory() - rt.freeMemory();
@@ -229,15 +205,12 @@ public class PerformanceTest {
     System.out.println("---- Interval Query: Chunk Strategy ----");
 
     rt.gc();
-    startBytes = rt.totalMemory() - rt.freeMemory();
     startMillis = System.currentTimeMillis();
     try (EventStream<FloatEvent> stream =
         nexus.openEventStream(
             metadata, begin, end, DataNexus.IntervalQueryFetchStrategy.CHUNK, false)) {
 
-      FloatEvent event;
-
-      while ((event = stream.read()) != null) {
+      while ((stream.read()) != null) {
         // System.out.println(event);
       }
     }
@@ -251,17 +224,12 @@ public class PerformanceTest {
     System.out.println("---- Interval Query: ALL Strategy ----");
 
     rt.gc();
-    startBytes = rt.totalMemory() - rt.freeMemory();
     startMillis = System.currentTimeMillis();
     try (EventStream<FloatEvent> stream =
         nexus.openEventStream(
             metadata, begin, end, DataNexus.IntervalQueryFetchStrategy.ALL, false)) {
 
-      FloatEvent event;
-
-      while ((event = stream.read()) != null) {
-        // System.out.println(event);
-      }
+      while ((stream.read()) != null) {}
     }
     stopMillis = System.currentTimeMillis();
     stopBytes = rt.totalMemory() - rt.freeMemory();

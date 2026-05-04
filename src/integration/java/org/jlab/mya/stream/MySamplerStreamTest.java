@@ -171,7 +171,6 @@ public class MySamplerStreamTest {
     boolean updatesOnly = false;
     int bufferSize = 50;
     int bufferCheck = 10_000;
-    int bufferDelay = 50;
 
     long[] steps =
         new long[] {

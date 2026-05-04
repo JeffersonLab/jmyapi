@@ -6,7 +6,6 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.ZoneId;
-import org.jlab.mya.event.AnalyzedFloatEvent;
 import org.jlab.mya.event.FloatEvent;
 import org.jlab.mya.nexus.DataNexus;
 import org.jlab.mya.nexus.OnDemandNexus;
@@ -114,8 +113,7 @@ public class AnalysisServiceTest {
             new BoundaryAwareStream<>(stream, begin, end, priorPoint, false, FloatEvent.class);
         final FloatAnalysisStream analysisStream = new FloatAnalysisStream(boundaryStream); ) {
 
-      AnalyzedFloatEvent event;
-      while ((event = analysisStream.read()) != null) {
+      while ((analysisStream.read()) != null) {
         // No-op - we just want to allow analysis stream to collect stats on entire series
         // If we wanted we could inspect running stats incrementally in here...
       }
@@ -131,17 +129,17 @@ public class AnalysisServiceTest {
     System.out.println("Jmyapi max:  " + result.getMax());
     System.out.println("Myapi mean:  " + mean);
     System.out.println("Jmyapi mean: " + result.getMean());
-    System.out.println("");
+    System.out.println();
 
     System.out.println("Myapi   sigma: " + sigma);
     System.out.println("Jmyapi  sigma: " + result.getSigma());
     System.out.println("Myapi  rms:  " + rms);
     System.out.println("Jmyapi rms: " + result.getRms());
-    System.out.println("");
+    System.out.println();
 
     System.out.println("Myapi         integration:       " + integration);
     System.out.println("Jmyapi        integration:       " + result.getIntegration());
-    System.out.println("");
+    System.out.println();
 
     double minMaxDiff = 0.000001; // absolutely the same within 6 decimal places
     double percDiff = 0.5; // 0.5% difference
