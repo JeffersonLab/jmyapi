@@ -34,7 +34,7 @@ configurations {
     integrationRuntimeOnly.extendsFrom runtimeOnly
 }
 dependencies {
-    implementation 'org.mariadb.jdbc:mariadb-java-client:3.0.8'
+    implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.5'
     testImplementation 'junit:junit:4.13.2'
 }
 test {
